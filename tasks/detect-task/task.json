@@ -1,0 +1,82 @@
+{
+  "id": "b396fde0-1aa2-11e6-a178-4b15f5ed2cab",
+  "name": "BlackDuckDetect",
+  "friendlyName": "Black Duck Detect",
+  "description": "Execute Black Duck Detect against your build",
+  "author": "Black Duck Software, Inc.",
+  "category": "Utility",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "0",
+    "Minor": "0",
+    "Patch": "2"
+  },
+  "minimumAgentVersion": "1.95.0",
+  "instanceNameFormat": "Execute Black Duck Detect against your build $(message)",
+  "inputs": [
+    {
+      "name": "BlackDuckHubService",
+      "type": "connectedService:BlackDuck",
+      "label": "Black Duck Hub Service Endpoint",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Select the Black Duck end point to use. If needed, click on 'manage', and add a new Service Endpoint of type 'Black Duck Hub'"
+    },
+    {
+      "name": "DetectArguments",
+      "type": "multiLine",
+      "label": "Detect Arguments",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Any additional detect arguments.Note that detect will also pick up environment and build variables."
+    },
+    {
+      "name": "DetectVersion",
+      "type": "string",
+      "label": "Detect Version",
+      "defaultValue": "latest",
+      "required": true,
+      "helpMarkDown": "A specific version of the detect binary to use, defaults to latest."
+    },
+    {
+      "name": "DetectJarPath",
+      "type": "string",
+      "label": "Detect Jar Path",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "The location of the detect jar, or the location to download the detect jar to."
+    },
+    {
+      "name": "TemporaryFileLocation",
+      "type": "string",
+      "label": "Temporary File Location",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "The directory to use for temporary files, defaults to the TMP environment variable."
+    },
+    {
+      "name": "SkipJavaTest",
+      "type": "boolean",
+      "label": "Skip Java Test",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "By default detect will check that java exists, set this to true to skip this test."
+    },
+    {
+      "name": "HubAcceptSSLCertificate",
+      "type": "boolean",
+      "label": "Accept SSL Certificate",
+      "required": false,
+      "helpMarkDown": "If checked, the SSL certificate of the Hub server will be imported to the scan client"
+    }
+  ],
+  "execution": {
+    "PowerShell3": {
+      "target": "detect-task.ps1"
+    }
+  }
+}

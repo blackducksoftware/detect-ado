@@ -1,0 +1,117 @@
+{
+  "manifestVersion": 1,
+  "id": "detect-for-tfs",
+  "version": "0.0.2",
+  "name": "Black Duck Detect",
+  "publisher": "black-duck-software",
+  "public": true,
+  "targets": [
+    {
+      "id": "Microsoft.VisualStudio.Services"
+    }
+  ],
+  "tags": [
+    "Black Duck",
+    "Detect",
+    "Hub Detect",
+    "Continuous Integration",
+    "Security",
+    "Open Source",
+    "Hub",
+    "Build"
+  ],
+  "scopes": [
+    "vso.build_execute"
+  ],
+  "description": "Execute Black Duck Detect against your build",
+  "categories": [
+    "Build and release"
+  ],
+  "icons": {
+    "default": "images/bds_ducky.png"
+  },
+  "branding": {
+    "color": "#00639c",
+    "theme": "dark"
+  },
+  "files": [
+    {
+      "path": "tasks/detect-task"
+    },
+    {
+      "path": "images",
+      "addressable": true
+    },
+    {
+      "path": "node_modules/vss-web-extension-sdk/lib",
+      "addressable": true,
+      "packagePath": "lib"
+    }
+  ],
+  "content": {
+    "details": {
+      "path": "overview.md"
+    }
+  },
+  "links": {
+    "getstarted": {
+      "uri": "https://github.com/blackducksoftware/hub-tfs/wiki/Downloading-and-Installing-the-Hub-TFS-Plugin"
+    }
+  },
+  "contributions": [
+    {
+      "id": "hub.detect.task",
+      "type": "ms.vss-distributed-task.task",
+      "targets": [
+        "ms.vss-distributed-task.tasks"
+      ],
+      "properties": {
+        "name": "tasks/detect-task"
+      }
+    },
+    {
+      "id": "hub-endpoint",
+      "description": "Service Endpoint for Black Duck Hub connections",
+      "type": "ms.vss-endpoint.service-endpoint-type",
+      "targets": [
+        "ms.vss-endpoint.endpoint-types"
+      ],
+      "properties": {
+        "name": "blackduck",
+        "displayName": "Black Duck Hub",
+        "url": {
+          "displayName": "Server URL",
+          "helpText": "Provide the URL for your Black Duck Hub Server - please include the port if other than 80 (http) or 443 (https)"
+        },
+        "authenticationSchemes": [
+          {
+            "type": "ms.vss-endpoint.endpoint-auth-scheme-basic",
+            "inputDescriptors": [
+              {
+                "id": "username",
+                "name": "Username",
+                "description": "The username to access your Black Duck Hub instance",
+                "inputMode": "textbox",
+                "validation": {
+                  "isRequired": true,
+                  "dataType": "string"
+                }
+              },
+              {
+                "id": "password",
+                "name": "Password",
+                "description": "The password to access your Black Duck Hub instance",
+                "inputMode": "passwordbox",
+                "isConfidential": true,
+                "validation": {
+                  "isRequired": true,
+                  "dataType": "string"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
