@@ -35,14 +35,6 @@
       "helpMarkDown": "Any additional detect arguments.Note that detect will also pick up environment and build variables."
     },
     {
-      "name": "SuppressAdditionalArgumentLogs",
-      "type": "boolean",
-      "label": "Suppress Additional Argument Logs",
-      "defaultValue": "false",
-      "required": false,
-      "helpMarkDown": "By default detect will print the additional arguments provided above, set this to true to suppress those logs."
-    },
-    {
       "name": "GenerateRiskReport",
       "type": "boolean",
       "defaultValue": false,

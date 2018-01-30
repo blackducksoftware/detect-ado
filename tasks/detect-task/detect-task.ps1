@@ -28,7 +28,6 @@ $HubPassword = $ServiceEndpoint.auth.parameters.password
 
 $DetectAdditionalArguments = Get-VstsInput -Name DetectArguments -Default ""
 $GenerateRiskReport = Get-VstsInput -Name GenerateRiskReport -Default $false
-$SuppressAdditionalArgumentLogs = Get-VstsInput -Name SuppressAdditionalArgumentLogs -Default $false
 $GenerateTaskSummary = Get-VstsInput -Name GenerateRiskReport -Default $true
 
 $DetectVersion = Get-VstsInput -Name DetectArguments -Default "latest"
@@ -76,9 +75,7 @@ if ($GenerateRiskReport){
 #Ask our lib to parse the string into arguments
 $ParsedArguments = Get-ArgumentsFromString -ArgumentString $DetectAdditionalArguments
 foreach ($AdditionalArgument in $ParsedArguments){
-    if ($SuppressAdditionalArgumentLogs -eq $false){
-        Write-Host "Parsed additional argument: {0}" -f $AdditionalArgument
-    }
+    Write-Host "Parsed additional argument: {0}" -f $AdditionalArgument
     $DetectArguments.Add($AdditionalArgument);
 }
 
