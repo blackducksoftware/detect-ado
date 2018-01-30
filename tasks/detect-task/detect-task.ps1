@@ -37,8 +37,6 @@ $TemporaryFileLocation = Get-VstsInput -Name TemporaryFileLocation -Default ""
 
 $SkipJavaTest = Get-VstsInput -Name SkipJavaTest -Default 0
 
-$HubAcceptSSLCertificate = Get-VstsInput -Name HubAcceptSSLCertificate -Default $false
-
 #Derive Values
 
 if ($TemporaryFileLocation -eq ""){

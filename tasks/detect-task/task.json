@@ -79,13 +79,6 @@
       "defaultValue": "false",
       "required": false,
       "helpMarkDown": "By default detect will check that java exists, set this to true to skip this test."
-    },
-    {
-      "name": "HubAcceptSSLCertificate",
-      "type": "boolean",
-      "label": "Accept SSL Certificate",
-      "required": false,
-      "helpMarkDown": "If checked, the SSL certificate of the Hub server will be imported to the java key store"
     }
   ],
   "execution": {
