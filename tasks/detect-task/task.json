@@ -35,6 +35,28 @@
       "helpMarkDown": "Any additional detect arguments.Note that detect will also pick up environment and build variables."
     },
     {
+      "name": "SuppressAdditionalArgumentLogs",
+      "type": "boolean",
+      "label": "Suppress Additional Argument Logs",
+      "defaultValue": "false",
+      "required": false,
+      "helpMarkDown": "By default detect will print the additional arguments provided above, set this to true to suppress those logs."
+    },
+    {
+      "name": "GenerateRiskReport",
+      "type": "boolean",
+      "defaultValue": false,
+      "label": "Generate Black Duck Risk Report",
+      "required": false
+    },
+    {
+      "name": "GenerateTaskSummary",
+      "type": "boolean",
+      "defaultValue": true,
+      "label": "Add Detect Task Summary",
+      "required": false
+    },
+    {
       "name": "DetectVersion",
       "type": "string",
       "label": "Detect Version",
@@ -56,7 +78,7 @@
       "label": "Temporary File Location",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "The directory to use for temporary files, defaults to the TMP environment variable."
+      "helpMarkDown": "The directory to use for temporary files, by default it will use agent home directory and build number."
     },
     {
       "name": "SkipJavaTest",
@@ -71,7 +93,7 @@
       "type": "boolean",
       "label": "Accept SSL Certificate",
       "required": false,
-      "helpMarkDown": "If checked, the SSL certificate of the Hub server will be imported to the scan client"
+      "helpMarkDown": "If checked, the SSL certificate of the Hub server will be imported to the java key store"
     }
   ],
   "execution": {
