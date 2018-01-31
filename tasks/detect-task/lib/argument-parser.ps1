@@ -5,7 +5,7 @@ function Get-ArgumentsFromString($ArgumentString) {
     foreach ($character in $DetectAdditionalArguments.ToCharArray()){
         if ($State -eq "None"){
             if ($character -eq ' ' -or $character -eq "`n"){
-                if ($Current.Length -gt 0){ $Parsed.Add($Current); }
+                if ($Current.Length -gt 0){ $Parsed.Add($Current) | Out-Null; }
                 $Current = "";
             }elseif ($character -eq '"'){
                 $State = "EscapeQuote";
@@ -18,7 +18,7 @@ function Get-ArgumentsFromString($ArgumentString) {
         }elseif ($State -eq "EscapeQuote"){
             if ($character -eq '"'){
                 $State = "None";
-                if ($Current.Length -gt 0){ $Parsed.Add($Current); }
+                if ($Current.Length -gt 0){ $Parsed.Add($Current) | Out-Null; }
                 $Current = "";
             }else{
                 $Current += $character;
@@ -26,7 +26,7 @@ function Get-ArgumentsFromString($ArgumentString) {
         }elseif ($State -eq "EscapeSingle"){
             if ($character -eq "'"){
                 $State = "None";
-                if ($Current.Length -gt 0){ $Parsed.Add($Current); }
+                if ($Current.Length -gt 0){ $Parsed.Add($Current) | Out-Null; }
                 $Current = "";
             }else{
                 $Current += $character;
@@ -40,7 +40,7 @@ function Get-ArgumentsFromString($ArgumentString) {
     if ($Current.Length -gt 0){
         #Write-Host "Adding Current"
         #Write-Host $Current
-        $Parsed.Add($Current);
+        $Parsed.Add($Current) | Out-Null;
     }
 
     return $Parsed

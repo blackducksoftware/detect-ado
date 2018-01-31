@@ -1,5 +1,5 @@
 {
-  "id": "b396fde0-1aa2-11e6-a178-4b15f5ed2cab",
+  "id": "972a31f2-1222-4397-b9aa-78523de2a8c9",
   "name": "BlackDuckDetect",
   "friendlyName": "Black Duck Detect",
   "description": "Execute Black Duck Detect against your build",
@@ -13,7 +13,7 @@
   "version": {
     "Major": "0",
     "Minor": "0",
-    "Patch": "2"
+    "Patch": "16"
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "Execute Black Duck Detect against your build $(message)",
@@ -27,28 +27,6 @@
       "helpMarkDown": "Select the Black Duck end point to use. If needed, click on 'manage', and add a new Service Endpoint of type 'Black Duck Hub'"
     },
     {
-      "name": "DetectArguments",
-      "type": "multiLine",
-      "label": "Detect Arguments",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "Any additional detect arguments.Note that detect will also pick up environment and build variables."
-    },
-    {
-      "name": "GenerateRiskReport",
-      "type": "boolean",
-      "defaultValue": false,
-      "label": "Generate Black Duck Risk Report",
-      "required": false
-    },
-    {
-      "name": "GenerateTaskSummary",
-      "type": "boolean",
-      "defaultValue": true,
-      "label": "Add Detect Task Summary",
-      "required": false
-    },
-    {
       "name": "DetectVersion",
       "type": "string",
       "label": "Detect Version",
@@ -57,28 +35,28 @@
       "helpMarkDown": "A specific version of the detect binary to use, defaults to latest."
     },
     {
-      "name": "DetectJarPath",
-      "type": "string",
-      "label": "Detect Jar Path",
+      "name": "DetectArguments",
+      "type": "multiLine",
+      "label": "Detect Arguments",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "The location of the detect jar, or the location to download the detect jar to."
+      "helpMarkDown": "Any additional detect arguments. Newline or space to seperate. Use double quotes to escape. Detect will also pick up environment and build variables."
     },
     {
-      "name": "TemporaryFileLocation",
+      "name": "DetectFolder",
       "type": "string",
-      "label": "Temporary File Location",
+      "label": "Detect Folder",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "The directory to use for temporary files, by default it will use agent home directory and build number."
+      "helpMarkDown": "The location to download the detect jar or the location of an existing detect jar, defaults to system temp directory."
     },
     {
-      "name": "SkipJavaTest",
+      "name": "AddTaskSummary",
       "type": "boolean",
-      "label": "Skip Java Test",
-      "defaultValue": "false",
+      "defaultValue": true,
+      "label": "Add Detect Task Summary",
       "required": false,
-      "helpMarkDown": "By default detect will check that java exists, set this to true to skip this test."
+      "helpMarkDown": "If set to true, will add a summary of the detect task to the build summary tab."
     }
   ],
   "execution": {

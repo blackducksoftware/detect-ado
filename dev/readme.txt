@@ -21,3 +21,5 @@ Powershell Variables
 	DETECT_JAR_PATH
 	TMP
 	DETECT_SKIP_JAVA_TEST
+
+powershell uses DETECT_JAR_PATH, or it uses the supplied TMP folder, or it defaults to the HOME\tmp folder.
