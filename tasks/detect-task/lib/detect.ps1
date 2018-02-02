@@ -43,7 +43,7 @@ $DetectSkipJavaTest = Get-EnvironmentVariable -Key "DETECT_SKIP_JAVA_TEST" -Defa
 
 # If you do not want to exit with the detect exit code,
 # set DETECT_EXIT_CODE_PASSTHRU to 1 and this script won't exit, but simply return it (pass it thru).
-$EnvDetectExitCodePassthru = Get-EnvironmentVariable -Key "DETECT_EXIT_CODE_PASSTHRU" -DefaultValue "";
+$EnvDetectExitCodePassthru = "1"# Get-EnvironmentVariable -Key "DETECT_EXIT_CODE_PASSTHRU" -DefaultValue "";
 
 $Version = "0.5.0"
 
@@ -66,11 +66,14 @@ function Detect {
     Write-Host "Initializing detect folder."
     $DetectFolder = Initialize-DetectFolder -DetectFolder $EnvDetectFolder -TempFolder $EnvTempFolder -HomeTempFolder $EnvHomeTempFolder
 
+    Write-Host "Checking for proxy."
+    $ProxyInfo = Get-ProxyInfo
+
     Write-Host "Getting detect."
     if ($EnvDetectUseSnapshot -eq "1"){
-        $DetectJarFile = Get-DetectSnapshotJar -DetectFolder $DetectFolder -DetectVersion $EnvDetectDesiredVersion
+        $DetectJarFile = Get-DetectSnapshotJar -DetectFolder $DetectFolder -DetectVersion $EnvDetectDesiredVersion -ProxyInfo $ProxyInfo
     }else{
-        $DetectJarFile = Get-DetectJar -DetectFolder $DetectFolder -DetectVersion $EnvDetectDesiredVersion
+        $DetectJarFile = Get-DetectJar -DetectFolder $DetectFolder -DetectVersion $EnvDetectDesiredVersion -ProxyInfo $ProxyInfo
     }
 
     Write-Host "Executing detect."
@@ -84,7 +87,98 @@ function Detect {
     }
 }
 
-function Get-DetectSnapshotJar ($DetectFolder, $DetectVersion) {
+function Get-ProxyInfo () {
+    $ProxyInfoProperties = @{
+        'UseProxy'=$false
+        'UseCredentials'=$false
+        'Uri'=$null
+        'Credentials'=$null
+    }
+
+    try {
+
+        $ProxyHost = ${Env:blackduck.hub.proxy.host};
+        if ([string]::IsNullOrEmpty($ProxyHost)){
+            Write-Host "Skipping proxy, no host found."
+        }else{
+            Write-Host "Found proxy host."
+            $ProxyUrlBuilder = New-Object System.UriBuilder
+            $ProxyUrlBuilder.Host = $ProxyHost
+
+            $ProxyPort = ${Env:blackduck.hub.proxy.port};
+
+            if ([string]::IsNullOrEmpty($ProxyPort)){
+                Write-Host "No proxy port found."
+            }else{
+                Write-Host "Found proxy port."
+                $ProxyUrlBuilder.Port = $ProxyPort
+            }
+
+            $ProxyInfoProperties.UseProxy = $true
+            $ProxyInfoProperties.Uri = $ProxyUrlBuilder.Uri
+
+            #Handle credentials
+            $ProxyUsername = ${Env:blackduck.hub.proxy.username};
+            $ProxyPassword = ${Env:blackduck.hub.proxy.password};
+
+            if ([string]::IsNullOrEmpty($ProxyPassword) -or [string]::IsNullOrEmpty($ProxyUsername)){
+                Write-Host "No proxy credentials found."
+            }else{
+                Write-Host "Found proxy credentials."
+                $ProxySecurePassword = ConvertTo-SecureString $ProxyPassword -AsPlainText -Force
+                $ProxyCredentials = New-Object System.Management.Automation.PSCredential ($ProxyUsername, $ProxySecurePassword)
+
+                $ProxyInfoProperties.UseCredentials = $true;
+                $ProxyInfo.Credentials = $ProxyCredentials;
+            }
+
+            Write-Host "Succesfully setup proxy."
+        }
+
+    } catch [Exception] {
+        Write-Host ("An exception occured setting up the proxy, will continue but will not use a proxy.")
+        Write-Host ("  Reason: {0}" -f $_.Exception.GetType().FullName); 
+        Write-Host ("  Reason: {0}" -f $_.Exception.Message); 
+        Write-Host ("  Reason: {0}" -f $_.Exception.StackTrace); 
+
+        $ProxyInfoProperties = @{
+            'UseProxy'=$false
+        }
+    }
+
+    $ProxyInfo = New-Object –TypeName PSObject –Prop $ProxyInfoProperties
+
+    return $ProxyInfo;
+}
+
+function Invoke-WebRequestWrapper($Url, $ProxyInfo, $DownloadLocation = $null) {
+    #All uses of Invoke-WebRequest
+    #Invoke-WebRequest $DetectCommitUrl -UseBasicParsing
+    #Invoke-WebRequest $DetectVersionUrl -UseBasicParsing
+    #Invoke-WebRequest $DetectUrl -OutFile $DetectJarFile -UseBasicParsing
+
+    return Invoke-WebRequest $Url -UseBasicParsing -OutFile $DownloadLocation -Proxy $ProxyInfo.Uri -ProxyCredential $ProxyInfo.Credentials
+
+    if ($DownloadLocation -ne ""){
+        if ($ProxyInfo.UseProxy -eq $true -and $ProxyInfo.UseCredentials -eq $true){
+            return Invoke-WebRequest $Url -UseBasicParsing -OutFile $DownloadLocation -Proxy $ProxyInfo.Uri -ProxyCredential $ProxyInfo.Credentials
+        }elseif ($ProxyInfo.UseProxy -eq $true){
+            return Invoke-WebRequest $Url -UseBasicParsing -OutFile $DownloadLocation -Proxy $ProxyInfo.Uri
+        }else{
+            return Invoke-WebRequest $Url -UseBasicParsing -OutFile $DownloadLocation
+        }
+    }else{
+        if ($ProxyInfo.UseProxy -eq $true -and $ProxyInfo.UseCredentials -eq $true){
+            return Invoke-WebRequest $Url -UseBasicParsing -Proxy $ProxyInfo.Uri -ProxyCredential $ProxyInfo.Credentials
+        }elseif ($ProxyInfo.UseProxy -eq $true){
+            return Invoke-WebRequest $Url -UseBasicParsing -Proxy $ProxyInfo.Uri
+        }else{
+            return Invoke-WebRequest $Url -UseBasicParsing
+        }
+    }
+}
+
+function Get-DetectSnapshotJar ($DetectFolder, $DetectVersion, $ProxyInfo) {
     if ($DetectVersion -eq ""){
         $DetectVersion = "latest-SNAPSHOT"
     }
@@ -96,7 +190,7 @@ function Get-DetectSnapshotJar ($DetectFolder, $DetectVersion) {
 
     $DetectJarExists = Test-Path $DetectJarFile
     $DetectCurrentCommitFileExists = Test-Path $DetectCurrentCommitFile
-    $DetectLatestCommit = Invoke-WebRequest $DetectCommitUrl -UseBasicParsing
+    $DetectLatestCommit = Invoke-WebRequestWrapper -Url $DetectCommitUrl -ProxyInfo $ProxyInfo
     $DetectLatestCommit = $DetectLatestCommit.ToString().Trim()
     Write-Host "Detect jar exists '$DetectJarExists', commit file exists '$DetectCurrentCommitFileExists', latest commit '$DetectLatestCommit'"
 
@@ -112,7 +206,7 @@ function Get-DetectSnapshotJar ($DetectFolder, $DetectVersion) {
 
     if ($Download){
         $DetectUrl = Join-DetectUrl -DetectBaseUrl $DetectSnapshotBaseUrl -DetectVersion $DetectVersion
-        Receive-DetectJar -DetectUrl $DetectUrl -DetectJarFile $DetectJarFile
+        Receive-DetectJar -DetectUrl $DetectUrl -DetectJarFile $DetectJarFile -ProxyInfo $ProxyInfo
         Set-Content $DetectCurrentCommitFile $DetectLatestCommit
     }else{
         Write-Host "You have already downloaded the latest file, so the local file will be used."
@@ -121,9 +215,9 @@ function Get-DetectSnapshotJar ($DetectFolder, $DetectVersion) {
     return $DetectJarFile    
 }
 
-function Get-DetectJar ($DetectFolder, $DetectVersion) {
+function Get-DetectJar ($DetectFolder, $DetectVersion, $ProxyInfo) {
     if ($DetectVersion -eq ""){
-        $DetectVersion = Receive-DetectLatestVersion
+        $DetectVersion = Receive-DetectLatestVersion -ProxyInfo $ProxyInfo
     }
 
 	Write-Host "Using detect version $DetectVersion"
@@ -135,7 +229,7 @@ function Get-DetectJar ($DetectFolder, $DetectVersion) {
 
     if (!$DetectJarExists){
         $DetectUrl = Join-DetectUrl -DetectBaseUrl $DetectReleaseBaseUrl -DetectVersion $DetectVersion
-        Receive-DetectJar -DetectUrl $DetectUrl -DetectJarFile $DetectJarFile
+        Receive-DetectJar -DetectUrl $DetectUrl -DetectJarFile $DetectJarFile -ProxyInfo $ProxyInfo
     }else{
         Write-Host "You have already downloaded the latest file, so the local file will be used."
     }
@@ -181,17 +275,17 @@ function Initialize-Folder ($Folder) {
     return $Folder
 }
 
-function Receive-DetectLatestVersion {
+function Receive-DetectLatestVersion ($ProxyInfo) {
     Write-Host "Finding latest detect version."
-    $DetectVersion = Invoke-WebRequest $DetectVersionUrl -UseBasicParsing
+    $DetectVersion = Invoke-WebRequestWrapper -Url $DetectVersionUrl -ProxyInfo $ProxyInfo
     Write-Host "Resolved version $DetectVersion"
     return $DetectVersion
 }
 
-function Receive-DetectJar ($DetectUrl, $DetectJarFile) {
+function Receive-DetectJar ($DetectUrl, $DetectJarFile, $ProxyInfo) {
     Write-Host "You don't have detect. Downloading now."
     Write-Host "Using url $DetectUrl"
-    $Request = Invoke-WebRequest $DetectUrl -OutFile $DetectJarFile -UseBasicParsing
+    $Request = Invoke-WebRequestWrapper -Url $DetectUrl -DownloadLocation $DetectJarFile -ProxyInfo $ProxyInfo
     $DetectJarExists = Test-Path $DetectJarFile
     Write-Host "Downloaded detect jar successfully '$DetectJarExists'"
 }
