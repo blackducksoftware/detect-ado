@@ -47,7 +47,7 @@ lib.buildVsixAndRename = function (cb) {
                 return;
             }else{
                 result.finalVsixPath = newVsix;
-                cb(result);
+                cb(null, result);
             }
         });
     });
