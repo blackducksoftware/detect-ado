@@ -26,18 +26,6 @@ lib.buildVsix = function(cb) {
         var packageId = lib.extractStdOutValue("Extension ID: ", stdout);
         var packageVersion = lib.extractStdOutValue("Extension Version: ", stdout);
         
-        
-        lib.rename(vsixPath, packageId, packageVersion, function (err, newVsix){
-            if (err){
-                cb(error);
-            }else{
-                cb(null, {
-                    vsixPath: newVsix,
-                    packageId: packageId,
-                    packageVersion: packageVersion
-                });
-            }
-        });
     });
 }
 
