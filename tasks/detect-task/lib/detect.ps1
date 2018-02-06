@@ -44,7 +44,6 @@ $EnvHomeTempFolder = "$HOME\tmp"
 # heap size, you would set DETECT_JAVA_OPTS=-Xmx6G.
 #$DetectJavaOpts = Get-EnvironmentVariable -Key "DETECT_JAVA_OPTS" -DefaultValue "";
 
-
 $Version = "0.6.0"
 
 $DetectReleaseBaseUrl = "https://test-repo.blackducksoftware.com/artifactory/bds-integrations-release/com/blackducksoftware/integration/hub-detect"
@@ -207,6 +206,7 @@ function Get-DetectJar ($DetectFolder, $DetectVersion, $ProxyInfo) {
 }
 
 function Invoke-Detect ($DetectJarFile, $DetectArgs) {
+    ${Env:detect.phone.home.passthrough.powershell.version} = $Version
     $JavaArgs = @("-jar", $DetectJarFile)
     $AllArgs =  $JavaArgs + $DetectArgs
     Set-ToEscaped($AllArgs)

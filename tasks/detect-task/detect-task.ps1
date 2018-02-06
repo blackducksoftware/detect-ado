@@ -8,7 +8,7 @@ Import-Module $PSScriptRoot\lib\argument-parser.ps1
 
 ######################SETTINGS#######################
 
-$TaskVersion = "0.0.16"; #Automatically Updated
+$TaskVersion = "0.0.20"; #Automatically Updated
 Write-Host ("Detect for TFS Version {0}" -f $TaskVersion)
 
 #Support all TLS protocols. 
@@ -63,7 +63,7 @@ ${Env:blackduck.hub.password} = $HubPassword
 #Ask our lib to parse the string into arguments
 Write-Host "Parsing additional arguments"
 $DetectArguments = New-Object System.Collections.ArrayList
-$DetectArguments.Add(("detect.phone.home.passthrough.detect.for.tfs.version={0}" -f $TaskVersion)) | Out-Null
+$DetectArguments.Add(("--detect.phone.home.passthrough.detect.for.tfs.version={0}" -f $TaskVersion)) | Out-Null
 
 $ParsedArguments = Get-ArgumentsFromString -ArgumentString $DetectAdditionalArguments
 foreach ($AdditionalArgument in $ParsedArguments){
