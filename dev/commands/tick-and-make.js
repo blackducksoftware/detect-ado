@@ -20,7 +20,7 @@ versionSyncer.updateEmbeddedVersion(function(err, newVersion) {
 });
 
 
-maker.buildAndRenameVsix(function (err, result){
+maker.buildVsixAndRename(function (err, result){
     if (err){
         throw err;
     }else{
