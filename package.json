@@ -24,6 +24,7 @@
     "@types/jquery": "^2.0.34",
     "@types/q": "0.0.32",
     "request-promise": "^4.2.2",
+    "tfx-cli": "^0.3.49",
     "vss-web-extension-sdk": "^2.109.0"
   }
 }
