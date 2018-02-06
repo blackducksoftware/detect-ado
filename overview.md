@@ -42,12 +42,6 @@ Black Duck® KnowledgeBase™ (KB) is the world’s largest knowledge base of op
 
 ![vulnerability](images/vulnerability.png)
 
-## Black Duck Risk Report
-
-View your scanned project's bill of materials (BOM), along with the associated security risk and policy violations directly from the build output.
-
-![riskreport](images/riskreport.png)
-
 ## Documentation
 
 All documentation can be found at the base project: https://github.com/blackducksoftware/hub-tfs/wiki
