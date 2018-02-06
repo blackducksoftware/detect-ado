@@ -27,7 +27,7 @@ lib.buildVsix = function(cb) {
         var packageVersion = lib.extractStdOutValue("Extension Version: ", stdout);
         
           cb(null, {
-                     vsixPath: newVsix,
+                     vsixPath: vsixPath,
                      packageId: packageId,
                      packageVersion: packageVersion
           });
