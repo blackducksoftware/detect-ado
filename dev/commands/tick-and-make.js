@@ -1,6 +1,7 @@
 const maker = require('../library/make-vsix.js');
 const tickerVsts = require('../library/tick-vsts-patch-version.js');
 const tickerTask = require('../library/tick-task-patch-version.js');
+const versionSyncer = require('../library/sync-embedded-task-version.js');
 
 
 tickerTask.tickTask(function(err, newVersion) {
@@ -12,6 +13,12 @@ tickerVsts.tickVsts(function(err, newVersion) {
     if (err) throw err;
     console.log("Ticked VSTS to:" + newVersion);
 });
+
+versionSyncer.updateEmbeddedVersion(function(err, newVersion) {
+    if (err) throw err;
+    console.log("Updated embedded version:" + newVersion);
+});
+
 
 maker.buildVsix(function (err, result){
     if (err){
