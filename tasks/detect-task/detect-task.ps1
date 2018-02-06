@@ -8,6 +8,9 @@ Import-Module $PSScriptRoot\lib\argument-parser.ps1
 
 ######################SETTINGS#######################
 
+$TaskVersion = "0.0.16"; #Automatically Updated
+Write-Host ("Detect for TFS Version {0}" -f $TaskVersion)
+
 #Support all TLS protocols. 
 [Net.ServicePointManager]::SecurityProtocol = [System.Security.Authentication.SslProtocols] "tls, tls11, tls12"
 
@@ -16,6 +19,14 @@ Import-Module $PSScriptRoot\lib\argument-parser.ps1
 Write-Host "Getting inputs from VSTS."
 
 #Get Hub Information
+
+$Service = (Get-VstsInput -Name BlackDuckHubService -Require)
+$ServiceEndpoint = Get-VstsEndpoint -Name $Service
+$HubUrl = $ServiceEndpoint.Url
+$HubUsername = $ServiceEndpoint.auth.parameters.username
+$HubPassword = $ServiceEndpoint.auth.parameters.password
+
+#Get Proxy Information 
 
 $Service = (Get-VstsInput -Name BlackDuckHubService -Require)
 $ServiceEndpoint = Get-VstsEndpoint -Name $Service
@@ -52,6 +63,8 @@ ${Env:blackduck.hub.password} = $HubPassword
 #Ask our lib to parse the string into arguments
 Write-Host "Parsing additional arguments"
 $DetectArguments = New-Object System.Collections.ArrayList
+$DetectArguments.Add(("detect.phone.home.passthrough.detect.for.tfs.version={0}" -f $TaskVersion)) | Out-Null
+
 $ParsedArguments = Get-ArgumentsFromString -ArgumentString $DetectAdditionalArguments
 foreach ($AdditionalArgument in $ParsedArguments){
     Write-Host ("Parsed additional argument: {0}" -f $AdditionalArgument)

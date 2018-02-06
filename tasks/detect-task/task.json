@@ -13,18 +13,26 @@
   "version": {
     "Major": "0",
     "Minor": "0",
-    "Patch": "16"
+    "Patch": "20"
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "Execute Black Duck Detect against your build $(message)",
   "inputs": [
     {
       "name": "BlackDuckHubService",
-      "type": "connectedService:BlackDuck",
+      "type": "connectedService:BlackDuckHub",
       "label": "Black Duck Hub Service Endpoint",
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "Select the Black Duck end point to use. If needed, click on 'manage', and add a new Service Endpoint of type 'Black Duck Hub'"
+    },
+    {
+      "name": "BlackDuckHubProxyService",
+      "type": "connectedService:BlackDuckProxy",
+      "label": "Black Duck Hub Proxy Service Endpoint",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Select the Black Duck proxy to use. If needed, click on 'manage', and add a new Service Endpoint of type 'Black Duck Hub Proxy'"
     },
     {
       "name": "DetectVersion",

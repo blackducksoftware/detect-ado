@@ -16,6 +16,14 @@ $EnvDetectDesiredVersion = Get-EnvironmentVariable -Key "DETECT_LATEST_RELEASE_V
 # a new commit is added to the master branch.
 $EnvDetectUseSnapshot = Get-EnvironmentVariable -Key "DETECT_USE_SNAPSHOT" -DefaultValue "0";
 
+# If you want to skip the test for java
+# DETECT_SKIP_JAVA_TEST=1
+$DetectSkipJavaTest = Get-EnvironmentVariable -Key "DETECT_SKIP_JAVA_TEST" -DefaultValue "";
+
+# If you do not want to exit with the detect exit code,
+# set DETECT_EXIT_CODE_PASSTHRU to 1 and this script won't exit, but simply return it (pass it thru).
+$EnvDetectExitCodePassthru = Get-EnvironmentVariable -Key "DETECT_EXIT_CODE_PASSTHRU" -DefaultValue "";
+
 # To override the default location specify your own DETECT_JAR_PATH
 # Otherwise, if the environment temp folder is set, it will be used.
 # Otherwise, a temporary folder will be created in your home directory
@@ -23,7 +31,12 @@ $EnvDetectFolder = Get-EnvironmentVariable -Key "DETECT_JAR_PATH" -DefaultValue 
 $EnvTempFolder = Get-EnvironmentVariable -Key "TMP" -DefaultValue "";
 $EnvHomeTempFolder = "$HOME\tmp"
 
-#TODO: Mirror the functionality of the shell script and allow Java opts and GET (InvokeWebRequest?) opts.
+# If you want to pass proxy information, use detect environment variables such as 'blackduck.hub.proxy.host'
+# If you do pass the proxy information in this way, you do not need to supply it to detect as arguments. 
+# Note: This script will not pick up proxy information from the passed 'detect arguments'
+# Note: This script will not pick up proxy information passed to the bash script using 'DETECT_CURL_OPTS'
+
+#TODO: Mirror the functionality of the shell script and allow Java opts.
 
 # If you want to pass any java options to the
 # invocation, specify DETECT_JAVA_OPTS in your
@@ -31,21 +44,8 @@ $EnvHomeTempFolder = "$HOME\tmp"
 # heap size, you would set DETECT_JAVA_OPTS=-Xmx6G.
 #$DetectJavaOpts = Get-EnvironmentVariable -Key "DETECT_JAVA_OPTS" -DefaultValue "";
 
-# If you want to pass any additional options to
-# curl, specify DETECT_CURL_OPTS in your environment.
-# For example, to specify a proxy, you would set
-# DETECT_CURL_OPTS=--proxy http://myproxy:3128
-#$DetectGetOpts = Get-EnvironmentVariable -Key "DETECT_CURL_OPTS" -DefaultValue "";
 
-# If you want to skip the test for java
-# DETECT_SKIP_JAVA_TEST=1
-$DetectSkipJavaTest = Get-EnvironmentVariable -Key "DETECT_SKIP_JAVA_TEST" -DefaultValue "";
-
-# If you do not want to exit with the detect exit code,
-# set DETECT_EXIT_CODE_PASSTHRU to 1 and this script won't exit, but simply return it (pass it thru).
-$EnvDetectExitCodePassthru = "1"# Get-EnvironmentVariable -Key "DETECT_EXIT_CODE_PASSTHRU" -DefaultValue "";
-
-$Version = "0.5.0"
+$Version = "0.6.0"
 
 $DetectReleaseBaseUrl = "https://test-repo.blackducksoftware.com/artifactory/bds-integrations-release/com/blackducksoftware/integration/hub-detect"
 $DetectSnapshotBaseUrl = "https://test-repo.blackducksoftware.com/artifactory/bds-integrations-snapshot/com/blackducksoftware/integration/hub-detect"
@@ -89,8 +89,6 @@ function Detect {
 
 function Get-ProxyInfo () {
     $ProxyInfoProperties = @{
-        'UseProxy'=$false
-        'UseCredentials'=$false
         'Uri'=$null
         'Credentials'=$null
     }
@@ -114,7 +112,6 @@ function Get-ProxyInfo () {
                 $ProxyUrlBuilder.Port = $ProxyPort
             }
 
-            $ProxyInfoProperties.UseProxy = $true
             $ProxyInfoProperties.Uri = $ProxyUrlBuilder.Uri
 
             #Handle credentials
@@ -128,7 +125,6 @@ function Get-ProxyInfo () {
                 $ProxySecurePassword = ConvertTo-SecureString $ProxyPassword -AsPlainText -Force
                 $ProxyCredentials = New-Object System.Management.Automation.PSCredential ($ProxyUsername, $ProxySecurePassword)
 
-                $ProxyInfoProperties.UseCredentials = $true;
                 $ProxyInfo.Credentials = $ProxyCredentials;
             }
 
@@ -140,10 +136,6 @@ function Get-ProxyInfo () {
         Write-Host ("  Reason: {0}" -f $_.Exception.GetType().FullName); 
         Write-Host ("  Reason: {0}" -f $_.Exception.Message); 
         Write-Host ("  Reason: {0}" -f $_.Exception.StackTrace); 
-
-        $ProxyInfoProperties = @{
-            'UseProxy'=$false
-        }
     }
 
     $ProxyInfo = New-Object –TypeName PSObject –Prop $ProxyInfoProperties
@@ -152,30 +144,7 @@ function Get-ProxyInfo () {
 }
 
 function Invoke-WebRequestWrapper($Url, $ProxyInfo, $DownloadLocation = $null) {
-    #All uses of Invoke-WebRequest
-    #Invoke-WebRequest $DetectCommitUrl -UseBasicParsing
-    #Invoke-WebRequest $DetectVersionUrl -UseBasicParsing
-    #Invoke-WebRequest $DetectUrl -OutFile $DetectJarFile -UseBasicParsing
-
     return Invoke-WebRequest $Url -UseBasicParsing -OutFile $DownloadLocation -Proxy $ProxyInfo.Uri -ProxyCredential $ProxyInfo.Credentials
-
-    if ($DownloadLocation -ne ""){
-        if ($ProxyInfo.UseProxy -eq $true -and $ProxyInfo.UseCredentials -eq $true){
-            return Invoke-WebRequest $Url -UseBasicParsing -OutFile $DownloadLocation -Proxy $ProxyInfo.Uri -ProxyCredential $ProxyInfo.Credentials
-        }elseif ($ProxyInfo.UseProxy -eq $true){
-            return Invoke-WebRequest $Url -UseBasicParsing -OutFile $DownloadLocation -Proxy $ProxyInfo.Uri
-        }else{
-            return Invoke-WebRequest $Url -UseBasicParsing -OutFile $DownloadLocation
-        }
-    }else{
-        if ($ProxyInfo.UseProxy -eq $true -and $ProxyInfo.UseCredentials -eq $true){
-            return Invoke-WebRequest $Url -UseBasicParsing -Proxy $ProxyInfo.Uri -ProxyCredential $ProxyInfo.Credentials
-        }elseif ($ProxyInfo.UseProxy -eq $true){
-            return Invoke-WebRequest $Url -UseBasicParsing -Proxy $ProxyInfo.Uri
-        }else{
-            return Invoke-WebRequest $Url -UseBasicParsing
-        }
-    }
 }
 
 function Get-DetectSnapshotJar ($DetectFolder, $DetectVersion, $ProxyInfo) {

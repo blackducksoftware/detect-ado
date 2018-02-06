@@ -1,7 +1,7 @@
 {
   "manifestVersion": 1,
   "id": "detect-for-tfs",
-  "version": "0.0.16",
+  "version": "0.0.20",
   "name": "Black Duck Detect",
   "publisher": "black-duck-software",
   "public": true,
@@ -70,14 +70,14 @@
       }
     },
     {
-      "id": "hub-endpoint",
+      "id": "blackduck-hub-endpoint",
       "description": "Service Endpoint for Black Duck Hub connections",
       "type": "ms.vss-endpoint.service-endpoint-type",
       "targets": [
         "ms.vss-endpoint.endpoint-types"
       ],
       "properties": {
-        "name": "blackduck",
+        "name": "blackduckhub",
         "displayName": "Black Duck Hub",
         "url": {
           "displayName": "Server URL",
@@ -105,6 +105,50 @@
                 "isConfidential": true,
                 "validation": {
                   "isRequired": true,
+                  "dataType": "string"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "blackduck-hub-proxy-endpoint",
+      "description": "Proxy Service Endpoint for Black Duck Hub connections",
+      "type": "ms.vss-endpoint.service-endpoint-type",
+      "targets": [
+        "ms.vss-endpoint.endpoint-types"
+      ],
+      "properties": {
+        "name": "blackduckproxy",
+        "displayName": "Black Duck Hub Proxy",
+        "url": {
+          "displayName": "Server URL",
+          "helpText": "Provide the URL for your proxy - please include the port if other than 80 (http) or 443 (https)"
+        },
+        "authenticationSchemes": [
+          {
+            "type": "ms.vss-endpoint.endpoint-auth-scheme-basic",
+            "inputDescriptors": [
+              {
+                "id": "username",
+                "name": "Username",
+                "description": "The username for this proxy",
+                "inputMode": "textbox",
+                "validation": {
+                  "isRequired": false,
+                  "dataType": "string"
+                }
+              },
+              {
+                "id": "password",
+                "name": "Password",
+                "description": "The password for this proxy",
+                "inputMode": "passwordbox",
+                "isConfidential": true,
+                "validation": {
+                  "isRequired": false,
                   "dataType": "string"
                 }
               }
