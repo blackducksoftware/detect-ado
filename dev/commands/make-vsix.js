@@ -5,7 +5,5 @@ maker.buildVsix(function (err, result){
         throw err;
     }else{
         console.log("Built!")
-        console.log(`Id: ${result.packageId}`)
-        console.log(`Version: ${result.packageVersion}`)
     }
 });
