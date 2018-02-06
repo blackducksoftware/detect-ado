@@ -35,6 +35,24 @@ lib.buildVsix = function(cb) {
     });
 }
 
+lib.buildVsixAndRename = function (cb) {
+    lib.buildVsix(function (error, result){
+        if (error) {
+            cb(error);
+            return;
+        }
+        lib.rename(result.vsixPath, result.packageId, result.packageVersion, function (err, newVsix){
+            if (err){
+                cb(err);
+                return;
+            }else{
+                result.finalVsix = newVsix;
+                cb(result);
+            }
+        });
+    });
+}
+
 lib.rename = function (vsixPath, packageId, packageVersion, cb) {
     var newName = `${packageId}.${packageVersion}.vsix`;
     var newPath = `bin/${newName}`;
