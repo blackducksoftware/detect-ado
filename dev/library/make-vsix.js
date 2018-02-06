@@ -46,7 +46,7 @@ lib.buildVsixAndRename = function (cb) {
                 cb(err);
                 return;
             }else{
-                result.finalVsix = newVsix;
+                result.finalVsixPath = newVsix;
                 cb(result);
             }
         });
