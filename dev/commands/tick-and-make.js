@@ -26,6 +26,7 @@ maker.buildAndRenameVsix(function (err, result){
     }else{
         console.log("Built!")
         console.log(`Vsix: ${result.vsixPath}`)
+        console.log(`Vsix: ${result.finalVsixPath}`)
         console.log(`Id: ${result.packageId}`)
         console.log(`Version: ${result.packageVersion}`)
     }
