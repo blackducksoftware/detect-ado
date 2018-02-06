@@ -20,7 +20,7 @@ versionSyncer.updateEmbeddedVersion(function(err, newVersion) {
 });
 
 
-maker.buildVsix(function (err, result){
+maker.buildAndRenameVsix(function (err, result){
     if (err){
         throw err;
     }else{
@@ -30,3 +30,4 @@ maker.buildVsix(function (err, result){
         console.log(`Version: ${result.packageVersion}`)
     }
 });
+
