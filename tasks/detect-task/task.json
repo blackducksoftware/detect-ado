@@ -16,7 +16,7 @@
     "Patch": "21"
   },
   "minimumAgentVersion": "1.95.0",
-  "instanceNameFormat": "Execute Black Duck Detect against your build $(message)",
+  "instanceNameFormat": "Run Black Duck Detect for your build $(message)",
   "inputs": [
     {
       "name": "BlackDuckHubService",
