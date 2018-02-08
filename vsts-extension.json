@@ -22,7 +22,7 @@
   "scopes": [
     "vso.build_execute"
   ],
-  "description": "Run Black Duck Detect against your build",
+  "description": "Run Black Duck Detect for your build",
   "categories": [
     "Build and release"
   ],
