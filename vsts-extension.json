@@ -13,7 +13,6 @@
   "tags": [
     "Black Duck",
     "Detect",
-    "Hub Detect",
     "Continuous Integration",
     "Security",
     "Open Source",
@@ -23,7 +22,7 @@
   "scopes": [
     "vso.build_execute"
   ],
-  "description": "Execute Black Duck Detect against your build",
+  "description": "Run Black Duck Detect against your build",
   "categories": [
     "Build and release"
   ],
