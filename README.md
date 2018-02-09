@@ -8,7 +8,7 @@ Detect for TFS plugin.
 
 
 ## Where can I get the latest release? ##
-You can download the latest release from Maven Central.
+Releases are available from GitHub release page: https://github.com/blackducksoftware/detect-for-tfs/releases
 
 ## Documentation ##
 Coming soon.
