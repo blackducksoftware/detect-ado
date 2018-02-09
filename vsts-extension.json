@@ -1,7 +1,7 @@
 {
   "manifestVersion": 1,
   "id": "detect-for-tfs",
-  "version": "0.0.21",
+  "version": "1.0.0",
   "name": "Black Duck Detect",
   "publisher": "black-duck-software",
   "public": true,

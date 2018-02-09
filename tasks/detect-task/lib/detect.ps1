@@ -56,7 +56,7 @@ $DetectVersionUrl = "https://test-repo.blackducksoftware.com/artifactory/api/sea
 function Detect {
     Write-Host "Detect Powershell Script $Version"
     
-    if ($DetectSkipJavaTest -eq ""){
+    if ($DetectSkipJavaTest -ne "1"){
     	Test-JavaExists
     }else{
    		Write-Host "Skipping java test."
