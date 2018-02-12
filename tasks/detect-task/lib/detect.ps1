@@ -18,7 +18,7 @@ $EnvDetectUseSnapshot = Get-EnvironmentVariable -Key "DETECT_USE_SNAPSHOT" -Defa
 
 # If you want to skip the test for java
 # DETECT_SKIP_JAVA_TEST=1
-$DetectSkipJavaTest = Get-EnvironmentVariable -Key "DETECT_SKIP_JAVA_TEST" -DefaultValue "";
+$EnvDetectSkipJavaTest = Get-EnvironmentVariable -Key "DETECT_SKIP_JAVA_TEST" -DefaultValue "";
 
 # If you do not want to exit with the detect exit code,
 # set DETECT_EXIT_CODE_PASSTHRU to 1 and this script won't exit, but simply return it (pass it thru).
@@ -44,7 +44,7 @@ $EnvHomeTempFolder = "$HOME\tmp"
 # heap size, you would set DETECT_JAVA_OPTS=-Xmx6G.
 #$DetectJavaOpts = Get-EnvironmentVariable -Key "DETECT_JAVA_OPTS" -DefaultValue "";
 
-$Version = "0.6.0"
+$Version = "0.6.2"
 
 $DetectReleaseBaseUrl = "https://test-repo.blackducksoftware.com/artifactory/bds-integrations-release/com/blackducksoftware/integration/hub-detect"
 $DetectSnapshotBaseUrl = "https://test-repo.blackducksoftware.com/artifactory/bds-integrations-snapshot/com/blackducksoftware/integration/hub-detect"
@@ -56,7 +56,7 @@ $DetectVersionUrl = "https://test-repo.blackducksoftware.com/artifactory/api/sea
 function Detect {
     Write-Host "Detect Powershell Script $Version"
     
-    if ($DetectSkipJavaTest -ne "1"){
+    if ($EnvDetectSkipJavaTest -ne "1"){
     	Test-JavaExists
     }else{
    		Write-Host "Skipping java test."
@@ -124,7 +124,7 @@ function Get-ProxyInfo () {
                 $ProxySecurePassword = ConvertTo-SecureString $ProxyPassword -AsPlainText -Force
                 $ProxyCredentials = New-Object System.Management.Automation.PSCredential ($ProxyUsername, $ProxySecurePassword)
 
-                $ProxyInfo.Credentials = $ProxyCredentials;
+                $ProxyInfoProperties.Credentials = $ProxyCredentials;
             }
 
             Write-Host "Succesfully setup proxy."
@@ -137,7 +137,7 @@ function Get-ProxyInfo () {
         Write-Host ("  Reason: {0}" -f $_.Exception.StackTrace); 
     }
 
-    $ProxyInfo = New-Object –TypeName PSObject –Prop $ProxyInfoProperties
+    $ProxyInfo = New-Object -TypeName PSObject -Prop $ProxyInfoProperties
 
     return $ProxyInfo;
 }
@@ -206,7 +206,7 @@ function Get-DetectJar ($DetectFolder, $DetectVersion, $ProxyInfo) {
 }
 
 function Invoke-Detect ($DetectJarFile, $DetectArgs) {
-    ${Env:detect.phone.home.passthrough.powershell.version} = $Version
+	${Env:detect.phone.home.passthrough.powershell.version} = $Version
     $JavaArgs = @("-jar", $DetectJarFile)
     $AllArgs =  $JavaArgs + $DetectArgs
     Set-ToEscaped($AllArgs)
