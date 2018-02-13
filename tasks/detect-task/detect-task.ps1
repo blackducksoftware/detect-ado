@@ -8,7 +8,7 @@ Import-Module $PSScriptRoot\lib\argument-parser.ps1
 
 ######################SETTINGS#######################
 
-$TaskVersion = "1.0.2"; #Automatically Updated
+$TaskVersion = "1.1.11"; #Automatically Updated
 Write-Host ("Detect for TFS Version {0}" -f $TaskVersion)
 
 #Support all TLS protocols. 
@@ -28,21 +28,34 @@ $HubPassword = $ServiceEndpoint.auth.parameters.password
 
 #Get Proxy Information 
 
-$ProxyService = (Get-VstsInput -Name BlackDuckHubProxyService -Require)
-$ProxyServiceEndpoint = Get-VstsEndpoint -Name $ProxyService
-$ProxyUrl = $ProxyServiceEndpoint.Url
-$ProxyUsername = $ProxyServiceEndpoint.auth.parameters.username
-$ProxyPassword = $ProxyServiceEndpoint.auth.parameters.password
-
-$ProxyServiceEndpoint.Url | Get-Member
+$ProxyService = (Get-VstsInput -Name BlackDuckHubProxyService -Default "")
+$UseProxy = $false;
+if ([string]::IsNullOrEmpty($ProxyService)){
+    Write-Host ("No proxy service selected.");
+}else{
+    Write-Host ("Found proxy service.");
+    $UseProxy = $true;
+    $ProxyServiceEndpoint = Get-VstsEndpoint -Name $ProxyService
+    $ProxyUrl = $ProxyServiceEndpoint.Url
+    $ProxyServiceEndpoint.Url | Get-Member
+    $ProxyUsername = $ProxyServiceEndpoint.auth.parameters.username
+    $ProxyPassword = $ProxyServiceEndpoint.auth.parameters.password
+}
 
 #Get Artifactory Information 
 
-$ArtifactoryService = (Get-VstsInput -Name BlackDuckArtifactoryService -Require)
-$ArtifactoryServiceEndpoint = Get-VstsEndpoint -Name $ArtifactoryService
-$ArtifactoryUrl = $ArtifactoryServiceEndpoint.Url
-$ArtifactoryUsername = $ArtifactoryServiceEndpoint.auth.parameters.username
-$ArtifactoryPassword = $ArtifactoryServiceEndpoint.auth.parameters.password
+$ArtifactoryService = (Get-VstsInput -Name BlackDuckArtifactoryService -Default "")
+$UseArtifactory = $false;
+if ([string]::IsNullOrEmpty($ArtifactoryService)){
+    Write-Host ("No artifactory service selected.");
+}else{
+    Write-Host ("Found artifactory service.");
+    $UseArtifactory = $true;
+    $ArtifactoryServiceEndpoint = Get-VstsEndpoint -Name $ArtifactoryService
+    $ArtifactoryUrl = $ArtifactoryServiceEndpoint.Url
+    $ArtifactoryUsername = $ArtifactoryServiceEndpoint.auth.parameters.username
+    $ArtifactoryPassword = $ArtifactoryServiceEndpoint.auth.parameters.password
+}
 
 #Get Other Input
 
@@ -64,9 +77,11 @@ $Env:DETECT_EXIT_CODE_PASSTHRU = "1" #Prevent detect from exiting the session.
 $Env:DETECT_JAR_PATH = $DetectFolder
 $Env:DETECT_LATEST_RELEASE_VERSION = $DetectVersion
 
-${Env:DETECT_ARTIFACTORY_BASE_URL} = $ArtifactoryUrl
-${Env:DETECT_ARTIFACTORY_USERNAME} = $ArtifactoryUsername
-${Env:DETECT_ARTIFACTORY_PASSWORD} = $ArtifactoryPassword
+if ($UseArtifactory -eq $true){
+    $Env:DETECT_ARTIFACTORY_BASE_URL = $ArtifactoryUrl
+    $Env:DETECT_ARTIFACTORY_USERNAME = $ArtifactoryUsername
+    $Env:DETECT_ARTIFACTORY_PASSWORD = $ArtifactoryPassword
+}
 
 Write-Host "Setting detect hub parameters"
 #We don't want to pass these to the powershell script as arguments or they will get printed.
@@ -74,10 +89,17 @@ ${Env:blackduck.hub.url} = $HubUrl
 ${Env:blackduck.hub.username} = $HubUsername
 ${Env:blackduck.hub.password} = $HubPassword
 
-#${Env:blackduck.hub.proxy.host} = $HubUrl
-#${Env:blackduck.hub.proxy.port} = $HubUsername
-#${Env:blackduck.hub.proxy.password} = $HubPassword
-#${Env:blackduck.hub.proxy.username} = $HubPassword
+if ($UseProxy -eq $true){
+    $ProxyUri = [System.Uri] $ProxyUrl
+    $ProxyHost = ("{0}://{1}" -f $ProxyUri.Scheme, $ProxyUri.Host)
+    $ProxyPort = $ProxyUri.Port
+    Write-Host ("Parsed Proxy Host: {0}" -f $ProxyHost)
+    Write-Host ("Parsed Proxy Port: {0}" -f $ProxyPort)
+    ${Env:blackduck.hub.proxy.host} = $ProxyHost
+    ${Env:blackduck.hub.proxy.port} = $ProxyPort
+    ${Env:blackduck.hub.proxy.password} = $ProxyUsername
+    ${Env:blackduck.hub.proxy.username} = $ProxyPassword
+}
 
 ${Env:detect.phone.home.passthrough.detect.for.tfs.version} = $TaskVersion
 

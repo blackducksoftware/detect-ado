@@ -154,7 +154,7 @@ function Get-ArtifactoryHeaders ($ArtifactoryUsername, $ArtifactoryPassword) {
 
     try {
         if ([string]::IsNullOrEmpty($ArtifactoryUsername) -or [string]::IsNullOrEmpty($ArtifactoryPassword)){
-            Write-Host "No artifactory credentials found."
+            Write-Host "Skipping artifactory headers, no credentials found."
         }else{
             Write-Host "Found artifactory credentials."
             $ArtifactoryBasicCredentials = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $ArtifactoryUsername, $ArtifactoryPassword)))
