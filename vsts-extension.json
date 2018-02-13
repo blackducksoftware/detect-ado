@@ -1,7 +1,7 @@
 {
   "manifestVersion": 1,
   "id": "detect-for-tfs",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "name": "Black Duck Detect",
   "publisher": "black-duck-software",
   "public": true,
@@ -144,6 +144,50 @@
                 "id": "password",
                 "name": "Password",
                 "description": "The password for this proxy",
+                "inputMode": "passwordbox",
+                "isConfidential": true,
+                "validation": {
+                  "isRequired": false,
+                  "dataType": "string"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "blackduck-artifactory-endpoint",
+      "description": "Artifactory Service Endpoint for Black Duck artifactory connections",
+      "type": "ms.vss-endpoint.service-endpoint-type",
+      "targets": [
+        "ms.vss-endpoint.endpoint-types"
+      ],
+      "properties": {
+        "name": "blackduckartifactory",
+        "displayName": "Black Duck Artifactory",
+        "url": {
+          "displayName": "Server URL",
+          "helpText": "Provide the URL for your artifactory - please include the port if other than 80 (http) or 443 (https)"
+        },
+        "authenticationSchemes": [
+          {
+            "type": "ms.vss-endpoint.endpoint-auth-scheme-basic",
+            "inputDescriptors": [
+              {
+                "id": "username",
+                "name": "Username",
+                "description": "The username for this artifactory",
+                "inputMode": "textbox",
+                "validation": {
+                  "isRequired": false,
+                  "dataType": "string"
+                }
+              },
+              {
+                "id": "password",
+                "name": "Password",
+                "description": "The password for this artifactory",
                 "inputMode": "passwordbox",
                 "isConfidential": true,
                 "validation": {

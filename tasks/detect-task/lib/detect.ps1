@@ -31,10 +31,21 @@ $EnvDetectFolder = Get-EnvironmentVariable -Key "DETECT_JAR_PATH" -DefaultValue 
 $EnvTempFolder = Get-EnvironmentVariable -Key "TMP" -DefaultValue "";
 $EnvHomeTempFolder = "$HOME\tmp"
 
+# To override the base artifactory url provide the base url here
+$EnvArtifactoryBaseUrl = Get-EnvironmentVariable -Key "DETECT_ARTIFACTORY_BASE_URL" -DefaultValue "https://test-repo.blackducksoftware.com/artifactory";
+
+# To provide artifactory credentials, provide the username and password
+$EnvArtifactoryUsername = Get-EnvironmentVariable -Key "DETECT_ARTIFACTORY_USERNAME" -DefaultValue "";
+$EnvArtifactoryPassword = Get-EnvironmentVariable -Key "DETECT_ARTIFACTORY_PASSWORD" -DefaultValue "";
+
 # If you want to pass proxy information, use detect environment variables such as 'blackduck.hub.proxy.host'
 # If you do pass the proxy information in this way, you do not need to supply it to detect as arguments. 
 # Note: This script will not pick up proxy information from the passed 'detect arguments'
 # Note: This script will not pick up proxy information passed to the bash script using 'DETECT_CURL_OPTS'
+$EnvProxyHost = Get-EnvironmentVariable -Key "blackduck.hub.proxy.host" -DefaultValue "";
+$EnvProxyPort = Get-EnvironmentVariable -Key "blackduck.hub.proxy.port" -DefaultValue "";
+$EnvProxyUsername = Get-EnvironmentVariable -Key "blackduck.hub.proxy.username" -DefaultValue "";
+$EnvProxyPassword = Get-EnvironmentVariable -Key "blackduck.hub.proxy.password" -DefaultValue "";
 
 #TODO: Mirror the functionality of the shell script and allow Java opts.
 
@@ -44,12 +55,12 @@ $EnvHomeTempFolder = "$HOME\tmp"
 # heap size, you would set DETECT_JAVA_OPTS=-Xmx6G.
 #$DetectJavaOpts = Get-EnvironmentVariable -Key "DETECT_JAVA_OPTS" -DefaultValue "";
 
-$Version = "0.6.2"
+$Version = "0.7.0"
 
-$DetectReleaseBaseUrl = "https://test-repo.blackducksoftware.com/artifactory/bds-integrations-release/com/blackducksoftware/integration/hub-detect"
-$DetectSnapshotBaseUrl = "https://test-repo.blackducksoftware.com/artifactory/bds-integrations-snapshot/com/blackducksoftware/integration/hub-detect"
+$DetectReleaseBaseUrl = "$EnvArtifactoryBaseUrl/bds-integrations-release/com/blackducksoftware/integration/hub-detect"
+$DetectSnapshotBaseUrl = "$EnvArtifactoryBaseUrl/bds-integrations-snapshot/com/blackducksoftware/integration/hub-detect"
+$DetectVersionUrl = "$EnvArtifactoryBaseUrl/api/search/latestVersion?g=com.blackducksoftware.integration&a=hub-detect&repos=bds-integrations-release"
 $DetectCommitUrl = "https://blackducksoftware.github.io/hub-detect/latest-commit-id.txt"
-$DetectVersionUrl = "https://test-repo.blackducksoftware.com/artifactory/api/search/latestVersion?g=com.blackducksoftware.integration&a=hub-detect&repos=bds-integrations-release"
 
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 #Enable TLS2
 
@@ -66,13 +77,16 @@ function Detect {
     $DetectFolder = Initialize-DetectFolder -DetectFolder $EnvDetectFolder -TempFolder $EnvTempFolder -HomeTempFolder $EnvHomeTempFolder
 
     Write-Host "Checking for proxy."
-    $ProxyInfo = Get-ProxyInfo
+    $ProxyInfo = Get-ProxyInfo -ProxyHost $EnvProxyHost -ProxyUsername $EnvProxyUsername -ProxyPassword $EnvProxyPassword -ProxyPort $EnvProxyPort
+
+    Write-Host "Checking for artifactory credentials"
+    $ArtifactoryHeaders = Get-ArtifactoryHeaders -ArtifactoryUsername $EnvArtifactoryUsername -ArtifactoryPassword $EnvArtifactoryPassword
 
     Write-Host "Getting detect."
     if ($EnvDetectUseSnapshot -eq "1"){
-        $DetectJarFile = Get-DetectSnapshotJar -DetectFolder $DetectFolder -DetectVersion $EnvDetectDesiredVersion -ProxyInfo $ProxyInfo
+        $DetectJarFile = Get-DetectSnapshotJar -DetectFolder $DetectFolder -DetectVersion $EnvDetectDesiredVersion -ProxyInfo $ProxyInfo -ArtifactoryHeaders $ArtifactoryHeaders
     }else{
-        $DetectJarFile = Get-DetectJar -DetectFolder $DetectFolder -DetectVersion $EnvDetectDesiredVersion -ProxyInfo $ProxyInfo
+        $DetectJarFile = Get-DetectJar -DetectFolder $DetectFolder -DetectVersion $EnvDetectDesiredVersion -ProxyInfo $ProxyInfo -ArtifactoryHeaders $ArtifactoryHeaders
     }
 
     Write-Host "Executing detect."
@@ -86,7 +100,7 @@ function Detect {
     }
 }
 
-function Get-ProxyInfo () {
+function Get-ProxyInfo ($ProxyHost, $ProxyPort, $ProxyUsername, $ProxyPassword) {
     $ProxyInfoProperties = @{
         'Uri'=$null
         'Credentials'=$null
@@ -94,15 +108,12 @@ function Get-ProxyInfo () {
 
     try {
 
-        $ProxyHost = ${Env:blackduck.hub.proxy.host};
         if ([string]::IsNullOrEmpty($ProxyHost)){
             Write-Host "Skipping proxy, no host found."
         }else{
             Write-Host "Found proxy host."
             $ProxyUrlBuilder = New-Object System.UriBuilder
             $ProxyUrlBuilder.Host = $ProxyHost
-
-            $ProxyPort = ${Env:blackduck.hub.proxy.port};
 
             if ([string]::IsNullOrEmpty($ProxyPort)){
                 Write-Host "No proxy port found."
@@ -112,10 +123,6 @@ function Get-ProxyInfo () {
             }
 
             $ProxyInfoProperties.Uri = $ProxyUrlBuilder.Uri
-
-            #Handle credentials
-            $ProxyUsername = ${Env:blackduck.hub.proxy.username};
-            $ProxyPassword = ${Env:blackduck.hub.proxy.password};
 
             if ([string]::IsNullOrEmpty($ProxyPassword) -or [string]::IsNullOrEmpty($ProxyUsername)){
                 Write-Host "No proxy credentials found."
@@ -142,11 +149,33 @@ function Get-ProxyInfo () {
     return $ProxyInfo;
 }
 
-function Invoke-WebRequestWrapper($Url, $ProxyInfo, $DownloadLocation = $null) {
-    return Invoke-WebRequest $Url -UseBasicParsing -OutFile $DownloadLocation -Proxy $ProxyInfo.Uri -ProxyCredential $ProxyInfo.Credentials
+function Get-ArtifactoryHeaders ($ArtifactoryUsername, $ArtifactoryPassword) {
+    $ArtifactoryHeaders = $null;
+
+    try {
+        if ([string]::IsNullOrEmpty($ArtifactoryUsername) -or [string]::IsNullOrEmpty($ArtifactoryPassword)){
+            Write-Host "No artifactory credentials found."
+        }else{
+            Write-Host "Found artifactory credentials."
+            $ArtifactoryBasicCredentials = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $ArtifactoryUsername, $ArtifactoryPassword)))
+            $ArtifactoryHeaders = @{"Authorization"="Basic $ArtifactoryBasicCredentials"}
+        }
+    } catch [Exception] {
+        Write-Host ("An exception occured setting up the artifactory headers, will continue but will not use artifactory headers.")
+        Write-Host ("  Reason: {0}" -f $_.Exception.GetType().FullName); 
+        Write-Host ("  Reason: {0}" -f $_.Exception.Message); 
+        Write-Host ("  Reason: {0}" -f $_.Exception.StackTrace); 
+    }
+
+    return $ArtifactoryHeaders;
 }
 
-function Get-DetectSnapshotJar ($DetectFolder, $DetectVersion, $ProxyInfo) {
+
+function Invoke-WebRequestWrapper($Url, $ProxyInfo, $DownloadLocation = $null, $Headers = $null) {
+    return Invoke-WebRequest $Url -UseBasicParsing -OutFile $DownloadLocation -Proxy $ProxyInfo.Uri -ProxyCredential $ProxyInfo.Credentials -Headers $Headers
+}
+
+function Get-DetectSnapshotJar ($DetectFolder, $DetectVersion, $ProxyInfo, $ArtifactoryHeaders) {
     if ($DetectVersion -eq ""){
         $DetectVersion = "latest-SNAPSHOT"
     }
@@ -174,7 +203,7 @@ function Get-DetectSnapshotJar ($DetectFolder, $DetectVersion, $ProxyInfo) {
 
     if ($Download){
         $DetectUrl = Join-DetectUrl -DetectBaseUrl $DetectSnapshotBaseUrl -DetectVersion $DetectVersion
-        Receive-DetectJar -DetectUrl $DetectUrl -DetectJarFile $DetectJarFile -ProxyInfo $ProxyInfo
+        Receive-DetectJar -DetectUrl $DetectUrl -DetectJarFile $DetectJarFile -ProxyInfo $ProxyInfo -ArtifactoryHeaders $ArtifactoryHeaders
         Set-Content $DetectCurrentCommitFile $DetectLatestCommit
     }else{
         Write-Host "You have already downloaded the latest file, so the local file will be used."
@@ -183,9 +212,9 @@ function Get-DetectSnapshotJar ($DetectFolder, $DetectVersion, $ProxyInfo) {
     return $DetectJarFile    
 }
 
-function Get-DetectJar ($DetectFolder, $DetectVersion, $ProxyInfo) {
+function Get-DetectJar ($DetectFolder, $DetectVersion, $ProxyInfo, $ArtifactoryHeaders) {
     if ($DetectVersion -eq ""){
-        $DetectVersion = Receive-DetectLatestVersion -ProxyInfo $ProxyInfo
+        $DetectVersion = Receive-DetectLatestVersion -ProxyInfo $ProxyInfo -ArtifactoryHeaders $ArtifactoryHeaders
     }
 
 	Write-Host "Using detect version $DetectVersion"
@@ -197,7 +226,7 @@ function Get-DetectJar ($DetectFolder, $DetectVersion, $ProxyInfo) {
 
     if (!$DetectJarExists){
         $DetectUrl = Join-DetectUrl -DetectBaseUrl $DetectReleaseBaseUrl -DetectVersion $DetectVersion
-        Receive-DetectJar -DetectUrl $DetectUrl -DetectJarFile $DetectJarFile -ProxyInfo $ProxyInfo
+        Receive-DetectJar -DetectUrl $DetectUrl -DetectJarFile $DetectJarFile -ProxyInfo $ProxyInfo -ArtifactoryHeaders $ArtifactoryHeaders
     }else{
         Write-Host "You have already downloaded the latest file, so the local file will be used."
     }
@@ -244,17 +273,17 @@ function Initialize-Folder ($Folder) {
     return $Folder
 }
 
-function Receive-DetectLatestVersion ($ProxyInfo) {
+function Receive-DetectLatestVersion ($ProxyInfo, $ArtifactoryHeaders) {
     Write-Host "Finding latest detect version."
-    $DetectVersion = Invoke-WebRequestWrapper -Url $DetectVersionUrl -ProxyInfo $ProxyInfo
+    $DetectVersion = Invoke-WebRequestWrapper -Url $DetectVersionUrl -ProxyInfo $ProxyInfo -Headers $ArtifactoryHeaders
     Write-Host "Resolved version $DetectVersion"
     return $DetectVersion
 }
 
-function Receive-DetectJar ($DetectUrl, $DetectJarFile, $ProxyInfo) {
+function Receive-DetectJar ($DetectUrl, $DetectJarFile, $ProxyInfo, $ArtifactoryHeaders) {
     Write-Host "You don't have detect. Downloading now."
     Write-Host "Using url $DetectUrl"
-    $Request = Invoke-WebRequestWrapper -Url $DetectUrl -DownloadLocation $DetectJarFile -ProxyInfo $ProxyInfo
+    $Request = Invoke-WebRequestWrapper -Url $DetectUrl -DownloadLocation $DetectJarFile -ProxyInfo $ProxyInfo -Headers $ArtifactoryHeaders
     $DetectJarExists = Test-Path $DetectJarFile
     Write-Host "Downloaded detect jar successfully '$DetectJarExists'"
 }

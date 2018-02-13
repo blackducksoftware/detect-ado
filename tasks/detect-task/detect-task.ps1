@@ -28,11 +28,21 @@ $HubPassword = $ServiceEndpoint.auth.parameters.password
 
 #Get Proxy Information 
 
-$Service = (Get-VstsInput -Name BlackDuckHubService -Require)
-$ServiceEndpoint = Get-VstsEndpoint -Name $Service
-$HubUrl = $ServiceEndpoint.Url
-$HubUsername = $ServiceEndpoint.auth.parameters.username
-$HubPassword = $ServiceEndpoint.auth.parameters.password
+$ProxyService = (Get-VstsInput -Name BlackDuckHubProxyService -Require)
+$ProxyServiceEndpoint = Get-VstsEndpoint -Name $ProxyService
+$ProxyUrl = $ProxyServiceEndpoint.Url
+$ProxyUsername = $ProxyServiceEndpoint.auth.parameters.username
+$ProxyPassword = $ProxyServiceEndpoint.auth.parameters.password
+
+$ProxyServiceEndpoint.Url | Get-Member
+
+#Get Artifactory Information 
+
+$ArtifactoryService = (Get-VstsInput -Name BlackDuckArtifactoryService -Require)
+$ArtifactoryServiceEndpoint = Get-VstsEndpoint -Name $ArtifactoryService
+$ArtifactoryUrl = $ArtifactoryServiceEndpoint.Url
+$ArtifactoryUsername = $ArtifactoryServiceEndpoint.auth.parameters.username
+$ArtifactoryPassword = $ArtifactoryServiceEndpoint.auth.parameters.password
 
 #Get Other Input
 
@@ -47,18 +57,28 @@ $DetectFolder = Get-VstsInput -Name DetectFolder -Default ""
 if ($DetectVersion -eq "latest"){
     $DetectVersion = "" # Detect powershell script expects latest to be "".
 }
-	
+
 #Set powershell environment variables
 Write-Host "Setting detect environment variables"
 $Env:DETECT_EXIT_CODE_PASSTHRU = "1" #Prevent detect from exiting the session.
 $Env:DETECT_JAR_PATH = $DetectFolder
 $Env:DETECT_LATEST_RELEASE_VERSION = $DetectVersion
 
+${Env:DETECT_ARTIFACTORY_BASE_URL} = $ArtifactoryUrl
+${Env:DETECT_ARTIFACTORY_USERNAME} = $ArtifactoryUsername
+${Env:DETECT_ARTIFACTORY_PASSWORD} = $ArtifactoryPassword
+
 Write-Host "Setting detect hub parameters"
 #We don't want to pass these to the powershell script as arguments or they will get printed.
 ${Env:blackduck.hub.url} = $HubUrl
 ${Env:blackduck.hub.username} = $HubUsername
 ${Env:blackduck.hub.password} = $HubPassword
+
+#${Env:blackduck.hub.proxy.host} = $HubUrl
+#${Env:blackduck.hub.proxy.port} = $HubUsername
+#${Env:blackduck.hub.proxy.password} = $HubPassword
+#${Env:blackduck.hub.proxy.username} = $HubPassword
+
 ${Env:detect.phone.home.passthrough.detect.for.tfs.version} = $TaskVersion
 
 #Ask our lib to parse the string into arguments
