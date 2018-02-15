@@ -8,12 +8,17 @@ Import-Module $PSScriptRoot\lib\argument-parser.ps1
 
 ######################SETTINGS#######################
 
-$TaskVersion = "1.0.2"; #Automatically Updated
+$TaskVersion = "1.0.3"; #Automatically Updated
 Write-Host ("Detect for TFS Version {0}" -f $TaskVersion)
 
 #Support all TLS protocols. 
-[Net.ServicePointManager]::SecurityProtocol = [System.Security.Authentication.SslProtocols] "tls, tls11, tls12"
-
+try {
+    [Net.ServicePointManager]::SecurityProtocol = "tls, tls11, tls12"
+} catch  [Exception] {
+    Write-Host ("Failed to enable TLS protocols.")
+    Write-Host $_.Exception.GetType().FullName; 
+    Write-Host $_.Exception.Message; 
+}
 #Get Hub Url
 
 Write-Host "Getting inputs from VSTS."
