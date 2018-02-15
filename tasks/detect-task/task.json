@@ -32,7 +32,7 @@
       "label": "Black Duck Hub Proxy Service Endpoint",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Select the Black Duck proxy to use. Click on 'manage' and add a new Service Endpoint of type 'Black Duck Hub Proxy'"
+      "helpMarkDown": "Optional: Select a Black Duck proxy to use. Click on 'manage' and add a new Service Endpoint of type 'Black Duck Hub Proxy'"
     },
     {
       "name": "BlackDuckArtifactoryService",
@@ -40,7 +40,7 @@
       "label": "Black Duck Artifactory Service Endpoint",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "Select the Black Duck artifactory to use. Click on 'manage' and add a new Service Endpoint of type 'Black Duck Artifactory'"
+      "helpMarkDown": "Optional: Select the artifactory that hosts Detect. Click on 'manage' and add a new Service Endpoint of type 'Black Duck Artifactory'"
     },
     {
       "name": "DetectVersion",
