@@ -44,7 +44,7 @@ $EnvHomeTempFolder = "$HOME\tmp"
 # heap size, you would set DETECT_JAVA_OPTS=-Xmx6G.
 #$DetectJavaOpts = Get-EnvironmentVariable -Key "DETECT_JAVA_OPTS" -DefaultValue "";
 
-$Version = "0.6.2"
+$Version = "0.6.4"
 
 $DetectReleaseBaseUrl = "https://test-repo.blackducksoftware.com/artifactory/bds-integrations-release/com/blackducksoftware/integration/hub-detect"
 $DetectSnapshotBaseUrl = "https://test-repo.blackducksoftware.com/artifactory/bds-integrations-snapshot/com/blackducksoftware/integration/hub-detect"
@@ -95,6 +95,11 @@ function Get-ProxyInfo () {
     try {
 
         $ProxyHost = ${Env:blackduck.hub.proxy.host};
+        
+        if ([string]::IsNullOrEmpty($ProxyHost)){
+			$ProxyHost = ${BLACKDUCK_HUB_PROXY_HOST};
+		}
+        
         if ([string]::IsNullOrEmpty($ProxyHost)){
             Write-Host "Skipping proxy, no host found."
         }else{
@@ -103,6 +108,10 @@ function Get-ProxyInfo () {
             $ProxyUrlBuilder.Host = $ProxyHost
 
             $ProxyPort = ${Env:blackduck.hub.proxy.port};
+
+			if ([string]::IsNullOrEmpty($ProxyPort)){
+				$ProxyPort = ${Env:BLACKDUCK_HUB_PROXY_PORT};
+			}
 
             if ([string]::IsNullOrEmpty($ProxyPort)){
                 Write-Host "No proxy port found."
@@ -116,6 +125,14 @@ function Get-ProxyInfo () {
             #Handle credentials
             $ProxyUsername = ${Env:blackduck.hub.proxy.username};
             $ProxyPassword = ${Env:blackduck.hub.proxy.password};
+            
+            if ([string]::IsNullOrEmpty($ProxyUsername)){
+				$ProxyUsername = ${BLACKDUCK_HUB_PROXY_USERNAME};
+			}
+			
+			if ([string]::IsNullOrEmpty($ProxyPassword)){
+				$ProxyPassword = ${BLACKDUCK_HUB_PROXY_PASSWORD};
+			}
 
             if ([string]::IsNullOrEmpty($ProxyPassword) -or [string]::IsNullOrEmpty($ProxyUsername)){
                 Write-Host "No proxy credentials found."
@@ -127,11 +144,11 @@ function Get-ProxyInfo () {
                 $ProxyInfoProperties.Credentials = $ProxyCredentials;
             }
 
-            Write-Host "Succesfully setup proxy."
+            Write-Host "Successfully setup proxy."
         }
 
     } catch [Exception] {
-        Write-Host ("An exception occured setting up the proxy, will continue but will not use a proxy.")
+        Write-Host ("An exception occurred setting up the proxy, will continue but will not use a proxy.")
         Write-Host ("  Reason: {0}" -f $_.Exception.GetType().FullName); 
         Write-Host ("  Reason: {0}" -f $_.Exception.Message); 
         Write-Host ("  Reason: {0}" -f $_.Exception.StackTrace); 
@@ -143,7 +160,27 @@ function Get-ProxyInfo () {
 }
 
 function Invoke-WebRequestWrapper($Url, $ProxyInfo, $DownloadLocation = $null) {
-    return Invoke-WebRequest $Url -UseBasicParsing -OutFile $DownloadLocation -Proxy $ProxyInfo.Uri -ProxyCredential $ProxyInfo.Credentials
+    $parameters = @{}
+    try {
+        if ($DownloadLocation -ne $null){
+            $parameters.Add("OutFile", $DownloadLocation);
+        }
+        if ($ProxyInfo -ne $null){
+            if ($ProxyInfo.Uri -ne $null){
+                $parameters.Add("Proxy", $ProxyInfo.Uri);
+            }
+            if ($ProxyInfo.Credentials -ne $null){
+                $parameters.Add("ProxyCredential",$ProxyInfo.Credentials);
+            }
+        }
+    }catch [Exception] {
+        Write-Host ("An exception occurred setting additional properties on web request.")
+        Write-Host ("  Reason: {0}" -f $_.Exception.GetType().FullName); 
+        Write-Host ("  Reason: {0}" -f $_.Exception.Message); 
+        Write-Host ("  Reason: {0}" -f $_.Exception.StackTrace);
+    }
+    
+    return Invoke-WebRequest $Url -UseBasicParsing @parameters
 }
 
 function Get-DetectSnapshotJar ($DetectFolder, $DetectVersion, $ProxyInfo) {

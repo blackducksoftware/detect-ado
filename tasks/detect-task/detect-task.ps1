@@ -8,7 +8,7 @@ Import-Module $PSScriptRoot\lib\argument-parser.ps1
 
 ######################SETTINGS#######################
 
-$TaskVersion = "1.0.3"; #Automatically Updated
+$TaskVersion = "1.0.4"; #Automatically Updated
 Write-Host ("Detect for TFS Version {0}" -f $TaskVersion)
 
 #Support all TLS protocols. 
@@ -33,11 +33,19 @@ $HubPassword = $ServiceEndpoint.auth.parameters.password
 
 #Get Proxy Information 
 
-$Service = (Get-VstsInput -Name BlackDuckHubService -Require)
-$ServiceEndpoint = Get-VstsEndpoint -Name $Service
-$HubUrl = $ServiceEndpoint.Url
-$HubUsername = $ServiceEndpoint.auth.parameters.username
-$HubPassword = $ServiceEndpoint.auth.parameters.password
+$ProxyService = (Get-VstsInput -Name BlackDuckHubProxyService -Default "")
+$UseProxy = $false;
+if ([string]::IsNullOrEmpty($ProxyService)){
+    Write-Host ("No proxy service selected.");
+}else{
+    Write-Host ("Found proxy service.");
+    $UseProxy = $true;
+    $ProxyServiceEndpoint = Get-VstsEndpoint -Name $ProxyService
+    $ProxyUrl = $ProxyServiceEndpoint.Url
+    $ProxyServiceEndpoint.Url | Get-Member
+    $ProxyUsername = $ProxyServiceEndpoint.auth.parameters.username
+    $ProxyPassword = $ProxyServiceEndpoint.auth.parameters.password
+}
 
 #Get Other Input
 
@@ -65,6 +73,18 @@ ${Env:blackduck.hub.url} = $HubUrl
 ${Env:blackduck.hub.username} = $HubUsername
 ${Env:blackduck.hub.password} = $HubPassword
 ${Env:detect.phone.home.passthrough.detect.for.tfs.version} = $TaskVersion
+
+if ($UseProxy -eq $true){
+    $ProxyUri = [System.Uri] $ProxyUrl
+    $ProxyHost = ("{0}://{1}" -f $ProxyUri.Scheme, $ProxyUri.Host)
+    $ProxyPort = $ProxyUri.Port
+    Write-Host ("Parsed Proxy Host: {0}" -f $ProxyHost)
+    Write-Host ("Parsed Proxy Port: {0}" -f $ProxyPort)
+    ${Env:blackduck.hub.proxy.host} = $ProxyHost
+    ${Env:blackduck.hub.proxy.port} = $ProxyPort
+    ${Env:blackduck.hub.proxy.password} = $ProxyUsername
+    ${Env:blackduck.hub.proxy.username} = $ProxyPassword
+}
 
 #Ask our lib to parse the string into arguments
 Write-Host "Parsing additional arguments"
