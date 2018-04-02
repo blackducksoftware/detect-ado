@@ -104,8 +104,7 @@ function Get-ProxyInfo () {
             Write-Host "Skipping proxy, no host found."
         }else{
             Write-Host "Found proxy host."
-            $ProxyUrlBuilder = New-Object System.UriBuilder
-            $ProxyUrlBuilder.Host = $ProxyHost
+            $ProxyUrlBuilder = [UriBuilder]($ProxyHost)
 
             $ProxyPort = ${Env:blackduck.hub.proxy.port};
 

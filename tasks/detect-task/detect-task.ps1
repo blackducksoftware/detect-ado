@@ -99,7 +99,15 @@ foreach ($AdditionalArgument in $ParsedArguments){
 Write-Host "Downloading detect powershell library"
 $DetectDownloadSuccess = $false;
 try {
+        if ($UseProxy -eq $true){
+            $ProxyCreds = New-Object System.Management.Automation.PSCredential(
+                ${Env:blackduck.hub.proxy.username},
+                (ConvertTo-SecureString ${Env:blackduck.hub.proxy.password} -AsPlainText -Force)
+            );
+               Invoke-RestMethod https://blackducksoftware.github.io/hub-detect/hub-detect.ps1?$(Get-Random) -Proxy ${Env:blackduck.hub.proxy.host}":"${Env:blackduck.hub.proxy.port} -ProxyCredential $ProxyCreds | Invoke-Expression;
+        } else {
 	Invoke-RestMethod https://blackducksoftware.github.io/hub-detect/hub-detect.ps1?$(Get-Random) | Invoke-Expression;
+	}
 	$DetectDownloadSuccess = $true;
 } catch  [Exception] {
     Write-Host ("Failed to download the latest detect powershell library from the web. Using the embedded version.")
