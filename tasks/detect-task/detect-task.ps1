@@ -107,8 +107,7 @@ try {
                Invoke-RestMethod https://blackducksoftware.github.io/hub-detect/hub-detect.ps1?$(Get-Random) -Proxy ${Env:blackduck.hub.proxy.host}":"${Env:blackduck.hub.proxy.port} -ProxyCredential $ProxyCreds | Invoke-Expression;
         } else {
 	Invoke-RestMethod https://blackducksoftware.github.io/hub-detect/hub-detect.ps1?$(Get-Random) | Invoke-Expression;
-	{
-
+	}
 	$DetectDownloadSuccess = $true;
 } catch  [Exception] {
     Write-Host ("Failed to download the latest detect powershell library from the web. Using the embedded version.")
