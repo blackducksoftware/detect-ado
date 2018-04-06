@@ -6,9 +6,109 @@ Write-Host "Detect for TFS initializing."
 
 Import-Module $PSScriptRoot\lib\argument-parser.ps1
 
+##################CODE FROM DETECT###################
+#This code is shared from Detect's powershell script.
+#Please keep up to date.
+
+function Get-ProxyInfo () {
+    $ProxyInfoProperties = @{
+        'Uri'=$null
+        'Credentials'=$null
+    }
+
+    try {
+
+        $ProxyHost = ${Env:blackduck.hub.proxy.host};
+        
+        if ([string]::IsNullOrEmpty($ProxyHost)){
+			$ProxyHost = ${Env:BLACKDUCK_HUB_PROXY_HOST};
+		}
+        
+        if ([string]::IsNullOrEmpty($ProxyHost)){
+            Write-Host "Skipping proxy, no host found."
+        }else{
+            Write-Host "Found proxy host."
+            $ProxyUrlBuilder = New-Object System.UriBuilder -ArgumentList $ProxyHost
+
+            $ProxyPort = ${Env:blackduck.hub.proxy.port};
+
+			if ([string]::IsNullOrEmpty($ProxyPort)){
+				$ProxyPort = ${Env:BLACKDUCK_HUB_PROXY_PORT};
+			}
+
+            if ([string]::IsNullOrEmpty($ProxyPort)){
+                Write-Host "No proxy port found."
+            }else{
+                Write-Host "Found proxy port."
+                $ProxyUrlBuilder.Port = $ProxyPort
+            }
+
+            $ProxyInfoProperties.Uri = $ProxyUrlBuilder.Uri
+
+            #Handle credentials
+            $ProxyUsername = ${Env:blackduck.hub.proxy.username};
+            $ProxyPassword = ${Env:blackduck.hub.proxy.password};
+            
+            if ([string]::IsNullOrEmpty($ProxyUsername)){
+				$ProxyUsername = ${BLACKDUCK_HUB_PROXY_USERNAME};
+			}
+			
+			if ([string]::IsNullOrEmpty($ProxyPassword)){
+				$ProxyPassword = ${BLACKDUCK_HUB_PROXY_PASSWORD};
+			}
+
+            if ([string]::IsNullOrEmpty($ProxyPassword) -or [string]::IsNullOrEmpty($ProxyUsername)){
+                Write-Host "No proxy credentials found."
+            }else{
+                Write-Host "Found proxy credentials."
+                $ProxySecurePassword = ConvertTo-SecureString $ProxyPassword -AsPlainText -Force
+                $ProxyCredentials = New-Object System.Management.Automation.PSCredential ($ProxyUsername, $ProxySecurePassword)
+
+                $ProxyInfoProperties.Credentials = $ProxyCredentials;
+            }
+
+            Write-Host "Successfully setup proxy."
+        }
+
+    } catch [Exception] {
+        Write-Host ("An exception occurred setting up the proxy, will continue but will not use a proxy.")
+        Write-Host ("  Reason: {0}" -f $_.Exception.GetType().FullName); 
+        Write-Host ("  Reason: {0}" -f $_.Exception.Message); 
+        Write-Host ("  Reason: {0}" -f $_.Exception.StackTrace); 
+    }
+
+    $ProxyInfo = New-Object -TypeName PSObject -Prop $ProxyInfoProperties
+
+    return $ProxyInfo;
+}
+
+function Invoke-WebRequestWrapper($Url, $ProxyInfo, $DownloadLocation = $null) {
+    $parameters = @{}
+    try {
+        if ($DownloadLocation -ne $null){
+            $parameters.Add("OutFile", $DownloadLocation);
+        }
+        if ($ProxyInfo -ne $null){
+            if ($ProxyInfo.Uri -ne $null){
+                $parameters.Add("Proxy", $ProxyInfo.Uri);
+            }
+            if ($ProxyInfo.Credentials -ne $null){
+                $parameters.Add("ProxyCredential",$ProxyInfo.Credentials);
+            }
+        }
+    }catch [Exception] {
+        Write-Host ("An exception occurred setting additional properties on web request.")
+        Write-Host ("  Reason: {0}" -f $_.Exception.GetType().FullName); 
+        Write-Host ("  Reason: {0}" -f $_.Exception.Message); 
+        Write-Host ("  Reason: {0}" -f $_.Exception.StackTrace);
+    }
+    
+    return Invoke-WebRequest $Url -UseBasicParsing @parameters
+}
+
 ######################SETTINGS#######################
 
-$TaskVersion = "1.0.4"; #Automatically Updated
+$TaskVersion = "1.0.5"; #Automatically Updated
 Write-Host ("Detect for TFS Version {0}" -f $TaskVersion)
 
 #Support all TLS protocols. 
@@ -99,7 +199,8 @@ foreach ($AdditionalArgument in $ParsedArguments){
 Write-Host "Downloading detect powershell library"
 $DetectDownloadSuccess = $false;
 try {
-	Invoke-RestMethod https://blackducksoftware.github.io/hub-detect/hub-detect.ps1?$(Get-Random) | Invoke-Expression;
+    $ProxyInfo = Get-ProxyInfo
+	Invoke-WebRequestWrapper -Url https://blackducksoftware.github.io/hub-detect/hub-detect.ps1?$(Get-Random) -ProxyInfo $ProxyInfo | Invoke-Expression;
 	$DetectDownloadSuccess = $true;
 } catch  [Exception] {
     Write-Host ("Failed to download the latest detect powershell library from the web. Using the embedded version.")
