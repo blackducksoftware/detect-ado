@@ -31,7 +31,7 @@ $EnvDetectFolder = Get-EnvironmentVariable -Key "DETECT_JAR_PATH" -DefaultValue 
 $EnvTempFolder = Get-EnvironmentVariable -Key "TMP" -DefaultValue "";
 $EnvHomeTempFolder = "$HOME\tmp"
 
-# If you want to pass proxy information, use detect environment variables such as 'blackduck.hub.proxy.host'
+# If you want to pass proxy information, use detect environment variables such as 'blackduck.proxy.host'
 # If you do pass the proxy information in this way, you do not need to supply it to detect as arguments. 
 # Note: This script will not pick up proxy information from the passed 'detect arguments'
 # Note: This script will not pick up proxy information passed to the bash script using 'DETECT_CURL_OPTS'
@@ -44,7 +44,7 @@ $EnvHomeTempFolder = "$HOME\tmp"
 # heap size, you would set DETECT_JAVA_OPTS=-Xmx6G.
 #$DetectJavaOpts = Get-EnvironmentVariable -Key "DETECT_JAVA_OPTS" -DefaultValue "";
 
-$Version = "0.6.4"
+$Version = "0.7.0"
 
 $DetectReleaseBaseUrl = "https://test-repo.blackducksoftware.com/artifactory/bds-integrations-release/com/blackducksoftware/integration/hub-detect"
 $DetectSnapshotBaseUrl = "https://test-repo.blackducksoftware.com/artifactory/bds-integrations-snapshot/com/blackducksoftware/integration/hub-detect"
@@ -57,7 +57,14 @@ function Detect {
     Write-Host "Detect Powershell Script $Version"
     
     if ($EnvDetectSkipJavaTest -ne "1"){
-    	Test-JavaExists
+    	if (Test-JavaNotAvailable){ #If java is not available, we abort early.
+			$JavaExitCode = 127 #Command not found http://tldp.org/LDP/abs/html/exitcodes.html 
+    		if ($EnvDetectExitCodePassthru -eq "1"){
+		        return $JavaExitCode
+		    }else{
+		    	exit $JavaExitCode
+		    }
+    	}
     }else{
    		Write-Host "Skipping java test."
     }
@@ -86,6 +93,16 @@ function Detect {
     }
 }
 
+function Get-FirstFromEnv($Names) {
+	foreach ($Name in $Names){
+		$Value = Get-EnvironmentVariable -Key $Name -Default $null;
+		if (-Not [string]::IsNullOrEmpty($Value)){
+			return $Value;
+		}
+	}
+	return $null;
+}
+
 function Get-ProxyInfo () {
     $ProxyInfoProperties = @{
         'Uri'=$null
@@ -94,24 +111,15 @@ function Get-ProxyInfo () {
 
     try {
 
-        $ProxyHost = ${Env:blackduck.hub.proxy.host};
-        
-        if ([string]::IsNullOrEmpty($ProxyHost)){
-			$ProxyHost = ${BLACKDUCK_HUB_PROXY_HOST};
-		}
+        $ProxyHost = Get-FirstFromEnv @("blackduck.proxy.host", "BLACKDUCK_PROXY_HOST", "blackduck.hub.proxy.host", "BLACKDUCK_HUB_PROXY_HOST");
         
         if ([string]::IsNullOrEmpty($ProxyHost)){
             Write-Host "Skipping proxy, no host found."
         }else{
             Write-Host "Found proxy host."
-            $ProxyUrlBuilder = New-Object System.UriBuilder
-            $ProxyUrlBuilder.Host = $ProxyHost
+            $ProxyUrlBuilder = New-Object System.UriBuilder -ArgumentList $ProxyHost
 
-            $ProxyPort = ${Env:blackduck.hub.proxy.port};
-
-			if ([string]::IsNullOrEmpty($ProxyPort)){
-				$ProxyPort = ${Env:BLACKDUCK_HUB_PROXY_PORT};
-			}
+            $ProxyPort = Get-FirstFromEnv @("blackduck.proxy.port", "BLACKDUCK_PROXY_PORT", "blackduck.hub.proxy.port", "BLACKDUCK_HUB_PROXY_PORT"); 
 
             if ([string]::IsNullOrEmpty($ProxyPort)){
                 Write-Host "No proxy port found."
@@ -123,16 +131,8 @@ function Get-ProxyInfo () {
             $ProxyInfoProperties.Uri = $ProxyUrlBuilder.Uri
 
             #Handle credentials
-            $ProxyUsername = ${Env:blackduck.hub.proxy.username};
-            $ProxyPassword = ${Env:blackduck.hub.proxy.password};
-            
-            if ([string]::IsNullOrEmpty($ProxyUsername)){
-				$ProxyUsername = ${BLACKDUCK_HUB_PROXY_USERNAME};
-			}
-			
-			if ([string]::IsNullOrEmpty($ProxyPassword)){
-				$ProxyPassword = ${BLACKDUCK_HUB_PROXY_PASSWORD};
-			}
+            $ProxyUsername = Get-FirstFromEnv @("blackduck.proxy.username", "BLACKDUCK_PROXY_USERNAME", "blackduck.hub.proxy.username", "BLACKDUCK_HUB_PROXY_USERNAME"); 
+            $ProxyPassword = Get-FirstFromEnv @("blackduck.proxy.password", "BLACKDUCK_PROXY_PASSWORD", "blackduck.hub.proxy.password", "BLACKDUCK_HUB_PROXY_PASSWORD"); 
 
             if ([string]::IsNullOrEmpty($ProxyPassword) -or [string]::IsNullOrEmpty($ProxyUsername)){
                 Write-Host "No proxy credentials found."
@@ -303,7 +303,7 @@ function Set-ToEscaped ($ArgArray){
     }
 }
 
-function Test-JavaExists() {
+function Test-JavaNotAvailable() {
 	Write-Host "Checking if Java is installed by asking for version."
 	try {
 		$ProcessStartInfo = New-object System.Diagnostics.ProcessStartInfo 
@@ -322,8 +322,9 @@ function Test-JavaExists() {
 		Write-Host "Java Standard Output: $StdOutput"
 		Write-Host "Java Error Output: $StdError"
 		Write-Host "Successfully able to start java and get version."
+		return $FALSE;
 	}catch { 
 		Write-Host "An error occurred checking the Java version. Please ensure Java is installed."
-		exit 127 #Command not found http://tldp.org/LDP/abs/html/exitcodes.html
+		return $TRUE;
 	}
 }

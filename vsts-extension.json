@@ -1,7 +1,7 @@
 {
   "manifestVersion": 1,
   "id": "detect-for-tfs",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "name": "Black Duck Detect",
   "publisher": "black-duck-software",
   "public": true,
@@ -70,17 +70,17 @@
     },
     {
       "id": "blackduck-hub-endpoint",
-      "description": "Service Endpoint for Black Duck Hub connections",
+      "description": "Service Endpoint for Black Duck connections",
       "type": "ms.vss-endpoint.service-endpoint-type",
       "targets": [
         "ms.vss-endpoint.endpoint-types"
       ],
       "properties": {
         "name": "blackduckhub",
-        "displayName": "Black Duck Hub",
+        "displayName": "Black Duck",
         "url": {
           "displayName": "Server URL",
-          "helpText": "Provide the URL for your Black Duck Hub Server - please include the port if other than 80 (http) or 443 (https)"
+          "helpText": "Provide the URL for your Black Duck Server - please include the port if other than 80 (http) or 443 (https)"
         },
         "authenticationSchemes": [
           {
@@ -89,7 +89,7 @@
               {
                 "id": "username",
                 "name": "Username",
-                "description": "The username to access your Black Duck Hub instance",
+                "description": "The username to access your Black Duck instance",
                 "inputMode": "textbox",
                 "validation": {
                   "isRequired": true,
@@ -99,7 +99,7 @@
               {
                 "id": "password",
                 "name": "Password",
-                "description": "The password to access your Black Duck Hub instance",
+                "description": "The password to access your Black Duck instance",
                 "inputMode": "passwordbox",
                 "isConfidential": true,
                 "validation": {
@@ -114,14 +114,14 @@
     },
     {
       "id": "blackduck-hub-proxy-endpoint",
-      "description": "Proxy Service Endpoint for Black Duck Hub connections",
+      "description": "Proxy Service Endpoint for Black Duck connections",
       "type": "ms.vss-endpoint.service-endpoint-type",
       "targets": [
         "ms.vss-endpoint.endpoint-types"
       ],
       "properties": {
         "name": "blackduckproxy",
-        "displayName": "Black Duck Hub Proxy",
+        "displayName": "Black Duck Proxy",
         "url": {
           "displayName": "Server URL",
           "helpText": "Provide the URL for your proxy - please include the port if other than 80 (http) or 443 (https)"
