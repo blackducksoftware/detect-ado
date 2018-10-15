@@ -8,7 +8,7 @@ Import-Module $PSScriptRoot\lib\argument-parser.ps1
 
 ######################SETTINGS#######################
 
-$TaskVersion = "1.0.4"; #Automatically Updated
+$TaskVersion = "1.1.0"; #Automatically Updated
 Write-Host ("Detect for TFS Version {0}" -f $TaskVersion)
 
 #Support all TLS protocols. 
@@ -25,11 +25,7 @@ Write-Host "Getting inputs from VSTS."
 
 #Get Hub Information
 
-$Service = (Get-VstsInput -Name BlackDuckHubService -Require)
-$ServiceEndpoint = Get-VstsEndpoint -Name $Service
-$HubUrl = $ServiceEndpoint.Url
-$HubUsername = $ServiceEndpoint.auth.parameters.username
-$HubPassword = $ServiceEndpoint.auth.parameters.password
+$Service = (Get-VstsInput -Name BlackDuckHubService -Default "")
 
 #Get Proxy Information 
 
@@ -67,11 +63,27 @@ $Env:DETECT_EXIT_CODE_PASSTHRU = "1" #Prevent detect from exiting the session.
 $Env:DETECT_JAR_PATH = $DetectFolder
 $Env:DETECT_LATEST_RELEASE_VERSION = $DetectVersion
 
-Write-Host "Setting detect hub parameters"
-#We don't want to pass these to the powershell script as arguments or they will get printed.
-${Env:blackduck.hub.url} = $HubUrl
-${Env:blackduck.hub.username} = $HubUsername
-${Env:blackduck.hub.password} = $HubPassword
+if ([string]::IsNullOrEmpty($Service)){
+    Write-Host ("No service selected.");
+}else{
+    Write-Host ("Setting black duck service properties.");
+
+    $ServiceEndpoint = Get-VstsEndpoint -Name $Service
+    $HubUrl = $ServiceEndpoint.Url
+
+    $ApiToken = $ServiceEndpoint.auth.parameters.apitoken
+    $HubUsername = $ServiceEndpoint.auth.parameters.username
+    $HubPassword = $ServiceEndpoint.auth.parameters.password
+
+    #We don't want to pass these to the powershell script as arguments or they will get printed.
+    ${Env:blackduck.url} = $HubUrl
+    ${Env:blackduck.apitoken} = $ApiToken
+    ${Env:blackduck.username} = $HubUsername
+    ${Env:blackduck.password} = $HubPassword
+}
+
+Write-Host ("Setting tfs properties.");
+
 ${Env:detect.phone.home.passthrough.detect.for.tfs.version} = $TaskVersion
 
 if ($UseProxy -eq $true){
@@ -80,10 +92,10 @@ if ($UseProxy -eq $true){
     $ProxyPort = $ProxyUri.Port
     Write-Host ("Parsed Proxy Host: {0}" -f $ProxyHost)
     Write-Host ("Parsed Proxy Port: {0}" -f $ProxyPort)
-    ${Env:blackduck.hub.proxy.host} = $ProxyHost
-    ${Env:blackduck.hub.proxy.port} = $ProxyPort
-    ${Env:blackduck.hub.proxy.password} = $ProxyUsername
-    ${Env:blackduck.hub.proxy.username} = $ProxyPassword
+    ${Env:blackduck.proxy.host} = $ProxyHost
+    ${Env:blackduck.proxy.port} = $ProxyPort
+    ${Env:blackduck.proxy.password} = $ProxyUsername
+    ${Env:blackduck.proxy.username} = $ProxyPassword
 }
 
 #Ask our lib to parse the string into arguments

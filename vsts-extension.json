@@ -84,6 +84,30 @@
         },
         "authenticationSchemes": [
           {
+            "id": "endpoint-auth-scheme-token",
+            "type": "ms.vss-endpoint.endpoint-auth-scheme-token",
+            "properties": {
+              "name": "Api Token",
+              "displayName": "Token Based Authentication",
+              "inputDescriptors": [
+                {
+                  "id": "apitoken",
+                  "name": "API Token",
+                  "description": "API Token for connection to endpoint",
+                  "inputMode": "textbox",
+                  "isConfidential": true,
+                  "validation": {
+                    "isRequired": true,
+                    "dataType": "string",
+                    "maxLength": 300
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "Basic Authorization",
+            "displayName": "Basic Authentication",
             "type": "ms.vss-endpoint.endpoint-auth-scheme-basic",
             "inputDescriptors": [
               {
