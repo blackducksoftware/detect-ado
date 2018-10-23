@@ -8,7 +8,7 @@ Import-Module $PSScriptRoot\lib\argument-parser.ps1
 
 ######################SETTINGS#######################
 
-$TaskVersion = "1.1.0"; #Automatically Updated
+$TaskVersion = "1.1.1"; #Automatically Updated
 Write-Host ("Detect for TFS Version {0}" -f $TaskVersion)
 
 #Support all TLS protocols. 
@@ -62,6 +62,8 @@ Write-Host "Setting detect environment variables"
 $Env:DETECT_EXIT_CODE_PASSTHRU = "1" #Prevent detect from exiting the session.
 $Env:DETECT_JAR_PATH = $DetectFolder
 $Env:DETECT_LATEST_RELEASE_VERSION = $DetectVersion
+Write-Host "Setting detect source path to build directory"
+$Env:DETECT_SOURCE_PATH = $env:BUILD_SOURCESDIRECTORY
 
 if ([string]::IsNullOrEmpty($Service)){
     Write-Host ("No service selected.");
