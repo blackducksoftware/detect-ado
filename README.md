@@ -11,4 +11,4 @@ Detect for TFS plugin.
 Releases are available from GitHub release page: https://github.com/blackducksoftware/detect-for-tfs/releases
 
 ## Documentation ##
-Coming soon.
+Public [Confluence](https://synopsys.atlassian.net/wiki/spaces/INTDOCS/pages/622618/Hub+Detect+Extension+for+VSTS)
