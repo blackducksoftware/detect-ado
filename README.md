@@ -1,5 +1,5 @@
 ## Overview ##
-Detect for TFS plugin.
+This is the GitHub page for the Detect plugin for TFS and Azure DevOps.
 
 ## Build ##
 
