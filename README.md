@@ -8,9 +8,9 @@ This is the GitHub page for the Detect plugin for TFS and Azure DevOps.
 
 
 ## Where can I get the latest release? ##
-The Detect for TFS/Azure DevOps is available on the [Azure Marketplace](https://marketplace.visualstudio.com/items?itemName=black-duck-software.detect-for-tfs)
+The Detect for TFS/Azure DevOps is available on the [Azure Marketplace](https://marketplace.visualstudio.com/items?itemName=black-duck-software.detect-for-tfs).
 
-Releases and Source are available under [GitHub releases](https://github.com/blackducksoftware/detect-for-tfs/releases)
+Releases and Source are available under [GitHub releases](https://github.com/blackducksoftware/detect-for-tfs/releases).
 
 ## Documentation ##
-Instructions and examples for the TFS/Azure DevOps Extension are available on our [Public Confluence](https://synopsys.atlassian.net/wiki/spaces/INTDOCS/pages/622655/Running+Hub+Detect+with+TFS+or+Azure+DevOps)
+Instructions and examples for the TFS/Azure DevOps Extension are available on our [Public Confluence](https://synopsys.atlassian.net/wiki/spaces/INTDOCS/pages/622655/Running+Hub+Detect+with+TFS+or+Azure+DevOps).
