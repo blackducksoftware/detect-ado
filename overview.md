@@ -8,17 +8,19 @@ The Black Duck plugin for TFS and Azure DevOps allows automatic detection of ope
 
 ## Key Features ## 
 
-• Open Source Discovery: Rapid scanning and identification of open source libraries, versions, license, and community activity powered by the Black Duck® KnowledgeBase™ – the industry’s most complete with detailed data on more than 2 million open source projects and 79,000+ known open source vulnerabilities.
-
-• Identify Open Source Risk: Create an inventory of all open source components in use and map them to known security vulnerabilities, giving you insight to the severity of the vulnerability and possible remediation steps.
+Open Source Discovery: Rapid scanning and identification of open source libraries, versions, license, and community activity powered by the Black Duck® KnowledgeBase™ – the industry’s most complete with detailed data on more than 2 million open source projects and 79,000+ known open source vulnerabilities.
 
 ![catalog](images/catalog.png)
 
-• Risk Remediation and Policy Enforcement: Make data-driven decisions around vulnerability remediation prioritization. Leverage mitigation guidance and policy management to secure your code and manage your external and internal compliance mandates.
+Identify Open Source Risk: Create an inventory of all open source components in use and map them to known security vulnerabilities, giving you insight to the severity of the vulnerability and possible remediation steps.
+
+![riskreport](images/riskreport.png)
+
+Risk Remediation and Policy Enforcement: Make data-driven decisions around vulnerability remediation prioritization. Leverage mitigation guidance and policy management to secure your code and manage your external and internal compliance mandates.
 
 ![policy](images/policy.png)
 
-• Continuous Monitoring for New Security Vulnerabilities: Continously monitor and alert on newly reported open source security vulnerabilities, without having to re-scan your code.
+Continuous Monitoring for New Security Vulnerabilities: Continously monitor and alert on newly reported open source security vulnerabilities, without having to re-scan your code.
 
 ![vulnerability](images/vulnerability.png)
 
