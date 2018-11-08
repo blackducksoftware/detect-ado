@@ -12,9 +12,15 @@ The Black Duck plugin for TFS and Azure DevOps allows automatic detection of ope
 
 • Identify Open Source Risk: Create an inventory of all open source components in use and map them to known security vulnerabilities, giving you insight to the severity of the vulnerability and possible remediation steps.
 
+![catalog](images/catalog.png)
+
 • Risk Remediation and Policy Enforcement: Make data-driven decisions around vulnerability remediation prioritization. Leverage mitigation guidance and policy management to secure your code and manage your external and internal compliance mandates.
 
+![policy](images/policy.png)
+
 • Continuous Monitoring for New Security Vulnerabilities: Continously monitor and alert on newly reported open source security vulnerabilities, without having to re-scan your code.
+
+![vulnerability](images/vulnerability.png)
 
 ## The Extension ##
 
