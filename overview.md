@@ -12,21 +12,27 @@ Open Source Discovery: Rapid scanning and identification of open source librarie
 
 ![catalog](images/catalog.png)
 
-Identify Open Source Risk: Create an inventory of all open source components in use and map them to known security vulnerabilities, giving you insight to the severity of the vulnerability and possible remediation steps.
+Identify Open Source Risk: Create an inventory of all open source components in use and map them to known security vulnerabilities, giving you insight to the severity of the vulnerability.
 
 ![riskreport](images/riskreport.png)
 
-Risk Remediation and Policy Enforcement: Make data-driven decisions around vulnerability remediation prioritization. Leverage mitigation guidance and policy management to secure your code and manage your external and internal compliance mandates.
+Policy Enforcement:  Leverage policy management to secure your code and manage your external and internal compliance mandates.
 
 ![policy](images/policy.png)
 
-Continuous Monitoring for New Security Vulnerabilities: Continously monitor and alert on newly reported open source security vulnerabilities, without having to re-scan your code.
+Risk Remediation: Make data-driven decisions around vulnerability remediation prioritization. See CVSS 2.0/3.0 scores as well as our own BDSA assessments and remediation guidance to quickly bring your projects back to compliance.
 
 ![vulnerability](images/vulnerability.png)
+
+Continuous Monitoring for New Security Vulnerabilities: Continously monitor and alert on newly reported open source security vulnerabilities, without having to re-scan your code.
+
+![monitoring](images/monitoring.png)
 
 ## The Extension ##
 
 Black Duck for TFS and Azure DevOps is architected to integrate seamlessly with TFS and Azure DevOps build and release pipelines. 
+
+![extension](images/extension.png)
 
 Using other tools in your CI/CD pipeline such as Jenkins, Artifactory, and others? We have easy to use plugins for the most popular development tools, and REST APIs that allow you to build your own integrations for virtually any commercial or custom development environment. Check out our [Integrations page](https://synopsys.atlassian.net/wiki/spaces/INTDOCS/overview) for more information! 
 
