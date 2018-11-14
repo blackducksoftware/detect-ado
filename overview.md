@@ -1,10 +1,10 @@
 ## Overview ##
 
-The Black Duck plugin for TFS and Azure DevOps allows automatic identification of open source security vulnerabilities during your application build process. The integration allows you to enforce policies configured in Black Duck to receive alerts and fail builds when policy violations are met. 
+The [Black Duck by Synopsys](https://www.synopsys.com/software-integrity/security-testing/software-composition-analysis.html) plugin for TFS and Azure DevOps allows automatic identification of open source security vulnerabilities during your application build process. The integration allows you to enforce policies configured in Black Duck to receive alerts and fail builds when policy violations are met. 
 
 ## What is Black Duck? ##
 
-[Black Duck by Synopsys](https://www.blackducksoftware.com/) helps organizations identify and manage open source security, license compliance and operational risks across applications and containers. Black Duck is powered by the world’s largest open source KnowledgeBase™, which containins information from over 13,000 unique sources, includes support for over 80 programming languages, provides timely and enhanced vulnerability information, and is backed by a dedicated team of open source and security experts. The KnowledgeBase™, combined with the broadest support for platforms, languages and integrations, is why 2,000 organizations worldwide rely on Black Duck to secure and manage open source.
+Black Duck by Synopsys helps organizations identify and manage open source security, license compliance and operational risks across applications and containers. Black Duck is powered by the world’s largest open source KnowledgeBase™, which containins information from over 13,000 unique sources, includes support for over 80 programming languages, provides timely and enhanced vulnerability information, and is backed by a dedicated team of open source and security experts. The KnowledgeBase™, combined with the broadest support for platforms, languages and integrations, is why 2,000 organizations worldwide rely on Black Duck to secure and manage open source.
 
 ## Key Features ## 
 
