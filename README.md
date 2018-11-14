@@ -14,3 +14,5 @@ Releases and Source are available under [GitHub releases](https://github.com/bla
 
 ## Documentation ##
 Instructions and examples for the TFS/Azure DevOps Extension are available on our [Public Confluence](https://synopsys.atlassian.net/wiki/spaces/INTDOCS/pages/622655/Running+Hub+Detect+with+TFS+or+Azure+DevOps).
+
+
