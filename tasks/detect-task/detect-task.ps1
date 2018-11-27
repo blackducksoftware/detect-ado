@@ -8,7 +8,7 @@ Import-Module $PSScriptRoot\lib\argument-parser.ps1
 
 ######################SETTINGS#######################
 
-$TaskVersion = "1.1.1"; #Automatically Updated
+$TaskVersion = "1.1.2"; #Automatically Updated
 Write-Host ("Detect for TFS Version {0}" -f $TaskVersion)
 
 #Support all TLS protocols. 
@@ -79,7 +79,7 @@ if ([string]::IsNullOrEmpty($Service)){
 
     #We don't want to pass these to the powershell script as arguments or they will get printed.
     ${Env:blackduck.url} = $HubUrl
-    ${Env:blackduck.apitoken} = $ApiToken
+    ${Env:blackduck.api.token} = $ApiToken
     ${Env:blackduck.username} = $HubUsername
     ${Env:blackduck.password} = $HubPassword
 }
