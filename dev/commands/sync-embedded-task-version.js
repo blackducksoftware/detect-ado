@@ -1,7 +1,7 @@
 const updater = require('../library/sync-embedded-task-version.js');
 
 updater.updateEmbeddedVersion(function () {
-  console.log("Task succesfully updated.")
+  console.log("Task successfully updated.")
 }, function (err) {
   console.log(err);
 })
