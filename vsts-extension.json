@@ -192,13 +192,13 @@
             "id": "endpoint-auth-scheme-token",
             "type": "ms.vss-endpoint.endpoint-auth-scheme-token",
             "properties": {
-              "name": "Access Token",
+              "name": "Api Token",
               "displayName": "Token Based Authentication",
               "inputDescriptors": [
                 {
-                  "id": "accesstoken",
-                  "name": "Access Token",
-                  "description": "Access Token for connection to polaris",
+                  "id": "apitoken",
+                  "name": "API Token",
+                  "description": "API Token for connection to endpoint",
                   "inputMode": "textbox",
                   "isConfidential": true,
                   "validation": {

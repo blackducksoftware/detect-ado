@@ -8,7 +8,7 @@ Import-Module $PSScriptRoot\lib\argument-parser.ps1
 
 ######################SETTINGS#######################
 
-$TaskVersion = "2.0.0"; #Automatically Updated
+$TaskVersion = "2.0.2"; #Automatically Updated
 Write-Host ("Detect for TFS Version {0}" -f $TaskVersion)
 
 #Support all TLS protocols. 
@@ -90,7 +90,7 @@ if ([string]::IsNullOrEmpty($PolarisService)){
     $PolarisServiceEndpoint = Get-VstsEndpoint -Name $PolarisService
     $PolarisUrl = $PolarisServiceEndpoint.Url
 
-    $PolarisAccessToken = $PolarisServiceEndpoint.auth.parameters.accesstoken
+    $PolarisAccessToken = $PolarisServiceEndpoint.auth.parameters.apitoken
 
     #We don't want to pass these to the powershell script as arguments or they will get printed.
     ${Env:polaris.url} = $PolarisUrl
