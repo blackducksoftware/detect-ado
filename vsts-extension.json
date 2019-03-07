@@ -1,9 +1,9 @@
 {
   "manifestVersion": 1,
   "id": "detect-for-tfs",
-  "version": "1.1.2",
-  "name": "Black Duck Detect",
-  "publisher": "black-duck-software",
+  "version": "2.0.0",
+  "name": "Synopsys Detect",
+  "publisher": "synopsys",
   "public": true,
   "targets": [
     {
@@ -12,23 +12,21 @@
   ],
   "tags": [
     "Black Duck",
+    "Polaris",
+    "Coverity",
     "Detect",
     "Continuous Integration",
     "Security",
     "Open Source",
-    "Hub",
     "Build"
   ],
   "scopes": [
     "vso.build_execute"
   ],
-  "description": "Run Black Duck Detect for your build",
+  "description": "Run Synopsys Detect for your build",
   "categories": [
     "Build and release"
   ],
-  "icons": {
-    "default": "images/bds_ducky.png"
-  },
   "branding": {
     "color": "#00639c",
     "theme": "dark"
@@ -52,14 +50,9 @@
       "path": "overview.md"
     }
   },
-  "links": {
-    "getstarted": {
-      "uri": "https://github.com/blackducksoftware/hub-tfs/wiki/Downloading-and-Installing-the-Hub-TFS-Plugin"
-    }
-  },
   "contributions": [
     {
-      "id": "hub.detect.task",
+      "id": "synopsys.detect.task",
       "type": "ms.vss-distributed-task.task",
       "targets": [
         "ms.vss-distributed-task.tasks"
@@ -69,14 +62,58 @@
       }
     },
     {
-      "id": "blackduck-hub-endpoint",
+      "id": "blackduck-proxy-endpoint",
+      "description": "Proxy Service Endpoint for Black Duck connections",
+      "type": "ms.vss-endpoint.service-endpoint-type",
+      "targets": [
+        "ms.vss-endpoint.endpoint-types"
+      ],
+      "properties": {
+        "name": "blackduckproxy",
+        "displayName": "Black Duck Proxy",
+        "url": {
+          "displayName": "Server URL",
+          "helpText": "Provide the URL for your proxy - please include the port if other than 80 (http) or 443 (https)"
+        },
+        "authenticationSchemes": [
+          {
+            "type": "ms.vss-endpoint.endpoint-auth-scheme-basic",
+            "inputDescriptors": [
+              {
+                "id": "username",
+                "name": "Username",
+                "description": "The username for this proxy",
+                "inputMode": "textbox",
+                "validation": {
+                  "isRequired": false,
+                  "dataType": "string"
+                }
+              },
+              {
+                "id": "password",
+                "name": "Password",
+                "description": "The password for this proxy",
+                "inputMode": "passwordbox",
+                "isConfidential": true,
+                "validation": {
+                  "isRequired": false,
+                  "dataType": "string"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "blackduck-endpoint",
       "description": "Service Endpoint for Black Duck connections",
       "type": "ms.vss-endpoint.service-endpoint-type",
       "targets": [
         "ms.vss-endpoint.endpoint-types"
       ],
       "properties": {
-        "name": "blackduckhub",
+        "name": "blackduck",
         "displayName": "Black Duck",
         "url": {
           "displayName": "Server URL",
@@ -137,45 +174,41 @@
       }
     },
     {
-      "id": "blackduck-hub-proxy-endpoint",
-      "description": "Proxy Service Endpoint for Black Duck connections",
+      "id": "polaris-endpoint",
+      "description": "Service Endpoint for Polaris connections",
       "type": "ms.vss-endpoint.service-endpoint-type",
       "targets": [
         "ms.vss-endpoint.endpoint-types"
       ],
       "properties": {
-        "name": "blackduckproxy",
-        "displayName": "Black Duck Proxy",
+        "name": "polaris",
+        "displayName": "Polaris",
         "url": {
           "displayName": "Server URL",
-          "helpText": "Provide the URL for your proxy - please include the port if other than 80 (http) or 443 (https)"
+          "helpText": "Provide the URL for your Polaris Server - please include the port if other than 80 (http) or 443 (https)"
         },
         "authenticationSchemes": [
           {
-            "type": "ms.vss-endpoint.endpoint-auth-scheme-basic",
-            "inputDescriptors": [
-              {
-                "id": "username",
-                "name": "Username",
-                "description": "The username for this proxy",
-                "inputMode": "textbox",
-                "validation": {
-                  "isRequired": false,
-                  "dataType": "string"
+            "id": "endpoint-auth-scheme-token",
+            "type": "ms.vss-endpoint.endpoint-auth-scheme-token",
+            "properties": {
+              "name": "Access Token",
+              "displayName": "Token Based Authentication",
+              "inputDescriptors": [
+                {
+                  "id": "accesstoken",
+                  "name": "Access Token",
+                  "description": "Access Token for connection to polaris",
+                  "inputMode": "textbox",
+                  "isConfidential": true,
+                  "validation": {
+                    "isRequired": true,
+                    "dataType": "string",
+                    "maxLength": 300
+                  }
                 }
-              },
-              {
-                "id": "password",
-                "name": "Password",
-                "description": "The password for this proxy",
-                "inputMode": "passwordbox",
-                "isConfidential": true,
-                "validation": {
-                  "isRequired": false,
-                  "dataType": "string"
-                }
-              }
-            ]
+              ]
+            }
           }
         ]
       }
