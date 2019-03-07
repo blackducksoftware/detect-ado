@@ -122,14 +122,8 @@ try {
 }
 
 if ($DetectDownloadSuccess -eq $false){
-	Write-Host "Importing embedded version of detect powershell library"
-	try {
-		Import-Module $PSScriptRoot\lib\detect.ps1
-	} catch  [Exception] {
-        Write-Warning $_.Exception.GetType().FullName; 
-        Write-Warning $_.Exception.Message;
-        Write-Error ("Failed to load detect powershell library.")
-    }
+    Write-Host "Failure: Failed to download the detect script."
+    exit 1
 }
 
 #Invoke detect
