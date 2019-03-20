@@ -1,6 +1,6 @@
 param()
 
-Write-Host "Detect for TFS initializing."
+Write-Host "Detect for ADO initializing."
 
 ######################LIBRARIES######################
 
@@ -8,8 +8,8 @@ Import-Module $PSScriptRoot\lib\argument-parser.ps1
 
 ######################SETTINGS#######################
 
-$TaskVersion = "2.0.2"; #Automatically Updated
-Write-Host ("Detect for TFS Version {0}" -f $TaskVersion)
+$TaskVersion = "2.0.5"; #Automatically Updated
+Write-Host ("Detect for ADO Version {0}" -f $TaskVersion)
 
 #Support all TLS protocols. 
 try {
@@ -116,7 +116,7 @@ $Env:DETECT_EXIT_CODE_PASSTHRU = "1" #Prevent detect from exiting the session.
 $Env:DETECT_JAR_PATH = $DetectFolder
 $Env:DETECT_LATEST_RELEASE_VERSION = $DetectVersion
 $Env:DETECT_SOURCE_PATH = $env:BUILD_SOURCESDIRECTORY
-${Env:detect.phone.home.passthrough.detect.for.tfs.version} = $TaskVersion
+${Env:detect.phone.home.passthrough.detect.for.ado.version} = $TaskVersion
 
 #Ask our lib to parse the string into arguments
 Write-Host "Parsing additional arguments"
@@ -134,7 +134,7 @@ try {
 	Invoke-RestMethod https://detect.synopsys.com/detect.ps1?$(Get-Random) | Invoke-Expression;
 	$DetectDownloadSuccess = $true;
 } catch  [Exception] {
-    Write-Host ("Failed to download the latest detect powershell library from the web. Using the embedded version.")
+    Write-Host ("Failed to download the latest detect powershell library from the web. Please ensure your connection and proxy can reach detect.synopsys.com.")
     Write-Host $_.Exception.GetType().FullName; 
     Write-Host $_.Exception.Message; 
 }
@@ -176,10 +176,10 @@ if ($AddTaskSummary -eq $true){
     }
     
     $Content | set-content $Tempfile
-    Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Black Duck Detect;]$Tempfile" 
+    Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Synopsys Detect;]$Tempfile" 
 }
 
-Write-Host "TFS plugin finished."
+Write-Host "Plugin finished."
 
 #$Exit Code
 if ($DetectExitCode -eq 0){

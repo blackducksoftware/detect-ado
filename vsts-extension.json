@@ -27,6 +27,9 @@
   "categories": [
     "Build and release"
   ],
+  "icons": {
+    "default": "images/synopsys.png"
+  },
   "branding": {
     "color": "#00639c",
     "theme": "dark"

@@ -13,17 +13,31 @@
   "version": {
     "Major": "2",
     "Minor": "0",
-    "Patch": "2"
+    "Patch": "0"
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "Run Synopsys Detect for your build $(message)",
   "inputs": [
     {
+      "name": "Products",
+      "type": "radio",
+      "label": "Run Detect For The Following Products",
+      "required": true,
+      "defaultValue": "ALL",
+      "helpMarkDown": "Detect supports multiple Synopsys Products. All selected products will require configuration.",
+      "options": {
+        "ALL": "All Products",
+        "BD": "Black Duck Only",
+        "PS": "Polaris Only"
+      }
+    },
+    {
       "name": "BlackDuckService",
       "type": "connectedService:BlackDuck",
       "label": "Black Duck Service Endpoint",
       "defaultValue": "",
-      "required": false,
+      "required": true,
+      "visibleRule": "Products != PS",
       "helpMarkDown": "Select the Black Duck end point to use. Click on 'manage' and add a new Service Endpoint of type 'Black Duck'"
     },
     {
@@ -32,6 +46,7 @@
       "label": "Black Duck Proxy Service Endpoint",
       "defaultValue": "",
       "required": false,
+      "visibleRule": "Products != PS",
       "helpMarkDown": "Select the Black Duck proxy to use. Click on 'manage' and add a new Service Endpoint of type 'Black Duck Proxy'"
     },
     {
@@ -39,7 +54,8 @@
       "type": "connectedService:Polaris",
       "label": "Polaris Service Endpoint",
       "defaultValue": "",
-      "required": false,
+      "required": true,
+      "visibleRule": "Products != BD",
       "helpMarkDown": "Select the Polaris end point to use. Click on 'manage' and add a new Service Endpoint of type 'Polaris'"
     },
     {

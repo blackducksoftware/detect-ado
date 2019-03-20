@@ -1,6 +1,9 @@
 ## Overview ##
 
-The [Black Duck by Synopsys](https://www.synopsys.com/software-integrity/security-testing/software-composition-analysis.html) plugin for TFS and Azure DevOps allows automatic identification of open source security vulnerabilities during your application build process. The integration allows you to enforce policies configured in Black Duck to receive alerts and fail builds when policy violations are met. 
+The [Synopsys Detect](https://www.synopsys.com/software-integrity/security-testing/software-composition-analysis.html) plugin for Azure DevOps allows automatic identification of open source security vulnerabilities during your application build process. The integration allows you to enforce policies configured in Black Duck to receive alerts and fail builds when policy violations are met. 
+
+## What is Synopsys Detect? ##
+Synopsys Detect (formerly Hub Detect) consolidates the functionality of Black Duck™ and Coverity™ on Polaris™ tools into a single tool. Synopsys Detect also makes it easier to set up and scan code bases using a variety of languages and package managers.  
 
 ## What is Black Duck? ##
 
@@ -30,7 +33,7 @@ Continuous Monitoring for New Security Vulnerabilities: Continously monitor and 
 
 ## The Extension ##
 
-Black Duck for TFS and Azure DevOps is architected to integrate seamlessly with TFS and Azure DevOps build and release pipelines. 
+Detect for Azure DevOps is architected to integrate seamlessly with build and release pipelines. 
 
 ![extension](images/extension.png)
 
@@ -38,17 +41,17 @@ Using other tools in your CI/CD pipeline such as Jenkins, Artifactory, and other
 
 ## Documentation ##
 
-Instructions and examples for the TFS or Azure DevOps Extension are available on our [Public Confluence](https://synopsys.atlassian.net/wiki/spaces/INTDOCS/pages/622655/Running+Hub+Detect+with+TFS+or+Azure+DevOps)
+Instructions and examples are available on our [Public Confluence](https://synopsys.atlassian.net/wiki/spaces/INTDOCS/pages/622618/Synopsys+Detect+Extension+for+VSTS)
 
-For information on the full capabilities of Detect visit [Black Duck Detect Docs](https://synopsys.atlassian.net/wiki/spaces/INTDOCS/pages/622633/Hub+Detect)
+For information on the full capabilities of Detect visit [Detect Public Confluence](https://synopsys.atlassian.net/wiki/spaces/INTDOCS/pages/62423113/Synopsys+Detect)
 
 ## Pre-Requisites ##
 
 Before calling Detect in TFS or Azure DevOps, an active instance of Black Duck is required.
 
-If you do not have Black Duck, refer to [Black Duck on the Azure Marketplace](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/black-duck-software.blackduck_hub_431) for more information.
+If you do not have Black Duck, refer to [Azure Marketplace](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/black-duck-software.blackduck_hub_431) for more information.
 
-Follow the steps to [Deploy Black Duck on Azure](https://synopsys.atlassian.net/wiki/spaces/PARTNERS/pages/7471182/Installing+Black+Duck+in+Azure+Using+the+Azure+Marketplace) for more information on deploying from the Azure Marketplace.
+Follow the steps to [Deploy on Azure](https://synopsys.atlassian.net/wiki/spaces/PARTNERS/pages/7471182/Installing+Black+Duck+in+Azure+Using+the+Azure+Marketplace) for more information on deploying from the Azure Marketplace.
 
 ## Want to contribute? ##
 
