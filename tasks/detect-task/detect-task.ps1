@@ -8,7 +8,7 @@ Import-Module $PSScriptRoot\lib\argument-parser.ps1
 
 ######################SETTINGS#######################
 
-$TaskVersion = "2.0.5"; #Automatically Updated
+$TaskVersion = "2.0.1"; #Automatically Updated
 Write-Host ("Detect for ADO Version {0}" -f $TaskVersion)
 
 #Support all TLS protocols. 
@@ -40,7 +40,7 @@ if ([string]::IsNullOrEmpty($ProxyService)){
 
 if ($UseProxy -eq $true){
     $ProxyUri = [System.Uri] $ProxyUrl
-    $ProxyHost = ("{0}://{1}" -f $ProxyUri.Scheme, $ProxyUri.Host)
+    $ProxyHost = $ProxyUri.Host
     $ProxyPort = $ProxyUri.Port
     Write-Host ("Parsed Proxy Host: {0}" -f $ProxyHost)
     Write-Host ("Parsed Proxy Port: {0}" -f $ProxyPort)
