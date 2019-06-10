@@ -5,10 +5,11 @@ Write-Host "Detect for ADO initializing."
 ######################LIBRARIES######################
 
 Import-Module $PSScriptRoot\lib\argument-parser.ps1
+Import-Module $PSScriptRoot\lib\proxy-service.ps1
 
 ######################SETTINGS#######################
 
-$TaskVersion = "2.0.1"; #Automatically Updated
+$TaskVersion = "2.0.13"; #Automatically Updated
 Write-Host ("Detect for ADO Version {0}" -f $TaskVersion)
 
 #Support all TLS protocols. 
@@ -131,7 +132,8 @@ foreach ($AdditionalArgument in $ParsedArguments){
 Write-Host "Downloading detect powershell library"
 $DetectDownloadSuccess = $false;
 try {
-	Invoke-RestMethod https://detect.synopsys.com/detect.ps1?$(Get-Random) | Invoke-Expression;
+    $ProxyInfo = Get-ProxyInfo
+    Invoke-WebRequestWrapper https://detect.synopsys.com/detect.ps1?$(Get-Random) -ProxyInfo $ProxyInfo | Invoke-Expression;
 	$DetectDownloadSuccess = $true;
 } catch  [Exception] {
     Write-Host ("Failed to download the latest detect powershell library from the web. Please ensure your connection and proxy can reach detect.synopsys.com.")
@@ -140,7 +142,8 @@ try {
 }
 
 if ($DetectDownloadSuccess -eq $false){
-    Write-Host "Failure: Failed to download the detect script."
+    Write-Error ("Failure: Failed to download the detect script.");
+    Write-Host 
     exit 1
 }
 
