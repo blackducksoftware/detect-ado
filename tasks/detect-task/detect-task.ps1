@@ -9,7 +9,7 @@ Import-Module $PSScriptRoot\lib\proxy-service.ps1
 
 ######################SETTINGS#######################
 
-$TaskVersion = "2.0.13"; #Automatically Updated
+$TaskVersion = "2.0.6"; #Automatically Updated
 Write-Host ("Detect for ADO Version {0}" -f $TaskVersion)
 
 #Support all TLS protocols. 
@@ -47,8 +47,8 @@ if ($UseProxy -eq $true){
     Write-Host ("Parsed Proxy Port: {0}" -f $ProxyPort)
     ${Env:blackduck.proxy.host} = $ProxyHost
     ${Env:blackduck.proxy.port} = $ProxyPort
-    ${Env:blackduck.proxy.password} = $ProxyUsername
-    ${Env:blackduck.proxy.username} = $ProxyPassword
+    ${Env:blackduck.proxy.username} = $ProxyUsername
+    ${Env:blackduck.proxy.password} = $ProxyPassword
 }
 
 #Get Black Duck Information
