@@ -9,7 +9,7 @@ Import-Module $PSScriptRoot\lib\proxy-service.ps1
 
 ######################SETTINGS#######################
 
-$TaskVersion = "2.0.6"; #Automatically Updated
+$TaskVersion = "2.0.7"; #Automatically Updated
 Write-Host ("Detect for ADO Version {0}" -f $TaskVersion)
 
 #Support all TLS protocols. 
@@ -21,83 +21,89 @@ try {
     Write-Host $_.Exception.Message; 
 }
 
-#Get Proxy Information 
 
-Write-Host "Getting proxy settings from inputs."
+#Get Product
+$ConfiguredProduct = (Get-VstsInput -Name Products -Default "ALL")
 
-$ProxyService = (Get-VstsInput -Name BlackDuckProxyService -Default "")
-$UseProxy = $false;
-if ([string]::IsNullOrEmpty($ProxyService)){
-    Write-Host ("No proxy service selected.");
-}else{
-    Write-Host ("Found proxy service.");
-    $UseProxy = $true;
-    $ProxyServiceEndpoint = Get-VstsEndpoint -Name $ProxyService
-    $ProxyUrl = $ProxyServiceEndpoint.Url
-    $ProxyServiceEndpoint.Url | Get-Member
-    $ProxyUsername = $ProxyServiceEndpoint.auth.parameters.username
-    $ProxyPassword = $ProxyServiceEndpoint.auth.parameters.password
-}
+if ($ConfiguredProduct -eq "BD" -OR $ConfiguredProduct -eq "ALL"){
 
-if ($UseProxy -eq $true){
-    $ProxyUri = [System.Uri] $ProxyUrl
-    $ProxyHost = $ProxyUri.Host
-    $ProxyPort = $ProxyUri.Port
-    Write-Host ("Parsed Proxy Host: {0}" -f $ProxyHost)
-    Write-Host ("Parsed Proxy Port: {0}" -f $ProxyPort)
-    ${Env:blackduck.proxy.host} = $ProxyHost
-    ${Env:blackduck.proxy.port} = $ProxyPort
-    ${Env:blackduck.proxy.username} = $ProxyUsername
-    ${Env:blackduck.proxy.password} = $ProxyPassword
-}
+    Write-Host "Getting proxy settings from inputs."
 
-#Get Black Duck Information
+    $ProxyService = (Get-VstsInput -Name BlackDuckProxyService -Default "")
+    $UseProxy = $false;
+    if ([string]::IsNullOrEmpty($ProxyService)){
+        Write-Host ("No proxy service selected.");
+    }else{
+        Write-Host ("Found proxy service.");
+        $UseProxy = $true;
+        $ProxyServiceEndpoint = Get-VstsEndpoint -Name $ProxyService
+        $ProxyUrl = $ProxyServiceEndpoint.Url
+        $ProxyServiceEndpoint.Url | Get-Member
+        $ProxyUsername = $ProxyServiceEndpoint.auth.parameters.username
+        $ProxyPassword = $ProxyServiceEndpoint.auth.parameters.password
+    }
 
-Write-Host "Getting Black Duck settings from inputs."
+    if ($UseProxy -eq $true){
+        $ProxyUri = [System.Uri] $ProxyUrl
+        $ProxyHost = $ProxyUri.Host
+        $ProxyPort = $ProxyUri.Port
+        Write-Host ("Parsed Proxy Host: {0}" -f $ProxyHost)
+        Write-Host ("Parsed Proxy Port: {0}" -f $ProxyPort)
+        ${Env:blackduck.proxy.host} = $ProxyHost
+        ${Env:blackduck.proxy.port} = $ProxyPort
+        ${Env:blackduck.proxy.username} = $ProxyUsername
+        ${Env:blackduck.proxy.password} = $ProxyPassword
+    }
 
-$BlackDuckService = (Get-VstsInput -Name BlackDuckService -Default "")
+    Write-Host "Getting Black Duck settings from inputs."
 
-if ([string]::IsNullOrEmpty($BlackDuckService)){
-    Write-Host ("No Black Duck service selected.");
-}else{
-    Write-Host ("Setting Black Duck service properties.");
+    $BlackDuckService = (Get-VstsInput -Name BlackDuckService -Default "")
 
-    $BlackDuckServiceEndpoint = Get-VstsEndpoint -Name $BlackDuckService
-    $BlackDuckUrl = $BlackDuckServiceEndpoint.Url
+    if ([string]::IsNullOrEmpty($BlackDuckService)){
+        Write-Host ("No Black Duck service selected.");
+    }else{
+        Write-Host ("Setting Black Duck service properties.");
 
-    $BlackDuckApiToken = $BlackDuckServiceEndpoint.auth.parameters.apitoken
-    $BlackDuckUsername = $BlackDuckServiceEndpoint.auth.parameters.username
-    $BlackDuckPassword = $BlackDuckServiceEndpoint.auth.parameters.password
+        $BlackDuckServiceEndpoint = Get-VstsEndpoint -Name $BlackDuckService
+        $BlackDuckUrl = $BlackDuckServiceEndpoint.Url
 
-    #We don't want to pass these to the powershell script as arguments or they will get printed.
-    ${Env:blackduck.url} = $BlackDuckUrl
-    ${Env:blackduck.api.token} = $BlackDuckApiToken
-    ${Env:blackduck.username} = $BlackDuckUsername
-    ${Env:blackduck.password} = $BlackDuckPassword
+        $BlackDuckApiToken = $BlackDuckServiceEndpoint.auth.parameters.apitoken
+        $BlackDuckUsername = $BlackDuckServiceEndpoint.auth.parameters.username
+        $BlackDuckPassword = $BlackDuckServiceEndpoint.auth.parameters.password
+
+        #We don't want to pass these to the powershell script as arguments or they will get printed.
+        ${Env:blackduck.url} = $BlackDuckUrl
+        ${Env:blackduck.api.token} = $BlackDuckApiToken
+        ${Env:blackduck.username} = $BlackDuckUsername
+        ${Env:blackduck.password} = $BlackDuckPassword
+    }
+
 }
 
 
 #Get Polaris Information
 
-Write-Host "Getting Polaris settings from inputs."
+if ($ConfiguredProduct -eq "PS" -OR $ConfiguredProduct -eq "ALL"){
+    Write-Host "Getting Polaris settings from inputs."
 
-$PolarisService = (Get-VstsInput -Name PolarisService -Default "")
+    $PolarisService = (Get-VstsInput -Name PolarisService -Default "")
 
-if ([string]::IsNullOrEmpty($PolarisService)){
-    Write-Host ("No polaris service selected.");
-}else{
-    Write-Host ("Setting polaris service properties.");
+    if ([string]::IsNullOrEmpty($PolarisService)){
+        Write-Host ("No polaris service selected.");
+    }else{
+        Write-Host ("Setting polaris service properties.");
 
-    $PolarisServiceEndpoint = Get-VstsEndpoint -Name $PolarisService
-    $PolarisUrl = $PolarisServiceEndpoint.Url
+        $PolarisServiceEndpoint = Get-VstsEndpoint -Name $PolarisService
+        $PolarisUrl = $PolarisServiceEndpoint.Url
 
-    $PolarisAccessToken = $PolarisServiceEndpoint.auth.parameters.apitoken
+        $PolarisAccessToken = $PolarisServiceEndpoint.auth.parameters.apitoken
 
-    #We don't want to pass these to the powershell script as arguments or they will get printed.
-    ${Env:polaris.url} = $PolarisUrl
-    ${Env:polaris.access.token} = $PolarisAccessToken
+        #We don't want to pass these to the powershell script as arguments or they will get printed.
+        ${Env:polaris.url} = $PolarisUrl
+        ${Env:polaris.access.token} = $PolarisAccessToken
+    }
+
 }
-
 
 #Get Other Input
 
