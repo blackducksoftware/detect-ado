@@ -9,7 +9,7 @@ Import-Module $PSScriptRoot\lib\proxy-service.ps1
 
 ######################SETTINGS#######################
 
-$TaskVersion = "2.0.7"; #Automatically Updated
+$TaskVersion = "2.0.8"; #Automatically Updated
 Write-Host ("Detect for ADO Version {0}" -f $TaskVersion)
 
 #Support all TLS protocols. 
@@ -78,6 +78,9 @@ if ($ConfiguredProduct -eq "BD" -OR $ConfiguredProduct -eq "ALL"){
         ${Env:blackduck.password} = $BlackDuckPassword
     }
 
+} else {
+    Write-Host "Enabling only the Polaris tool."
+    ${Env:detect.tools} = "POLARIS";
 }
 
 
