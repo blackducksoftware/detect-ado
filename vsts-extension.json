@@ -1,9 +1,9 @@
 {
   "manifestVersion": 1,
   "id": "detect-for-tfs",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "name": "Synopsys Detect",
-  "publisher": "synopsys",
+  "publisher": "synopsys-detect",
   "public": true,
   "targets": [
     {

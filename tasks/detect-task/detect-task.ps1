@@ -9,7 +9,7 @@ Import-Module $PSScriptRoot\lib\proxy-service.ps1
 
 ######################SETTINGS#######################
 
-$TaskVersion = "2.0.8"; #Automatically Updated
+$TaskVersion = "2.0.9"; #Automatically Updated
 Write-Host ("Detect for ADO Version {0}" -f $TaskVersion)
 
 #Support all TLS protocols. 
