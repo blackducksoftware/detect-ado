@@ -165,7 +165,7 @@ Write-Host "********************************************************************
 
 $DetectExitCode = -1;
 try {
-	$DetectExitCode = Detect @DetectArguments
+	$DetectExitCode = Detect $DetectArguments
 } catch  [Exception] {
     Write-Warning $_.Exception.GetType().FullName; 
     Write-Warning $_.Exception.Message; 
