@@ -1,7 +1,7 @@
 {
   "manifestVersion": 1,
   "id": "detect-for-tfs",
-  "version": "2.0.11",
+  "version": "2.0.12",
   "name": "Synopsys Detect",
   "publisher": "synopsys-detect",
   "public": true,
@@ -72,7 +72,7 @@
         "ms.vss-endpoint.endpoint-types"
       ],
       "properties": {
-        "name": "blackduckproxy",
+        "name": "synopsysproxy",
         "displayName": "Black Duck Proxy",
         "url": {
           "displayName": "Server URL",
@@ -116,7 +116,7 @@
         "ms.vss-endpoint.endpoint-types"
       ],
       "properties": {
-        "name": "blackduck",
+        "name": "synopsysblackduck",
         "displayName": "Black Duck",
         "url": {
           "displayName": "Server URL",
@@ -184,7 +184,7 @@
         "ms.vss-endpoint.endpoint-types"
       ],
       "properties": {
-        "name": "polaris",
+        "name": "synopsyspolaris",
         "displayName": "Polaris",
         "url": {
           "displayName": "Server URL",

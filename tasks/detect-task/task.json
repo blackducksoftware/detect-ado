@@ -13,7 +13,7 @@
   "version": {
     "Major": "2",
     "Minor": "0",
-    "Patch": "11"
+    "Patch": "12"
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "Run Synopsys Detect for your build $(message)",
@@ -33,7 +33,7 @@
     },
     {
       "name": "BlackDuckService",
-      "type": "connectedService:BlackDuck",
+      "type": "connectedService:SynopsysBlackDuck",
       "label": "Black Duck Service Endpoint",
       "defaultValue": "",
       "required": true,
@@ -42,7 +42,7 @@
     },
     {
       "name": "BlackDuckProxyService",
-      "type": "connectedService:BlackDuckProxy",
+      "type": "connectedService:SynopsysProxy",
       "label": "Black Duck Proxy Service Endpoint",
       "defaultValue": "",
       "required": false,
@@ -51,7 +51,7 @@
     },
     {
       "name": "PolarisService",
-      "type": "connectedService:Polaris",
+      "type": "connectedService:SynopsysPolaris",
       "label": "Polaris Service Endpoint",
       "defaultValue": "",
       "required": true,
