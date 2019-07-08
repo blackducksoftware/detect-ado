@@ -25,7 +25,7 @@
   ],
   "description": "Run Synopsys Detect for your build",
   "categories": [
-    "Build and release"
+    "Azure Pipelines"
   ],
   "icons": {
     "default": "images/synopsys.png"
