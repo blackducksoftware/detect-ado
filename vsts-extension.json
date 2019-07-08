@@ -1,7 +1,7 @@
 {
   "manifestVersion": 1,
-  "id": "detect-for-tfs",
-  "version": "2.0.12",
+  "id": "synopsys-detect",
+  "version": "2.0.13",
   "name": "Synopsys Detect",
   "publisher": "synopsys-detect",
   "public": true,
@@ -13,6 +13,7 @@
   "tags": [
     "Black Duck",
     "Polaris",
+    "Synopsys",
     "Coverity",
     "Detect",
     "Continuous Integration",
@@ -55,13 +56,13 @@
   },
   "contributions": [
     {
-      "id": "synopsys.detect.task",
+      "id": "synopsys-detect-task",
       "type": "ms.vss-distributed-task.task",
       "targets": [
         "ms.vss-distributed-task.tasks"
       ],
       "properties": {
-        "name": "tasks/detect-task"
+        "name": "tasks/synopsys-detect-task"
       }
     },
     {
