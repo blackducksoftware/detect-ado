@@ -1,5 +1,5 @@
 {
-  "id": "972a31f2-1222-4397-b9aa-78523de2a8c9",
+  "id": "5e9b6b5e-3130-47dc-89c5-77a58949f2cf",
   "name": "SynopsysDetectTask",
   "friendlyName": "Synopsys Detect",
   "description": "Execute Synopsys Detect against your build",
@@ -13,7 +13,7 @@
   "version": {
     "Major": "2",
     "Minor": "0",
-    "Patch": "14"
+    "Patch": "15"
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "Run Synopsys Detect for your build $(message)",
