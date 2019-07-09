@@ -24,7 +24,7 @@ Open Source Discovery: Rapid scanning and identification of open source librarie
 
 Detect for Azure DevOps is architected to integrate seamlessly with build and release pipelines for both Black Duck and Coverity on Polaris 
 
-![extension](images/new-extesnion.png)
+![extension](images/new-extension.png)
 
 Using other tools in your CI/CD pipeline such as Jenkins, Artifactory, and others? We have easy to use plugins for the most popular development tools, and REST APIs that allow you to build your own integrations for virtually any commercial or custom development environment. Check out our [Integrations page](https://synopsys.atlassian.net/wiki/spaces/INTDOCS/overview) for more information! 
 
