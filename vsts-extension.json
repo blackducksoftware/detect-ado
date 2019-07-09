@@ -1,7 +1,7 @@
 {
   "manifestVersion": 1,
   "id": "synopsys-detect",
-  "version": "2.0.13",
+  "version": "2.0.14",
   "name": "Synopsys Detect",
   "publisher": "synopsys-detect",
   "public": true,
