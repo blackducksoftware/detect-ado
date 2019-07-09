@@ -37,7 +37,7 @@
   },
   "files": [
     {
-      "path": "tasks/detect-task"
+      "path": "tasks/synopsys-detect-task"
     },
     {
       "path": "images",
