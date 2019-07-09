@@ -1,41 +1,30 @@
 ## Overview ##
 
-The [Synopsys Detect](https://www.synopsys.com/software-integrity/security-testing/software-composition-analysis.html) plugin for Azure DevOps allows automatic identification of open source security vulnerabilities during your application build process. The integration allows you to enforce policies configured in Black Duck to receive alerts and fail builds when policy violations are met. 
+The [Synopsys Detect](https://synopsys.atlassian.net/wiki/spaces/INTDOCS/pages/62423113/Synopsys+Detect) plugin for Azure DevOps (formerly known as Hub Detect) consolidates the functionality of Black Duck™ and Coverity™ on Polaris™ to support Software Composition Analysis (SCA: open source software detection) and Static Application Security Testing (SAST: code analysis). It is architected to seamlessly integrate Synopsys Detect with Azure DevOps build and release pipelines. Synopsys Detect makes it easier to set up and scan code bases using a variety of languages and package managers across different application security techniques.  
 
-## What is Synopsys Detect? ##
-Synopsys Detect (formerly Hub Detect) consolidates the functionality of Black Duck™ and Coverity™ on Polaris™ tools into a single tool. Synopsys Detect also makes it easier to set up and scan code bases using a variety of languages and package managers.  
+As a Synopsys and Azure DevOps user, Synopsys Detect Extension for Azure DevOps enables you to:
+•	Run a component scan in an Azure DevOps job:
+o	Create projects and releases in Black Duck through the Azure DevOps job.
+•	After a scan is complete, the results are available on the Black Duck server (for SCA)
+•	After the scan is complete, the results are available on the Coverity on Polaris server (for SAST)
 
-## What is Black Duck? ##
-
-Black Duck by Synopsys helps organizations identify and manage open source security, license compliance and operational risks across applications and containers. Black Duck is powered by the world’s largest open source KnowledgeBase™, which containins information from over 13,000 unique sources, includes support for over 80 programming languages, provides timely and enhanced vulnerability information, and is backed by a dedicated team of open source and security experts. The KnowledgeBase™, combined with the broadest support for platforms, languages and integrations, is why 2,000 organizations worldwide rely on Black Duck to secure and manage open source.
 
 ## Key Features ## 
+
+Defect Discovery with Coverity Static Analysis: Identify security & quality defects in your proprietary application using Coverity's market-leading Static Analysis solution. Synopsys Detect only supports Coverity on Polaris. 
+
+![Polaris](images/Polaris.png)
 
 Open Source Discovery: Rapid scanning and identification of open source libraries, versions, license, and community activity powered by the Black Duck® KnowledgeBase™.
 
 ![catalog](images/catalog.png)
 
-Identify Open Source Risk: Create an inventory of all open source components in use which automatically maps them to known security vulnerabilities, giving you insight to the severity of the vulnerability.
-
-![riskreport](images/riskreport.png)
-
-Policy Enforcement:  Leverage policy management to secure your code and manage your external and internal compliance mandates.
-
-![policy](images/policy.png)
-
-Risk Remediation: Make data-driven decisions around vulnerability remediation prioritization, powered by Black Duck Security Advisories (BDSA).  BDSA provides enahnced security vulnerability data including possible fixes, workarounds, more technical data, exploit information, and accurate CVSS and CWE classifications all within 24 to 48 hours of a vulnerability being published.
-
-![vulnerability](images/vulnerability.png)
-
-Continuous Monitoring for New Security Vulnerabilities: Continously monitor and alert on newly reported open source security vulnerabilities, without having to re-scan your code.
-
-![monitoring](images/monitoring.png)
 
 ## The Extension ##
 
-Detect for Azure DevOps is architected to integrate seamlessly with build and release pipelines. 
+Detect for Azure DevOps is architected to integrate seamlessly with build and release pipelines for both Black Duck and Coverity on Polaris 
 
-![extension](images/extension.png)
+![extension](images/new-extesnion.png)
 
 Using other tools in your CI/CD pipeline such as Jenkins, Artifactory, and others? We have easy to use plugins for the most popular development tools, and REST APIs that allow you to build your own integrations for virtually any commercial or custom development environment. Check out our [Integrations page](https://synopsys.atlassian.net/wiki/spaces/INTDOCS/overview) for more information! 
 
@@ -47,11 +36,13 @@ For information on the full capabilities of Detect visit [Detect Public Confluen
 
 ## Pre-Requisites ##
 
-Before calling Detect in TFS or Azure DevOps, an active instance of Black Duck is required.
+Before calling Detect in TFS or Azure DevOps, an active instance of Black Duck and/or Polaris is required.
 
 If you do not have Black Duck, refer to [Azure Marketplace](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/black-duck-software.blackduck_hub_431) for more information.
 
 Follow the steps to [Deploy on Azure](https://synopsys.atlassian.net/wiki/spaces/PARTNERS/pages/7471182/Installing+Black+Duck+in+Azure+Using+the+Azure+Marketplace) for more information on deploying from the Azure Marketplace.
+
+If you do not have Coverity on Polaris, contact us at sig-info@synopsys.com
 
 ## Want to contribute? ##
 
