@@ -1,7 +1,7 @@
 {
   "manifestVersion": 1,
   "id": "synopsys-detect",
-  "version": "2.0.16",
+  "version": "2.0.17",
   "name": "Synopsys Detect",
   "publisher": "synopsys-detect",
   "public": true,
@@ -126,25 +126,23 @@
         "authenticationSchemes": [
           {
             "id": "endpoint-auth-scheme-token",
+            "name": "Api Token",
+            "displayName": "Token Based Authentication",
             "type": "ms.vss-endpoint.endpoint-auth-scheme-token",
-            "properties": {
-              "name": "Api Token",
-              "displayName": "Token Based Authentication",
-              "inputDescriptors": [
-                {
-                  "id": "apitoken",
-                  "name": "API Token",
-                  "description": "API Token for connection to endpoint",
-                  "inputMode": "textbox",
-                  "isConfidential": true,
-                  "validation": {
-                    "isRequired": true,
-                    "dataType": "string",
-                    "maxLength": 300
-                  }
+            "inputDescriptors": [
+              {
+                "id": "apitoken",
+                "name": "API Token",
+                "description": "API Token for connection to endpoint",
+                "inputMode": "textbox",
+                "isConfidential": true,
+                "validation": {
+                  "isRequired": true,
+                  "dataType": "string",
+                  "maxLength": 300
                 }
-              ]
-            }
+              }
+            ]
           },
           {
             "name": "Basic Authorization",
@@ -194,25 +192,23 @@
         "authenticationSchemes": [
           {
             "id": "endpoint-auth-scheme-token",
+            "name": "Api Token",
+            "displayName": "Token Based Authentication",
             "type": "ms.vss-endpoint.endpoint-auth-scheme-token",
-            "properties": {
-              "name": "Api Token",
-              "displayName": "Token Based Authentication",
-              "inputDescriptors": [
-                {
-                  "id": "apitoken",
-                  "name": "API Token",
-                  "description": "API Token for connection to endpoint",
-                  "inputMode": "textbox",
-                  "isConfidential": true,
-                  "validation": {
-                    "isRequired": true,
-                    "dataType": "string",
-                    "maxLength": 300
-                  }
+            "inputDescriptors": [
+              {
+                "id": "apitoken",
+                "name": "API Token",
+                "description": "API Token for connection to endpoint",
+                "inputMode": "textbox",
+                "isConfidential": true,
+                "validation": {
+                  "isRequired": true,
+                  "dataType": "string",
+                  "maxLength": 300
                 }
-              ]
-            }
+              }
+            ]
           }
         ]
       }
