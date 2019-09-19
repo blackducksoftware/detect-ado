@@ -13,6 +13,6 @@ Detect for Azure DevOps is available on the [Azure Marketplace](https://marketpl
 Releases and Source are available under [GitHub releases](https://github.com/blackducksoftware/detect-for-tfs/releases).
 
 ## Documentation ##
-Instructions and examples are available on our [Public Confluence](https://synopsys.atlassian.net/wiki/spaces/INTDOCS/pages/622655/Running+Hub+Detect+with+TFS+or+Azure+DevOps).
+Instructions and examples are available on our [Public Confluence](https://synopsys.atlassian.net/wiki/spaces/INTDOCS/pages/622618/Synopsys+Detect+Extension+for+Azure+DevOps).
 
 
