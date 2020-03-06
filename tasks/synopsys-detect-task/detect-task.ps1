@@ -109,8 +109,18 @@ if ($ConfiguredProduct -eq "PS" -OR $ConfiguredProduct -eq "ALL"){
 }
 
 #Get Other Input
-
 $DetectAdditionalArguments = Get-VstsInput -Name DetectArguments -Default ""
+
+$DetectProjectName = Get-VstsInput -Name DetectProjectName -Default ""
+if (-Not [string]::IsNullOrWhiteSpace($DetectProjectName)){
+    $DetectAdditionalArguments = $DetectAdditionalArguments + " --detect.project.name=" + $DetectProjectName # Add the name of the project as Argument to be then parsed.
+}
+
+$DetectProjectVersion = Get-VstsInput -Name DetectProjectVersion -Default ""
+if (-Not [string]::IsNullOrWhiteSpace($DetectProjectVersion)){
+    $DetectAdditionalArguments = $DetectAdditionalArguments + " --detect.project.version.name=" + $DetectProjectVersion # Add the version of the project as Argument to be then parsed.
+}
+
 $AddTaskSummary = Get-VstsInput -Name AddTaskSummary -Default $true
 
 $DetectFolder = Get-VstsInput -Name DetectFolder -Default ""

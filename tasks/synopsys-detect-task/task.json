@@ -67,6 +67,22 @@
       "helpMarkDown": "Version of the detect binary to use. Default: Latest."
     },
     {
+      "name": "DetectProjectName",
+      "type": "string",
+      "label": "Detect Project Name",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "The Project name. If empty, it defaults to the name of the folder where the tool is running."
+    },
+    {
+      "name": "DetectProjectVersion",
+      "type": "string",
+      "label": "Detect Project Version",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The Version of the project. If empty, it defaults to 'Default Detect Version'"
+    },
+    {
       "name": "DetectArguments",
       "type": "multiLine",
       "label": "Detect Arguments",
