@@ -3,9 +3,13 @@
 The [Synopsys Detect](https://synopsys.atlassian.net/wiki/spaces/INTDOCS/pages/62423113/Synopsys+Detect) plugin for Azure DevOps (formerly known as Hub Detect) consolidates the functionality of Black Duck™ and Coverity™ on Polaris™ to support Software Composition Analysis (SCA: open source software detection) and Static Application Security Testing (SAST: code analysis). It is architected to seamlessly integrate Synopsys Detect with Azure DevOps build and release pipelines. Synopsys Detect makes it easier to set up and scan code bases using a variety of languages and package managers across different application security techniques.  
 
 As a Synopsys and Azure DevOps user, Synopsys Detect Extension for Azure DevOps enables you to:
+
 •	Run a component scan in an Azure DevOps job:
-o	Create projects and releases in Black Duck through the Azure DevOps job.
+
+•	Create projects and releases in Black Duck through the Azure DevOps job.
+	
 •	After a scan is complete, the results are available on the Black Duck server (for SCA)
+
 •	After the scan is complete, the results are available on the Coverity on Polaris server (for SAST)
 
 

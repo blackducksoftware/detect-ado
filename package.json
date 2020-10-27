@@ -15,14 +15,17 @@
     "url": "https://github.com/blackducksoftware/detect-for-tfs"
   },
   "devDependencies": {
+    "@types/node": "^14.14.5",
+    "@types/q": "0.0.32",
     "ncp": "^2.0.0",
     "rimraf": "^2.5.4",
     "tfx-cli": "^0.3.45",
-    "typescript": "^2.1.4"
+    "typescript": "^2.9.2"
   },
   "dependencies": {
     "@types/jquery": "^2.0.34",
-    "@types/q": "0.0.32",
+    "azure-pipelines-task-lib": "^3.0.4-preview.0",
+    "azure-pipelines-tool-lib": "^0.13.2",
     "request-promise": "^4.2.2",
     "tfx-cli": "^0.3.49",
     "vss-web-extension-sdk": "^2.109.0"
