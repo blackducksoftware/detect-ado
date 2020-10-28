@@ -12,13 +12,13 @@ import {IProxyInfo} from "./model/IProxyInfo";
 const osPlat: string = os.platform();
 const osArch: string = os.arch();
 
-async function run(): Promise<number> {
+async function run() {
     const blackduckData: IBlackduckData = getBlackduckData()
     const detectArguments: IDetectArguments = getDetectArguments()
     const taskConfiguration: ITaskConfiguration = getTaskConfiguration()
 
     const detectResult: number = await invokeDetect()
-    return detectResult
+    tl.setResult(tl.TaskResult.Failed, "Not implemented", true)
 }
 
 async function invokeDetect(): Promise<number> {
@@ -58,9 +58,23 @@ function getBlackduckData(): IBlackduckData {
 }
 
 function getDetectArguments(): IDetectArguments {
-    return null as any
+    const additionalArguments: string | undefined = tl.getInput(ArgumentConstants.DETECT_ARGUMENTS, false)
+    const detectFolder: string | undefined = tl.getInput(ArgumentConstants.DETECT_FOLDER, false)
+    const detectVersion: string | undefined = tl.getInput(ArgumentConstants.DETECT_VERSION, false)
+
+    return {
+        detectAdditionalArguments: additionalArguments,
+        detectFolder,
+        detectVersion
+    }
 }
 
 function getTaskConfiguration(): ITaskConfiguration {
-    return null as any
+    const addTask: boolean = tl.getBoolInput(ArgumentConstants.ADD_TASK_SUMMARY, false)
+
+    return {
+        addTaskSummary: addTask
+    }
 }
+
+run()

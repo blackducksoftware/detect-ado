@@ -1,7 +1,5 @@
 export interface IDetectArguments {
-    detectFolder: string
-    detectVersion: string
-    detectAdditionalArguments: string
-    existCodePassThru: number
-    phoneHomeAdoVersion: string
+    detectFolder: string | undefined
+    detectVersion: string | undefined
+    detectAdditionalArguments: string | undefined
 }
