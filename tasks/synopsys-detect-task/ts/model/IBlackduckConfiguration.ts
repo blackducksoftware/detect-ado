@@ -1,6 +1,6 @@
 import {IProxyInfo} from "./IProxyInfo";
 
-export interface IBlackduckData {
+export interface IBlackduckConfiguration {
     blackduckUrl: string
     blackduckApiToken: string | undefined
     blackduckUsername: string | undefined

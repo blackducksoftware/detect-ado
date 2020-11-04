@@ -1,44 +1,55 @@
-import * as toolLib from 'azure-pipelines-tool-lib/tool';
-import * as tl from 'azure-pipelines-task-lib/task';
-import * as os from 'os';
-import * as path from 'path';
-import * as util from 'util';
-import {IBlackduckData} from "./model/IBlackduckData";
-import {IDetectArguments} from "./model/IDetectArguments";
-import {ITaskConfiguration} from "./model/ITaskConfiguration";
-import {ArgumentConstants} from "./ArgumentConstants";
-import {IProxyInfo} from "./model/IProxyInfo";
+import * as tl from 'azure-pipelines-task-lib/task'
+import * as os from 'os'
+import {IBlackduckConfiguration} from "./model/IBlackduckConfiguration"
+import {IDetectConfiguration} from "./model/IDetectConfiguration"
+import {ITaskConfiguration} from "./model/ITaskConfiguration"
+import {DetectADOConstants} from "./DetectADOConstants"
+import {IProxyInfo} from "./model/IProxyInfo"
+import {DetectScript} from "./DetectScript";
+import {PowershellDetect} from "./PowershellDetect";
+import {BashDetect} from "./BashDetect";
 
-const osPlat: string = os.platform();
-const osArch: string = os.arch();
+const osPlat: string = os.platform()
 
 async function run() {
-    const blackduckData: IBlackduckData = getBlackduckData()
-    const detectArguments: IDetectArguments = getDetectArguments()
+    const blackduckConfiguration: IBlackduckConfiguration = getBlackduckConfiguration()
+    const detectConfiguration: IDetectConfiguration = getDetectConfiguration()
     const taskConfiguration: ITaskConfiguration = getTaskConfiguration()
 
-    const detectResult: number = await invokeDetect()
+    const detectResult: number = await invokeDetect(blackduckConfiguration, detectConfiguration)
+    if (taskConfiguration.addTaskSummary) {
+        const content = (detectResult == 0) ? "Detect ran successfully" : `There was an issue running detect, exit code: ${detectResult}`
+        // Could also be task.addattachment
+        // TODO Find out how to add an attachment if this doesn't work
+        tl.setTaskVariable('Distributedtask.Core.Summary', content, false)
+    }
     tl.setResult(tl.TaskResult.Failed, "Not implemented", true)
 }
 
-async function invokeDetect(): Promise<number> {
+async function invokeDetect(blackduckData: IBlackduckConfiguration, detectArguments: IDetectConfiguration): Promise<number> {
+    let detectScript: DetectScript
+    if ("win32" === osPlat) {
+        detectScript = new PowershellDetect()
+    } else {
+        detectScript = new BashDetect()
+    }
 
-    return null as any
+    return detectScript.runScript(blackduckData, detectArguments)
 }
 
-function getBlackduckData(): IBlackduckData {
-    const blackduckService: string = tl.getInput(ArgumentConstants.BLACKDUCK_ID, true)!
+function getBlackduckConfiguration(): IBlackduckConfiguration {
+    const blackduckService: string = tl.getInput(DetectADOConstants.BLACKDUCK_ID, true)!
     const blackduckUrl: string = tl.getEndpointUrl(blackduckService, false)!
-    const blackduckToken: string | undefined = tl.getEndpointAuthorizationParameter(blackduckService, ArgumentConstants.BLACKDUCK_API_TOKEN, true)
-    const blackduckUsername: string | undefined = tl.getEndpointAuthorizationParameter(blackduckService, ArgumentConstants.BLACKDUCK_USERNAME, true)
-    const blackduckPassword: string | undefined = tl.getEndpointAuthorizationParameter(blackduckService, ArgumentConstants.BLACKDUCK_PASSWORD, true)
+    const blackduckToken: string | undefined = tl.getEndpointAuthorizationParameter(blackduckService, DetectADOConstants.BLACKDUCK_API_TOKEN, true)
+    const blackduckUsername: string | undefined = tl.getEndpointAuthorizationParameter(blackduckService, DetectADOConstants.BLACKDUCK_USERNAME, true)
+    const blackduckPassword: string | undefined = tl.getEndpointAuthorizationParameter(blackduckService, DetectADOConstants.BLACKDUCK_PASSWORD, true)
 
     let blackduckProxyInfo: IProxyInfo | undefined
-    const blackduckProxyService: string | undefined = tl.getInput(ArgumentConstants.BLACKDUCK_PROXY_ID, false)
+    const blackduckProxyService: string | undefined = tl.getInput(DetectADOConstants.BLACKDUCK_PROXY_ID, false)
     if (blackduckProxyService) {
         const proxyUrl: string = tl.getEndpointUrl(blackduckProxyService, true)!
-        const proxyUsername : string | undefined = tl.getEndpointAuthorizationParameter(blackduckProxyService, ArgumentConstants.PROXY_USERNAME, true)
-        const proxyPassword: string | undefined = tl.getEndpointAuthorizationParameter(blackduckProxyService, ArgumentConstants.PROXY_PASSWORD, true)
+        const proxyUsername : string | undefined = tl.getEndpointAuthorizationParameter(blackduckProxyService, DetectADOConstants.PROXY_USERNAME, true)
+        const proxyPassword: string | undefined = tl.getEndpointAuthorizationParameter(blackduckProxyService, DetectADOConstants.PROXY_PASSWORD, true)
 
         blackduckProxyInfo = {
             proxyUrl,
@@ -57,10 +68,10 @@ function getBlackduckData(): IBlackduckData {
     }
 }
 
-function getDetectArguments(): IDetectArguments {
-    const additionalArguments: string | undefined = tl.getInput(ArgumentConstants.DETECT_ARGUMENTS, false)
-    const detectFolder: string | undefined = tl.getInput(ArgumentConstants.DETECT_FOLDER, false)
-    const detectVersion: string | undefined = tl.getInput(ArgumentConstants.DETECT_VERSION, false)
+function getDetectConfiguration(): IDetectConfiguration {
+    const additionalArguments: string = tl.getInput(DetectADOConstants.DETECT_ARGUMENTS, false) || ""
+    const detectFolder: string = tl.getInput(DetectADOConstants.DETECT_FOLDER, false) || ""
+    const detectVersion: string = tl.getInput(DetectADOConstants.DETECT_VERSION, false) || "latest"
 
     return {
         detectAdditionalArguments: additionalArguments,
@@ -70,7 +81,7 @@ function getDetectArguments(): IDetectArguments {
 }
 
 function getTaskConfiguration(): ITaskConfiguration {
-    const addTask: boolean = tl.getBoolInput(ArgumentConstants.ADD_TASK_SUMMARY, false)
+    const addTask: boolean = tl.getBoolInput(DetectADOConstants.ADD_TASK_SUMMARY, false)
 
     return {
         addTaskSummary: addTask

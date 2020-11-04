@@ -1,4 +1,4 @@
-export abstract class ArgumentConstants {
+export abstract class DetectADOConstants {
     static readonly BLACKDUCK_ID = "synopsysblackduck"
     static readonly BLACKDUCK_PROXY_ID = "synopsys-proxy-endpoint"
     static readonly DETECT_TASK_ID = "synopsys-detect-task"
