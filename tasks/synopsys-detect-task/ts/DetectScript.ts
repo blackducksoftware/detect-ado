@@ -5,40 +5,38 @@ import url from "url";
 import HttpsProxyAgent from "https-proxy-agent/dist/agent";
 import fs from "fs";
 const fse = require("fs-extra")
+const FileDownload = require("js-file-download")
 import {IDetectConfiguration} from "./model/IDetectConfiguration";
+import {parseArguments} from "./DetectUtils"
 
 export abstract class DetectScript {
     static readonly DETECT_DOWNLOAD_URL = "https://detect.synopsys.com"
 
     abstract getDownloadURL(): string
 
-    async abstract invokeDetect(cliFolder: string, detectArguments: string): Promise<number>
+    async abstract invokeDetect(cliFolder: string, env: any): Promise<number>
 
-    // Why is this returning a promise?
-    async downloadScript(axios: any, folder: string): Promise<any> {
+    createEnvironmentWithVariables(detectArguments: string): any {
+        const env = process.env
+        parseArguments(detectArguments).forEach((value, key) => {
+            env[key] = value
+        })
+        return env
+    }
+
+    getFullDownloadUrl(): string {
+        return `${DetectScript.DETECT_DOWNLOAD_URL}/${this.getDownloadURL()}`
+    }
+
+    downloadScript(axios: AxiosInstance, folder: string): void {
         if (fs.existsSync(folder)) {
             // Clean out existing folder
             fse.removeSync(folder);
         }
-
-        const downloadLink: string = DetectScript.DETECT_DOWNLOAD_URL + this.getDownloadURL()
-
-        const writer = fs.createWriteStream(folder + this.getDownloadURL());
-
-        // Find out an easier way to write to a file
-        const response = await axios({
-            url: downloadLink,
-            method: 'GET',
-            responseType: 'stream'
-        });
-
-
-        response.data.pipe(writer);
-
-        return new Promise((resolve, reject) => {
-            writer.on('finish', resolve);
-            writer.on('error', reject)
-        });
+        const downloadLink: string = this.getFullDownloadUrl()
+        axios.get(downloadLink).then((response) => {
+            FileDownload(response.data, `${folder} + ${this.getDownloadURL()}`)
+        })
     }
 
     createAxiosAgent(blackduckData: IBlackduckConfiguration): AxiosInstance {
@@ -62,11 +60,11 @@ export abstract class DetectScript {
         return Axios.create()
     }
 
-    async runScript(blackduckData: IBlackduckConfiguration, detectSettings: IDetectConfiguration): Promise<number> {
-        const axiosAgent: AxiosInstance = this.createAxiosAgent(blackduckData)
-        // Should I be using folder/file?
-        const result = await this.downloadScript(axiosAgent, detectSettings.detectFolder)
-        return await this.invokeDetect(detectSettings.detectFolder, detectSettings.detectAdditionalArguments)
+    async runScript(blackduckConfiguration: IBlackduckConfiguration, detectConfiguration: IDetectConfiguration): Promise<number> {
+        const axiosAgent: AxiosInstance = this.createAxiosAgent(blackduckConfiguration)
+        this.downloadScript(axiosAgent, detectConfiguration.detectFolder)
+        const env = this.createEnvironmentWithVariables(detectConfiguration.detectAdditionalArguments)
+        return await this.invokeDetect(detectConfiguration.detectFolder, env)
     }
 
 }

@@ -3,21 +3,19 @@ import * as tl from 'azure-pipelines-task-lib/task'
 import * as tr from 'azure-pipelines-task-lib/toolrunner'
 
 export class BashDetect extends DetectScript {
-    static readonly DETECT_URL = "/detect.sh"
+    static readonly DETECT_SCRIPT_NAME = "detect.sh"
 
     getDownloadURL(): string {
-        return BashDetect.DETECT_URL
+        return BashDetect.DETECT_SCRIPT_NAME
     }
 
-    async invokeDetect(cliFolder: string, detectArguments: string): Promise<number> {
-        const detect: tr.ToolRunner = tl.tool(cliFolder);
-        detect.line(detectArguments);
+    async invokeDetect(cliFolder: string, env: any): Promise<number> {
+        const detect: tr.ToolRunner = tl.tool(this.getDownloadURL());
+        detect.line(`./${BashDetect.DETECT_SCRIPT_NAME}`);
 
-        // TODO call detect
-        const return_code =  await detect.exec(<tr.IExecOptions>{
-
+        return detect.exec(<tr.IExecOptions>{
+            cwd: cliFolder,
+            env
         });
-
-        return Promise.resolve(0);
     }
 }
