@@ -3,10 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const DetectUtils_1 = require("../ts/DetectUtils");
 const assert = require('assert');
 describe('DetectUtils tests', function () {
-    before(function () {
-    });
-    after(() => {
-    });
     it('validate argument parsing', function () {
         const firstKey = "first.key";
         const firstValue = "test";

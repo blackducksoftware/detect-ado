@@ -5,7 +5,6 @@ import url from "url";
 import HttpsProxyAgent from "https-proxy-agent/dist/agent";
 import fs from "fs";
 const fse = require("fs-extra")
-const FileDownload = require("js-file-download")
 import {IDetectConfiguration} from "./model/IDetectConfiguration";
 import {parseArguments} from "./DetectUtils"
 
@@ -19,7 +18,8 @@ export abstract class DetectScript {
     createEnvironmentWithVariables(detectArguments: string): any {
         const env = process.env
         parseArguments(detectArguments).forEach((value, key) => {
-            env[key] = value
+            const formattedKey = key.replace('.', '_').toUpperCase()
+            env[formattedKey] = value
         })
         return env
     }
@@ -33,9 +33,16 @@ export abstract class DetectScript {
             // Clean out existing folder
             fse.removeSync(folder);
         }
+
+        fs.mkdirSync(folder)
         const downloadLink: string = this.getFullDownloadUrl()
-        axios.get(downloadLink).then((response) => {
-            FileDownload(response.data, `${folder} + ${this.getDownloadURL()}`)
+        const writer = fs.createWriteStream(`${folder}/${this.getDownloadURL()}`);
+        axios({
+            url: downloadLink,
+            method: 'GET',
+            responseType: 'stream'
+        }).then((response) => {
+            response.data.pipe(writer)
         })
     }
 

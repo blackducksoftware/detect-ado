@@ -3,6 +3,10 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+##FIXME clean up this file
+
+test_folder
+
 # User-specific files
 *.suo
 *.user
