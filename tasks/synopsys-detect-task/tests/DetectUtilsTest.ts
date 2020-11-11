@@ -10,7 +10,7 @@ describe('DetectUtils tests', function () {
         const secondKey = "second.key"
         const secondValue = "another"
 
-        const detectArgs: string = `--${firstKey}=${firstValue} --${secondKey}=${secondValue}`
+        const detectArgs: string = `--${firstKey}=${firstValue} \n--${secondKey}=${secondValue}`
         const parsedArguments: Map<string, string> = parseArguments(detectArgs)
 
         assert.strictEqual(parsedArguments.size, 2, "Unexpected number of arguments extracted")

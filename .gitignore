@@ -6,6 +6,7 @@
 ##FIXME clean up this file
 
 test_folder
+*.js
 
 # User-specific files
 *.suo

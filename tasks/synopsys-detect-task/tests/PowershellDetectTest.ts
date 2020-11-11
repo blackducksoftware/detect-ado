@@ -1,6 +1,5 @@
 import {DetectScript} from "../ts/DetectScript";
-import {BashDetect} from "../ts/BashDetect";
-import {PowershellDetect} from "../ts/PowershellDetect";
+import {PowershellDetectScript} from "../ts/PowershellDetectScript";
 import fs from "fs";
 import {Done} from "mocha";
 
@@ -11,7 +10,7 @@ describe('PowershellDetect tests', function () {
     let powershellScript: DetectScript
 
     before( function() {
-        powershellScript = new PowershellDetect()
+        powershellScript = new PowershellDetectScript()
     });
 
     it('validate env vars are set', function() {
@@ -42,7 +41,7 @@ describe('PowershellDetect tests', function () {
         const folder = "test_folder"
         powershellScript.downloadScript(axios, folder)
 
-        assert.ok(fs.existsSync(`${folder}/${powershellScript.getDownloadURL()}`), "Downloaded file did not exist")
+        assert.ok(fs.existsSync(`${folder}/${powershellScript.getFilename()}`), "Downloaded file did not exist")
         fse.removeSync(folder)
         done()
     });

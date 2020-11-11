@@ -6,8 +6,8 @@ import {ITaskConfiguration} from "./model/ITaskConfiguration"
 import {DetectADOConstants} from "./DetectADOConstants"
 import {IProxyInfo} from "./model/IProxyInfo"
 import {DetectScript} from "./DetectScript";
-import {PowershellDetect} from "./PowershellDetect";
-import {BashDetect} from "./BashDetect";
+import {PowershellDetectScript} from "./PowershellDetectScript";
+import {BashDetectScript} from "./BashDetectScript";
 
 const osPlat: string = os.platform()
 
@@ -29,9 +29,9 @@ async function run() {
 async function invokeDetect(blackduckData: IBlackduckConfiguration, detectArguments: IDetectConfiguration): Promise<number> {
     let detectScript: DetectScript
     if ("win32" === osPlat) {
-        detectScript = new PowershellDetect()
+        detectScript = new PowershellDetectScript()
     } else {
-        detectScript = new BashDetect()
+        detectScript = new BashDetectScript()
     }
 
     return detectScript.runScript(blackduckData, detectArguments)

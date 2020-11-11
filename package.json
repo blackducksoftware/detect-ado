@@ -7,7 +7,7 @@
     "postbuild": "npm run package",
     "package": "tfx extension create",
     "clean": "rimraf ./dist && rimraf ./*.vsix",
-    "test": "tsc && mocha tasks/synopsys-detect-task/tests/*.js"
+    "test": "tsc && mocha --timeout 10000 tasks/synopsys-detect-task/tests/*.js"
   },
   "author": "Black Duck Software, Inc.",
   "license": "Apache-2.0",

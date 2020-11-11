@@ -4,16 +4,17 @@ import {IProxyInfo} from "./model/IProxyInfo";
 import url from "url";
 import HttpsProxyAgent from "https-proxy-agent/dist/agent";
 import fs from "fs";
-const fse = require("fs-extra")
 import {IDetectConfiguration} from "./model/IDetectConfiguration";
 import {parseArguments} from "./DetectUtils"
+
+const fse = require("fs-extra")
 
 export abstract class DetectScript {
     static readonly DETECT_DOWNLOAD_URL = "https://detect.synopsys.com"
 
-    abstract getDownloadURL(): string
+    abstract getFilename(): string
 
-    async abstract invokeDetect(cliFolder: string, env: any): Promise<number>
+    async abstract invokeDetect(scriptFolder: string, env: any): Promise<number>
 
     createEnvironmentWithVariables(detectArguments: string): any {
         const env = process.env
@@ -25,7 +26,7 @@ export abstract class DetectScript {
     }
 
     getFullDownloadUrl(): string {
-        return `${DetectScript.DETECT_DOWNLOAD_URL}/${this.getDownloadURL()}`
+        return `${DetectScript.DETECT_DOWNLOAD_URL}/${this.getFilename()}`
     }
 
     downloadScript(axios: AxiosInstance, folder: string): void {
@@ -36,7 +37,7 @@ export abstract class DetectScript {
 
         fs.mkdirSync(folder)
         const downloadLink: string = this.getFullDownloadUrl()
-        const writer = fs.createWriteStream(`${folder}/${this.getDownloadURL()}`);
+        const writer = fs.createWriteStream(`${folder}/${this.getFilename()}`);
         axios({
             url: downloadLink,
             method: 'GET',
@@ -69,9 +70,11 @@ export abstract class DetectScript {
 
     async runScript(blackduckConfiguration: IBlackduckConfiguration, detectConfiguration: IDetectConfiguration): Promise<number> {
         const axiosAgent: AxiosInstance = this.createAxiosAgent(blackduckConfiguration)
+        console.log("Downloading detect script.")
         this.downloadScript(axiosAgent, detectConfiguration.detectFolder)
         const env = this.createEnvironmentWithVariables(detectConfiguration.detectAdditionalArguments)
-        return await this.invokeDetect(detectConfiguration.detectFolder, env)
+        console.log("Calling detect script")
+        return this.invokeDetect(detectConfiguration.detectFolder, env)
     }
 
 }
