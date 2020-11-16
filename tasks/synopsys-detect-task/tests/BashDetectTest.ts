@@ -14,7 +14,11 @@ describe('BashDetect tests', function () {
 
     before( function() {
         bashScript = new BashDetectScript()
-    });
+    })
+
+    after(function () {
+        fse.removeSync(folder)
+    })
 
     it('validate env vars are set', function() {
         const detectKey1 = "key.1"
@@ -49,11 +53,10 @@ describe('BashDetect tests', function () {
         done()
     });
 
-    it('run detect script', async(done: Done) => {
-        this.timeout(0)
+    it('run detect script', async() => {
         const blackduckConfiguration: IBlackduckConfiguration = {
             blackduckApiToken: undefined,
-                blackduckPassword: undefined,
+            blackduckPassword: undefined,
             blackduckUrl: "",
             blackduckUsername: undefined,
             proxyInfo: undefined,
@@ -68,6 +71,5 @@ describe('BashDetect tests', function () {
 
         const result: number = await bashScript.runScript(blackduckConfiguration, detectConfiguration)
         assert.strictEqual(0, result, "Detect scan should have ended in success")
-        done()
     });
 });

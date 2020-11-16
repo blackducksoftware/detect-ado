@@ -3,11 +3,11 @@ import Axios, {AxiosInstance} from "axios";
 import {IProxyInfo} from "./model/IProxyInfo";
 import url from "url";
 import HttpsProxyAgent from "https-proxy-agent/dist/agent";
-import fs from "fs";
+import fileSystem from "fs";
 import {IDetectConfiguration} from "./model/IDetectConfiguration";
 import {parseArguments} from "./DetectUtils"
 
-const fse = require("fs-extra")
+const fileSystemExtra = require("fs-extra")
 
 export abstract class DetectScript {
     static readonly DETECT_DOWNLOAD_URL = "https://detect.synopsys.com"
@@ -30,14 +30,14 @@ export abstract class DetectScript {
     }
 
     downloadScript(axios: AxiosInstance, folder: string): void {
-        if (fs.existsSync(folder)) {
+        if (fileSystem.existsSync(folder)) {
             // Clean out existing folder
-            fse.removeSync(folder);
+            fileSystemExtra.removeSync(folder);
         }
 
-        fs.mkdirSync(folder)
+        fileSystem.mkdirSync(folder)
         const downloadLink: string = this.getFullDownloadUrl()
-        const writer = fs.createWriteStream(`${folder}/${this.getFilename()}`);
+        const writer = fileSystem.createWriteStream(`${folder}/${this.getFilename()}`);
         axios({
             url: downloadLink,
             method: 'GET',
@@ -68,7 +68,7 @@ export abstract class DetectScript {
         return Axios.create()
     }
 
-    async runScript(blackduckConfiguration: IBlackduckConfiguration, detectConfiguration: IDetectConfiguration): Promise<number> {
+    runScript(blackduckConfiguration: IBlackduckConfiguration, detectConfiguration: IDetectConfiguration): Promise<number> {
         const axiosAgent: AxiosInstance = this.createAxiosAgent(blackduckConfiguration)
         console.log("Downloading detect script.")
         this.downloadScript(axiosAgent, detectConfiguration.detectFolder)

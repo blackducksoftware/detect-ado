@@ -1,36 +1,58 @@
 import * as tl from 'azure-pipelines-task-lib/task'
 import * as os from 'os'
-import {IBlackduckConfiguration} from "./model/IBlackduckConfiguration"
-import {IDetectConfiguration} from "./model/IDetectConfiguration"
-import {ITaskConfiguration} from "./model/ITaskConfiguration"
-import {DetectADOConstants} from "./DetectADOConstants"
-import {IProxyInfo} from "./model/IProxyInfo"
-import {DetectScript} from "./DetectScript";
-import {PowershellDetectScript} from "./PowershellDetectScript";
-import {BashDetectScript} from "./BashDetectScript";
+import {IBlackduckConfiguration} from "./ts/model/IBlackduckConfiguration"
+import {IDetectConfiguration} from "./ts/model/IDetectConfiguration"
+import {ITaskConfiguration} from "./ts/model/ITaskConfiguration"
+import {DetectADOConstants} from "./ts/DetectADOConstants"
+import {IProxyInfo} from "./ts/model/IProxyInfo"
+import {DetectScript} from "./ts/DetectScript";
+import {PowershellDetectScript} from "./ts/PowershellDetectScript";
+import {BashDetectScript} from "./ts/BashDetectScript";
+const winston = require("winston")
+
+const log = winston.createLogger({
+    level: "debug",
+    transports: [
+        new (winston.transports.Console)({
+            format: winston.format.combine(
+                winston.format.colorize(),
+                winston.format.simple()
+            )
+        })
+    ],
+});
 
 const osPlat: string = os.platform()
 
 async function run() {
-    const blackduckConfiguration: IBlackduckConfiguration = getBlackduckConfiguration()
-    const detectConfiguration: IDetectConfiguration = getDetectConfiguration()
-    const taskConfiguration: ITaskConfiguration = getTaskConfiguration()
+    log.info('Starting Detect Task')
+    try {
+        const blackduckConfiguration: IBlackduckConfiguration = getBlackduckConfiguration()
+        const detectConfiguration: IDetectConfiguration = getDetectConfiguration()
+        const taskConfiguration: ITaskConfiguration = getTaskConfiguration()
 
-    const detectResult: number = await invokeDetect(blackduckConfiguration, detectConfiguration)
-    if (taskConfiguration.addTaskSummary) {
-        const content = (detectResult == 0) ? "Detect ran successfully" : `There was an issue running detect, exit code: ${detectResult}`
-        // Could also be task.addattachment
-        // TODO Find out how to add an attachment if this doesn't work
-        tl.setTaskVariable('Distributedtask.Core.Summary', content, false)
+        const detectResult: number = await invokeDetect(blackduckConfiguration, detectConfiguration)
+        log.info('Finished running detect, updating task information')
+        if (taskConfiguration.addTaskSummary) {
+            log.info('Adding task summary')
+            const content = (detectResult == 0) ? "Detect ran successfully" : `There was an issue running detect, exit code: ${detectResult}`
+            // Could also be task.addattachment
+            // TODO Find out how to add an attachment if this doesn't work
+            tl.setTaskVariable('Distributedtask.Core.Summary', content, false)
+        }
+        tl.setResult(tl.TaskResult.Succeeded, "Test Success (Not yet implemented)", true)
+    } catch (e) {
+        tl.setResult(tl.TaskResult.Failed, `An unexpected error occurred: ${e}`)
     }
-    tl.setResult(tl.TaskResult.Failed, "Not implemented", true)
 }
 
-async function invokeDetect(blackduckData: IBlackduckConfiguration, detectArguments: IDetectConfiguration): Promise<number> {
+function invokeDetect(blackduckData: IBlackduckConfiguration, detectArguments: IDetectConfiguration): Promise<number> {
     let detectScript: DetectScript
-    if ("win32" === osPlat) {
+    if ("win32" == osPlat) {
+        log.info('Detected Windows: Running powershell script')
         detectScript = new PowershellDetectScript()
     } else {
+        log.info('Windows not detected: Running shell script')
         detectScript = new BashDetectScript()
     }
 
@@ -38,6 +60,7 @@ async function invokeDetect(blackduckData: IBlackduckConfiguration, detectArgume
 }
 
 function getBlackduckConfiguration(): IBlackduckConfiguration {
+    log.info('Retrieving Blackduck configuration')
     const blackduckService: string = tl.getInput(DetectADOConstants.BLACKDUCK_ID, true)!
     const blackduckUrl: string = tl.getEndpointUrl(blackduckService, false)!
     const blackduckToken: string | undefined = tl.getEndpointAuthorizationParameter(blackduckService, DetectADOConstants.BLACKDUCK_API_TOKEN, true)
@@ -69,6 +92,7 @@ function getBlackduckConfiguration(): IBlackduckConfiguration {
 }
 
 function getDetectConfiguration(): IDetectConfiguration {
+    log.info('Retrieving Detect configuration')
     const additionalArguments: string = tl.getInput(DetectADOConstants.DETECT_ARGUMENTS, false) || ""
     const detectFolder: string = tl.getInput(DetectADOConstants.DETECT_FOLDER, false) || ""
     const detectVersion: string = tl.getInput(DetectADOConstants.DETECT_VERSION, false) || "latest"
@@ -81,6 +105,7 @@ function getDetectConfiguration(): IDetectConfiguration {
 }
 
 function getTaskConfiguration(): ITaskConfiguration {
+    log.info('Retrieving Task configuration')
     const addTask: boolean = tl.getBoolInput(DetectADOConstants.ADD_TASK_SUMMARY, false)
 
     return {

@@ -1,7 +1,6 @@
 export abstract class DetectADOConstants {
-    static readonly BLACKDUCK_ID = "synopsysblackduck"
-    static readonly BLACKDUCK_PROXY_ID = "synopsys-proxy-endpoint"
-    static readonly DETECT_TASK_ID = "synopsys-detect-task"
+    static readonly BLACKDUCK_ID = "BlackDuckService"
+    static readonly BLACKDUCK_PROXY_ID = "BlackDuckProxyService"
 
     static readonly BLACKDUCK_API_TOKEN = "apitoken"
     static readonly BLACKDUCK_USERNAME = "username"

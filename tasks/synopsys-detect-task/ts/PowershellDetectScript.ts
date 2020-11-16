@@ -9,12 +9,14 @@ export class PowershellDetectScript extends DetectScript {
         return PowershellDetectScript.DETECT_SCRIPT_NAME;
     }
 
-    async invokeDetect(cliFolder: string, env: any): Promise<number> {
-        const detect: tr.ToolRunner = tl.tool(this.getFilename());
-        detect.line(`./${PowershellDetectScript.DETECT_SCRIPT_NAME}`);
-
-        return detect.exec(<tr.IExecOptions>{
-            cwd: cliFolder,
+    async invokeDetect(scriptFolder: string, env: any): Promise<number> {
+        console.log("Setting tool runner")
+        const script = `./${PowershellDetectScript.DETECT_SCRIPT_NAME}`
+        const powershell: tr.ToolRunner = tl.tool('powershell.exe');
+        const cwd: string = scriptFolder
+        powershell.arg(`${script}`)
+        return powershell.exec(<tr.IExecOptions>{
+            cwd,
             env
         });
     }
