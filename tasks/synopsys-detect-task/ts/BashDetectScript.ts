@@ -1,6 +1,6 @@
 import {DetectScript} from "./DetectScript";
 import * as task from 'azure-pipelines-task-lib/task'
-import * as tr from 'azure-pipelines-task-lib/toolrunner'
+import * as toolRunner from 'azure-pipelines-task-lib/toolrunner'
 
 export class BashDetectScript extends DetectScript {
     static readonly DETECT_SCRIPT_NAME = "detect.sh"
@@ -11,13 +11,10 @@ export class BashDetectScript extends DetectScript {
 
     async invokeDetect(scriptFolder: string, env: any): Promise<number> {
         console.log("Setting tool runner")
-        const script = `./${BashDetectScript.DETECT_SCRIPT_NAME}`
-        const sh: tr.ToolRunner = task.tool(task.which('sh', true));
-        const cwd: string = scriptFolder
-        console.log('script:' + scriptFolder)
+        const script = `./${scriptFolder}/${BashDetectScript.DETECT_SCRIPT_NAME}`
+        const sh: toolRunner.ToolRunner = task.tool(task.which('sh', true));
         sh.arg(`${script}`)
-        return sh.exec(<tr.IExecOptions>{
-            cwd,
+        return sh.exec(<toolRunner.IExecOptions>{
             env
         });
     }

@@ -1,11 +1,12 @@
 {
   "name": "detect-for-tfs",
-  "version": "4.0.26",
+  "version": "3.0.0",
   "description": "Execute Synopsys Detect against your build",
   "scripts": {
     "build": "tsc -p .",
     "postbuild": "npm run package",
     "package": "tfx extension create",
+    "tick": "tsc && node dev/tick.js && tfx extension create --manifest-globs vss-extension.json",,
     "clean": "rimraf ./dist && rimraf ./*.vsix",
     "test": "tsc && mocha --timeout 10000 tasks/synopsys-detect-task/tests/*.js"
   },

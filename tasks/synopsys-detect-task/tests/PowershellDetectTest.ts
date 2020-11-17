@@ -2,11 +2,17 @@ import {DetectScript} from "../ts/DetectScript";
 import {PowershellDetectScript} from "../ts/PowershellDetectScript";
 import fs from "fs";
 import {Done} from "mocha";
+import {IBlackduckConfiguration} from "../ts/model/IBlackduckConfiguration";
+import {IDetectConfiguration} from "../ts/model/IDetectConfiguration";
+import fileSystem from "fs";
 
 const fse = require("fs-extra")
 const assert = require('assert')
 
-describe('PowershellDetect tests', function () {
+
+describe.skip('PowershellDetect tests', function () {
+    const folder = "test_folder"
+
     let powershellScript: DetectScript
 
     before( function() {
@@ -38,7 +44,7 @@ describe('PowershellDetect tests', function () {
             useProxy: false
         })
 
-        const folder = "test_folder"
+
         powershellScript.downloadScript(axios, folder)
 
         assert.ok(fs.existsSync(`${folder}/${powershellScript.getFilename()}`), "Downloaded file did not exist")
@@ -46,7 +52,24 @@ describe('PowershellDetect tests', function () {
         done()
     });
 
-    it('run detect script', function() {
+    it('run detect script', async() => {
+        const blackduckConfiguration: IBlackduckConfiguration = {
+            blackduckApiToken: undefined,
+            blackduckPassword: undefined,
+            blackduckUrl: "",
+            blackduckUsername: undefined,
+            proxyInfo: undefined,
+            useProxy: false
+        }
 
+        const detectConfiguration: IDetectConfiguration = {
+            detectAdditionalArguments: "--blackduck.trust.cert=true --detect.project.name=Detect ADO Test",
+            detectFolder: folder,
+            detectVersion: "latest"
+        }
+
+        const result: number = await powershellScript.runScript(blackduckConfiguration, detectConfiguration)
+        assert.ok(fileSystem.existsSync(`${folder}/${powershellScript.getFilename()}`), "Downloaded file did not exist")
+        assert.strictEqual(0, result, "Detect scan should have ended in success")
     });
 });

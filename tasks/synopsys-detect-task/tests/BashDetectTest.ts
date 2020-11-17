@@ -1,11 +1,11 @@
 import {DetectScript} from "../ts/DetectScript";
 import {BashDetectScript} from "../ts/BashDetectScript";
 import {Done} from "mocha";
-import * as fs from 'fs'
+import * as fileSystem from 'fs'
 import {IBlackduckConfiguration} from "../ts/model/IBlackduckConfiguration";
 import {IDetectConfiguration} from "../ts/model/IDetectConfiguration";
 
-const fse = require("fs-extra")
+const fileSystemExtra = require("fs-extra")
 const assert = require('assert')
 
 describe('BashDetect tests', function () {
@@ -17,7 +17,7 @@ describe('BashDetect tests', function () {
     })
 
     after(function () {
-        fse.removeSync(folder)
+        fileSystemExtra.removeSync(folder)
     })
 
     it('validate env vars are set', function() {
@@ -48,8 +48,8 @@ describe('BashDetect tests', function () {
 
         bashScript.downloadScript(axios, folder)
 
-        assert.ok(fs.existsSync(`${folder}/${bashScript.getFilename()}`), "Downloaded file did not exist")
-        fse.removeSync(folder)
+        assert.ok(fileSystem.existsSync(`${folder}/${bashScript.getFilename()}`), "Downloaded file did not exist")
+        fileSystemExtra.removeSync(folder)
         done()
     });
 
@@ -70,6 +70,7 @@ describe('BashDetect tests', function () {
         }
 
         const result: number = await bashScript.runScript(blackduckConfiguration, detectConfiguration)
+        assert.ok(fileSystem.existsSync(`${folder}/${bashScript.getFilename()}`), "Downloaded file did not exist")
         assert.strictEqual(0, result, "Detect scan should have ended in success")
     });
 });

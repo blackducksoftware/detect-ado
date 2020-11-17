@@ -3,7 +3,7 @@ import Axios, {AxiosInstance} from "axios";
 import {IProxyInfo} from "./model/IProxyInfo";
 import url from "url";
 import HttpsProxyAgent from "https-proxy-agent/dist/agent";
-import fileSystem from "fs";
+import fileSystem, {WriteStream} from "fs";
 import {IDetectConfiguration} from "./model/IDetectConfiguration";
 import {parseArguments} from "./DetectUtils"
 
@@ -29,22 +29,25 @@ export abstract class DetectScript {
         return `${DetectScript.DETECT_DOWNLOAD_URL}/${this.getFilename()}`
     }
 
-    downloadScript(axios: AxiosInstance, folder: string): void {
+    // TODO Add the specified detect version that should be downloaded
+    async downloadScript(axios: AxiosInstance, folder: string) {
         if (fileSystem.existsSync(folder)) {
+            console.log('Cleaning existing folder')
             // Clean out existing folder
             fileSystemExtra.removeSync(folder);
         }
 
-        fileSystem.mkdirSync(folder)
+        console.log(`Creating folder '${folder}'`)
+        fileSystem.mkdirSync(folder, {recursive: true})
         const downloadLink: string = this.getFullDownloadUrl()
-        const writer = fileSystem.createWriteStream(`${folder}/${this.getFilename()}`);
-        axios({
+        const writer: WriteStream = fileSystem.createWriteStream(`${folder}/${this.getFilename()}`);
+        const response = await axios({
             url: downloadLink,
             method: 'GET',
             responseType: 'stream'
-        }).then((response) => {
-            response.data.pipe(writer)
         })
+
+        response.data.pipe(writer)
     }
 
     createAxiosAgent(blackduckData: IBlackduckConfiguration): AxiosInstance {
