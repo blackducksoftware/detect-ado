@@ -45,7 +45,7 @@ describe.skip('PowershellDetect tests', function () {
         })
 
 
-        powershellScript.downloadScript(axios, folder)
+        powershellScript.downloadScript(axios, folder, "latest")
 
         assert.ok(fs.existsSync(`${folder}/${powershellScript.getFilename()}`), "Downloaded file did not exist")
         fse.removeSync(folder)

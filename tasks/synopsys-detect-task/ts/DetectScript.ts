@@ -25,12 +25,19 @@ export abstract class DetectScript {
         return env
     }
 
-    getFullDownloadUrl(): string {
-        return `${DetectScript.DETECT_DOWNLOAD_URL}/${this.getFilename()}`
+    getVersionedFilename(version: string): string {
+        const latestUrl = this.getFilename()
+        if (version && ("latest" != version)) {
+            return latestUrl.replace('.', `-${version}.`)
+        }
+        return latestUrl
     }
 
-    // TODO Add the specified detect version that should be downloaded
-    async downloadScript(axios: AxiosInstance, folder: string) {
+    getFullDownloadUrl(version: string): string {
+        return `${DetectScript.DETECT_DOWNLOAD_URL}/${this.getVersionedFilename(version)}`
+    }
+
+    async downloadScript(axios: AxiosInstance, folder: string, version: string) {
         if (fileSystem.existsSync(folder)) {
             console.log('Cleaning existing folder')
             // Clean out existing folder
@@ -39,7 +46,7 @@ export abstract class DetectScript {
 
         console.log(`Creating folder '${folder}'`)
         fileSystem.mkdirSync(folder, {recursive: true})
-        const downloadLink: string = this.getFullDownloadUrl()
+        const downloadLink: string = this.getFullDownloadUrl(version)
         const writer: WriteStream = fileSystem.createWriteStream(`${folder}/${this.getFilename()}`);
         const response = await axios({
             url: downloadLink,
@@ -74,7 +81,7 @@ export abstract class DetectScript {
     runScript(blackduckConfiguration: IBlackduckConfiguration, detectConfiguration: IDetectConfiguration): Promise<number> {
         const axiosAgent: AxiosInstance = this.createAxiosAgent(blackduckConfiguration)
         console.log("Downloading detect script.")
-        this.downloadScript(axiosAgent, detectConfiguration.detectFolder)
+        this.downloadScript(axiosAgent, detectConfiguration.detectFolder, detectConfiguration.detectVersion)
         const env = this.createEnvironmentWithVariables(detectConfiguration.detectAdditionalArguments)
         console.log("Calling detect script")
         return this.invokeDetect(detectConfiguration.detectFolder, env)

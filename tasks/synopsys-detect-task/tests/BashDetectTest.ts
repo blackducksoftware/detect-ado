@@ -10,6 +10,8 @@ const assert = require('assert')
 
 describe('BashDetect tests', function () {
     const folder = "test_folder"
+    const detectVersion = "2.4.1"
+
     let bashScript: DetectScript
 
     before( function() {
@@ -46,10 +48,9 @@ describe('BashDetect tests', function () {
             })
 
 
-        bashScript.downloadScript(axios, folder)
+        bashScript.downloadScript(axios, folder, detectVersion)
 
         assert.ok(fileSystem.existsSync(`${folder}/${bashScript.getFilename()}`), "Downloaded file did not exist")
-        fileSystemExtra.removeSync(folder)
         done()
     });
 
