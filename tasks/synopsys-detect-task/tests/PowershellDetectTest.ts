@@ -9,7 +9,6 @@ import fileSystem from "fs";
 const fse = require("fs-extra")
 const assert = require('assert')
 
-
 describe.skip('PowershellDetect tests', function () {
     const folder = "test_folder"
 
@@ -27,7 +26,12 @@ describe.skip('PowershellDetect tests', function () {
 
         const detectArgs = `--${detectKey1}=${detectValue1} --${detectKey2}=${detectValue2}`
 
-        const env = powershellScript.createEnvironmentWithVariables(detectArgs)
+        const config: IDetectConfiguration = {
+            detectFolder: folder,
+            detectVersion: "",
+            detectAdditionalArguments: detectArgs
+        }
+        const env = powershellScript.createEnvironmentWithVariables(config)
 
         assert.strictEqual(env["KEY_1"], detectValue1, "Expected to find matching env var 1")
         assert.strictEqual(env["KEY_2"], detectValue2, "Expected to find matching env var 2")
@@ -45,7 +49,7 @@ describe.skip('PowershellDetect tests', function () {
         })
 
 
-        powershellScript.downloadScript(axios, folder, "latest")
+        powershellScript.downloadScript(axios, folder)
 
         assert.ok(fs.existsSync(`${folder}/${powershellScript.getFilename()}`), "Downloaded file did not exist")
         fse.removeSync(folder)

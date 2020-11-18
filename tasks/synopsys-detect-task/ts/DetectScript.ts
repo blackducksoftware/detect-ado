@@ -1,4 +1,5 @@
 import {IBlackduckConfiguration} from "./model/IBlackduckConfiguration";
+import * as task from 'azure-pipelines-task-lib/task'
 import Axios, {AxiosInstance} from "axios";
 import {IProxyInfo} from "./model/IProxyInfo";
 import url from "url";
@@ -16,28 +17,28 @@ export abstract class DetectScript {
 
     async abstract invokeDetect(scriptFolder: string, env: any): Promise<number>
 
-    createEnvironmentWithVariables(detectArguments: string): any {
+    createEnvironmentWithVariables(detectConfiguration: IDetectConfiguration): any {
         const env = process.env
+        const detectArguments: string = detectConfiguration.detectAdditionalArguments
         parseArguments(detectArguments).forEach((value, key) => {
             const formattedKey = key.replace('.', '_').toUpperCase()
             env[formattedKey] = value
         })
+        const detectVersion: string = detectConfiguration.detectVersion
+        if (detectVersion && ('latest' != detectVersion)) {
+            env['DETECT_LATEST_RELEASE_VERSION'] = detectVersion
+        }
+        env['DETECT_EXIT_CODE_PASSTHRU'] = "1"
+        env['DETECT_JAR_PATH'] = detectConfiguration.detectFolder
+        env['DETECT_SOURCE_PATH'] = task.getVariable('BUILD_SOURCESDIRECTORY')
         return env
     }
 
-    getVersionedFilename(version: string): string {
-        const latestUrl = this.getFilename()
-        if (version && ("latest" != version)) {
-            return latestUrl.replace('.', `-${version}.`)
-        }
-        return latestUrl
+    getFullDownloadUrl(): string {
+        return `${DetectScript.DETECT_DOWNLOAD_URL}/${this.getFilename()}`
     }
 
-    getFullDownloadUrl(version: string): string {
-        return `${DetectScript.DETECT_DOWNLOAD_URL}/${this.getVersionedFilename(version)}`
-    }
-
-    async downloadScript(axios: AxiosInstance, folder: string, version: string) {
+    async downloadScript(axios: AxiosInstance, folder: string): Promise<boolean> {
         if (fileSystem.existsSync(folder)) {
             console.log('Cleaning existing folder')
             // Clean out existing folder
@@ -46,8 +47,9 @@ export abstract class DetectScript {
 
         console.log(`Creating folder '${folder}'`)
         fileSystem.mkdirSync(folder, {recursive: true})
-        const downloadLink: string = this.getFullDownloadUrl(version)
-        const writer: WriteStream = fileSystem.createWriteStream(`${folder}/${this.getFilename()}`);
+        const downloadLink: string = this.getFullDownloadUrl()
+        const filePath: string = `${folder}/${this.getFilename()}`
+        const writer: WriteStream = fileSystem.createWriteStream(filePath);
         const response = await axios({
             url: downloadLink,
             method: 'GET',
@@ -55,6 +57,7 @@ export abstract class DetectScript {
         })
 
         response.data.pipe(writer)
+        return fileSystem.existsSync(filePath)
     }
 
     createAxiosAgent(blackduckData: IBlackduckConfiguration): AxiosInstance {
@@ -78,13 +81,18 @@ export abstract class DetectScript {
         return Axios.create()
     }
 
-    runScript(blackduckConfiguration: IBlackduckConfiguration, detectConfiguration: IDetectConfiguration): Promise<number> {
+    async runScript(blackduckConfiguration: IBlackduckConfiguration, detectConfiguration: IDetectConfiguration): Promise<number> {
         const axiosAgent: AxiosInstance = this.createAxiosAgent(blackduckConfiguration)
         console.log("Downloading detect script.")
-        this.downloadScript(axiosAgent, detectConfiguration.detectFolder, detectConfiguration.detectVersion)
-        const env = this.createEnvironmentWithVariables(detectConfiguration.detectAdditionalArguments)
+        const scriptDownloaded: boolean = await this.downloadScript(axiosAgent, detectConfiguration.detectFolder)
+        if (!scriptDownloaded) {
+            console.log("Didn't download file")
+        } else {
+            console.log("Downloaded file")
+        }
+        const env = this.createEnvironmentWithVariables(detectConfiguration)
         console.log("Calling detect script")
-        return this.invokeDetect(detectConfiguration.detectFolder, env)
+        return await this.invokeDetect(detectConfiguration.detectFolder, env)
     }
 
 }

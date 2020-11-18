@@ -47,7 +47,7 @@ async function run() {
     }
 }
 
-function invokeDetect(blackduckData: IBlackduckConfiguration, detectArguments: IDetectConfiguration): Promise<number> {
+async function invokeDetect(blackduckData: IBlackduckConfiguration, detectArguments: IDetectConfiguration): Promise<number> {
     let detectScript: DetectScript
     if ("win32" == osPlat) {
         log.info('Windows detected: Running powershell script')
@@ -57,7 +57,7 @@ function invokeDetect(blackduckData: IBlackduckConfiguration, detectArguments: I
         detectScript = new BashDetectScript()
     }
 
-    return detectScript.runScript(blackduckData, detectArguments)
+    return await detectScript.runScript(blackduckData, detectArguments)
 }
 
 function getBlackduckConfiguration(): IBlackduckConfiguration {

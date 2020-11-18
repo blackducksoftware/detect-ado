@@ -1,6 +1,7 @@
 import {DetectScript} from "./DetectScript";
 import * as task from 'azure-pipelines-task-lib/task'
 import * as toolRunner from 'azure-pipelines-task-lib/toolrunner'
+import fileSystem, {WriteStream} from "fs";
 
 export class BashDetectScript extends DetectScript {
     static readonly DETECT_SCRIPT_NAME = "detect.sh"

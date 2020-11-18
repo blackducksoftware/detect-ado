@@ -29,8 +29,13 @@ describe('BashDetect tests', function () {
         const detectValue2 = "value2"
 
         const detectArgs = `--${detectKey1}=${detectValue1} --${detectKey2}=${detectValue2}`
+        const config: IDetectConfiguration = {
+            detectFolder: folder,
+            detectVersion: "",
+            detectAdditionalArguments: detectArgs
+        }
 
-        const env = bashScript.createEnvironmentWithVariables(detectArgs)
+        const env = bashScript.createEnvironmentWithVariables(config)
 
         assert.strictEqual(env["KEY_1"], detectValue1, "Expected to find matching env var 1")
         assert.strictEqual(env["KEY_2"], detectValue2, "Expected to find matching env var 2")
@@ -48,7 +53,7 @@ describe('BashDetect tests', function () {
             })
 
 
-        bashScript.downloadScript(axios, folder, detectVersion)
+        bashScript.downloadScript(axios, folder)
 
         assert.ok(fileSystem.existsSync(`${folder}/${bashScript.getFilename()}`), "Downloaded file did not exist")
         done()
