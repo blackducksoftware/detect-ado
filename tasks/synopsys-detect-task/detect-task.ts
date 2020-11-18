@@ -31,17 +31,15 @@ async function run() {
         const detectConfiguration: IDetectConfiguration = getDetectConfiguration()
         const taskConfiguration: ITaskConfiguration = getTaskConfiguration()
 
-        // const detectResult: number = await invokeDetect(blackduckConfiguration, detectConfiguration)
-        invokeDetect(blackduckConfiguration, detectConfiguration).then((result) => {
-            log.info('Finished running detect, updating task information')
-            if (taskConfiguration.addTaskSummary) {
-                log.info('Adding task summary')
-                const content = (result == 0) ? "Detect ran successfully" : `There was an issue running detect, exit code: ${result}`
-                // Could also be task.addattachment
-                // TODO Find out how to add an attachment if this doesn't work
-                task.setTaskVariable('Distributedtask.Core.Summary', content, false)
-            }
-        })
+        const detectResult: number = await invokeDetect(blackduckConfiguration, detectConfiguration)
+        log.info('Finished running detect, updating task information')
+        if (taskConfiguration.addTaskSummary) {
+            log.info('Adding task summary')
+            const content = (detectResult == 0) ? "Detect ran successfully" : `There was an issue running detect, exit code: ${detectResult}`
+            // Could also be task.addattachment
+            // TODO Find out how to add an attachment if this doesn't work
+            task.setTaskVariable('Distributedtask.Core.Summary', content, false)
+        }
     } catch (e) {
         task.setResult(task.TaskResult.Failed, `An unexpected error occurred: ${e}`)
     }

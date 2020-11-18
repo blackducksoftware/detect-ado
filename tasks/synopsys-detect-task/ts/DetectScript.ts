@@ -57,7 +57,10 @@ export abstract class DetectScript {
         })
 
         response.data.pipe(writer)
-        return fileSystem.existsSync(filePath)
+        return new Promise((resolve, reject) => {
+            writer.on('finish', resolve)
+            writer.on('error', reject)
+        })
     }
 
     createAxiosAgent(blackduckData: IBlackduckConfiguration): AxiosInstance {
