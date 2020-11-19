@@ -17,20 +17,34 @@ export abstract class DetectScript {
 
     async abstract invokeDetect(scriptFolder: string, env: any): Promise<number>
 
-    createEnvironmentWithVariables(detectConfiguration: IDetectConfiguration): any {
+    createEnvironmentWithVariables(blackduckConfiguration: IBlackduckConfiguration, detectConfiguration: IDetectConfiguration): any {
         const env = process.env
         const detectArguments: string = detectConfiguration.detectAdditionalArguments
         parseArguments(detectArguments).forEach((value, key) => {
-            const formattedKey = key.replace('.', '_').toUpperCase()
+            // Replaces all occurrences of . with _ (Need to use regex otherwise only the first is replaced)
+            const formattedKey = key.replace(new RegExp("\\.", "g"), '_').toUpperCase()
             env[formattedKey] = value
         })
         const detectVersion: string = detectConfiguration.detectVersion
         if (detectVersion && ('latest' != detectVersion)) {
             env['DETECT_LATEST_RELEASE_VERSION'] = detectVersion
         }
+
+        env['BLACKDUCK_URL'] = blackduckConfiguration.blackduckUrl
+
+        if(blackduckConfiguration.blackduckApiToken) {
+            console.log("Using blackduck API token")
+            env['BLACKDUCK_API_TOKEN'] = blackduckConfiguration.blackduckApiToken
+        } else {
+            console.log("Using blackduck username and password")
+            env['BLACKDUCK_USERNAME'] = blackduckConfiguration.blackduckUsername
+            env['BLACKDUCK_PASSWORD'] = blackduckConfiguration.blackduckPassword
+        }
+
         env['DETECT_EXIT_CODE_PASSTHRU'] = "1"
         env['DETECT_JAR_PATH'] = detectConfiguration.detectFolder
         env['DETECT_SOURCE_PATH'] = task.getVariable('BUILD_SOURCESDIRECTORY')
+
         return env
     }
 
@@ -87,13 +101,8 @@ export abstract class DetectScript {
     async runScript(blackduckConfiguration: IBlackduckConfiguration, detectConfiguration: IDetectConfiguration): Promise<number> {
         const axiosAgent: AxiosInstance = this.createAxiosAgent(blackduckConfiguration)
         console.log("Downloading detect script.")
-        const scriptDownloaded: boolean = await this.downloadScript(axiosAgent, detectConfiguration.detectFolder)
-        if (!scriptDownloaded) {
-            console.log("Didn't download file")
-        } else {
-            console.log("Downloaded file")
-        }
-        const env = this.createEnvironmentWithVariables(detectConfiguration)
+        await this.downloadScript(axiosAgent, detectConfiguration.detectFolder)
+        const env = this.createEnvironmentWithVariables(blackduckConfiguration, detectConfiguration)
         console.log("Calling detect script")
         return await this.invokeDetect(detectConfiguration.detectFolder, env)
     }

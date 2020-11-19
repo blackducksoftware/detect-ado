@@ -10,7 +10,6 @@ const assert = require('assert')
 
 describe('BashDetect tests', function () {
     const folder = "test_folder"
-    const detectVersion = "2.4.1"
 
     let bashScript: DetectScript
 
@@ -19,7 +18,7 @@ describe('BashDetect tests', function () {
     })
 
     after(function () {
-        fileSystemExtra.removeSync(folder)
+        // fileSystemExtra.removeSync(folder)
     })
 
     it('validate env vars are set', function() {
@@ -27,18 +26,23 @@ describe('BashDetect tests', function () {
         const detectValue1 = "value1"
         const detectKey2 = "key.2"
         const detectValue2 = "value2"
+        const actualPropertyKey = "blackduck.trust.cert"
+        const actualPropertyValue = "true"
 
-        const detectArgs = `--${detectKey1}=${detectValue1} --${detectKey2}=${detectValue2}`
+        const detectArgs = `--${detectKey1}=${detectValue1}
+                            --${detectKey2}=${detectValue2}
+                            --${actualPropertyKey}=${actualPropertyValue}`
         const config: IDetectConfiguration = {
             detectFolder: folder,
             detectVersion: "",
             detectAdditionalArguments: detectArgs
         }
 
-        const env = bashScript.createEnvironmentWithVariables(config)
+        const env = bashScript.createEnvironmentWithVariables({} as IBlackduckConfiguration, config)
 
-        assert.strictEqual(env["KEY_1"], detectValue1, "Expected to find matching env var 1")
-        assert.strictEqual(env["KEY_2"], detectValue2, "Expected to find matching env var 2")
+        assert.strictEqual(env["KEY_1"], detectValue1)
+        assert.strictEqual(env["KEY_2"], detectValue2)
+        assert.strictEqual(env["BLACKDUCK_TRUST_CERT"], actualPropertyValue)
     });
 
     it('test script download', function(done: Done) {
@@ -70,7 +74,7 @@ describe('BashDetect tests', function () {
         }
 
         const detectConfiguration: IDetectConfiguration = {
-            detectAdditionalArguments: "--blackduck.trust.cert=true --detect.project.name=Detect ADO Test",
+            detectAdditionalArguments: "--blackduck.offline.mode=true",
             detectFolder: folder,
             detectVersion: "latest"
         }
