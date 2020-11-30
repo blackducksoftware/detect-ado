@@ -13,7 +13,7 @@
   "version": {
     "Major": 4,
     "Minor": 0,
-    "Patch": 303
+    "Patch": 309
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "Run Synopsys Detect for your build $(message)",

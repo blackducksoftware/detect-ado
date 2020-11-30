@@ -11,10 +11,16 @@ export class PowershellDetectScript extends DetectScript {
 
     async invokeDetect(scriptFolder: string, env: any): Promise<number> {
         console.log("Setting tool runner")
-        const script = `./${PowershellDetectScript.DETECT_SCRIPT_NAME}`
+        const script = `.\\${PowershellDetectScript.DETECT_SCRIPT_NAME}`
         const powershell: tr.ToolRunner = tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
-        const cwd: string = scriptFolder
-        powershell.arg(`${script}`)
+        const cwd = scriptFolder
+
+        // Script from docs "[Net.ServicePointManager]::SecurityProtocol = 'tls12'; irm https://detect.synopsys.com/detect.ps1?$(Get-Random) | iex; detect"
+        const securityArg = "[Net.ServicePointManager]::SecurityProtocol = 'tls12'"
+        //Runs the script 'powershell -command "& { . .\detect.ps1; Detect }"'
+        const command = `& {. ${script}; Detect }`
+        powershell.arg(["-command ", securityArg, command])
+
         return powershell.exec(<tr.IExecOptions>{
             cwd,
             env

@@ -18,7 +18,7 @@ describe('BashDetect tests', function () {
     })
 
     after(function () {
-        // fileSystemExtra.removeSync(folder)
+        fileSystemExtra.removeSync(folder)
     })
 
     it('validate env vars are set', function() {
@@ -56,14 +56,13 @@ describe('BashDetect tests', function () {
                 useProxy: false
             })
 
-
         bashScript.downloadScript(axios, folder)
 
         assert.ok(fileSystem.existsSync(`${folder}/${bashScript.getFilename()}`), "Downloaded file did not exist")
         done()
     });
 
-    it('run detect script', async() => {
+    it.skip('run detect script', async() => {
         const blackduckConfiguration: IBlackduckConfiguration = {
             blackduckApiToken: undefined,
             blackduckPassword: undefined,

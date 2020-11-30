@@ -41,8 +41,9 @@ export abstract class DetectScript {
             env['BLACKDUCK_PASSWORD'] = blackduckConfiguration.blackduckPassword
         }
 
+        // Set according to the Powershell script
         env['DETECT_EXIT_CODE_PASSTHRU'] = "1"
-        env['DETECT_JAR_PATH'] = detectConfiguration.detectFolder
+
         env['DETECT_SOURCE_PATH'] = task.getVariable('BUILD_SOURCESDIRECTORY')
 
         return env
@@ -63,6 +64,7 @@ export abstract class DetectScript {
         fileSystem.mkdirSync(folder, {recursive: true})
         const downloadLink: string = this.getFullDownloadUrl()
         const filePath: string = `${folder}/${this.getFilename()}`
+        console.log(`Creating new file: ${filePath}`)
         const writer: WriteStream = fileSystem.createWriteStream(filePath);
         const response = await axios({
             url: downloadLink,

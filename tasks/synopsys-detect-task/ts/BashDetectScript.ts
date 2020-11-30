@@ -12,10 +12,11 @@ export class BashDetectScript extends DetectScript {
 
     async invokeDetect(scriptFolder: string, env: any): Promise<number> {
         console.log("Setting tool runner")
-        const script = `./${scriptFolder}/${BashDetectScript.DETECT_SCRIPT_NAME}`
+        const script = `./${BashDetectScript.DETECT_SCRIPT_NAME}`
         const sh: toolRunner.ToolRunner = task.tool(task.which('sh', true));
         sh.arg(`${script}`)
         return sh.exec(<toolRunner.IExecOptions>{
+            cwd: scriptFolder,
             env
         });
     }
