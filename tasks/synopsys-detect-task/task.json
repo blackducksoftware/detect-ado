@@ -11,9 +11,9 @@
   ],
   "demands": [],
   "version": {
-    "Major": 4,
+    "Major": 3,
     "Minor": 0,
-    "Patch": 309
+    "Patch": 13
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "Run Synopsys Detect for your build $(message)",

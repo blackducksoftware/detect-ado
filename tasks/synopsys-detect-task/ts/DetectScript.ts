@@ -7,6 +7,7 @@ import HttpsProxyAgent from "https-proxy-agent/dist/agent";
 import fileSystem, {WriteStream} from "fs";
 import {IDetectConfiguration} from "./model/IDetectConfiguration";
 import {parseArguments} from "./DetectUtils"
+import {IExecOptions, ToolRunner} from "azure-pipelines-task-lib/toolrunner";
 
 const fileSystemExtra = require("fs-extra")
 
@@ -15,7 +16,18 @@ export abstract class DetectScript {
 
     abstract getFilename(): string
 
-    async abstract invokeDetect(scriptFolder: string, env: any): Promise<number>
+    abstract getTool(): ToolRunner
+
+    abstract getCommands(): Array<string>
+
+    async runScript(blackduckConfiguration: IBlackduckConfiguration, detectConfiguration: IDetectConfiguration): Promise<number> {
+        const axiosAgent: AxiosInstance = this.createAxiosAgent(blackduckConfiguration)
+        console.log("Downloading detect script.")
+        await this.downloadScript(axiosAgent, detectConfiguration.detectFolder)
+        const env = this.createEnvironmentWithVariables(blackduckConfiguration, detectConfiguration)
+        console.log("Calling detect script")
+        return await this.invokeDetect(detectConfiguration.detectFolder, env)
+    }
 
     createEnvironmentWithVariables(blackduckConfiguration: IBlackduckConfiguration, detectConfiguration: IDetectConfiguration): any {
         const env = process.env
@@ -100,13 +112,14 @@ export abstract class DetectScript {
         return Axios.create()
     }
 
-    async runScript(blackduckConfiguration: IBlackduckConfiguration, detectConfiguration: IDetectConfiguration): Promise<number> {
-        const axiosAgent: AxiosInstance = this.createAxiosAgent(blackduckConfiguration)
-        console.log("Downloading detect script.")
-        await this.downloadScript(axiosAgent, detectConfiguration.detectFolder)
-        const env = this.createEnvironmentWithVariables(blackduckConfiguration, detectConfiguration)
-        console.log("Calling detect script")
-        return await this.invokeDetect(detectConfiguration.detectFolder, env)
+    async invokeDetect(scriptFolder: string, env: any): Promise<number> {
+        console.log("Setting tool runner")
+        const tool: ToolRunner = this.getTool()
+        tool.arg(this.getCommands())
+        return tool.exec(<IExecOptions>{
+            cwd: scriptFolder,
+            env
+        });
     }
 
 }

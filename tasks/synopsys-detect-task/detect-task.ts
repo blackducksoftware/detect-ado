@@ -9,6 +9,7 @@ import {DetectScript} from "./ts/DetectScript";
 import {PowershellDetectScript} from "./ts/PowershellDetectScript";
 import {BashDetectScript} from "./ts/BashDetectScript";
 const winston = require("winston")
+import fileSystem from "fs";
 
 const log = winston.createLogger({
     level: "debug",
@@ -31,31 +32,31 @@ async function run() {
         const detectConfiguration: IDetectConfiguration = getDetectConfiguration()
         const taskConfiguration: ITaskConfiguration = getTaskConfiguration()
 
-        const detectResult: number = await invokeDetect(blackduckConfiguration, detectConfiguration)
+        const detectScript: DetectScript = createScript()
+        const detectResult: number = await detectScript.runScript(blackduckConfiguration, detectConfiguration)
         log.info('Finished running detect, updating task information')
         if (taskConfiguration.addTaskSummary) {
             log.info('Adding task summary')
             const content = (detectResult == 0) ? "Detect ran successfully" : `There was an issue running detect, exit code: ${detectResult}`
-            // Could also be task.addattachment
-            // TODO Find out how to add an attachment if this doesn't work
-            task.setTaskVariable('Distributedtask.Core.Summary', content, false)
+            const tempFile: string = Date.now().toString()
+            const fullPath: string = `${__dirname}/${tempFile}`
+            fileSystem.writeFileSync(fullPath, content)
+            task.addAttachment("Distributedtask.Core.Summary", "Synopsys Detect", fullPath)
         }
     } catch (e) {
         task.setResult(task.TaskResult.Failed, `An unexpected error occurred: ${e}`)
     }
 }
 
-async function invokeDetect(blackduckData: IBlackduckConfiguration, detectArguments: IDetectConfiguration): Promise<number> {
+function createScript(): DetectScript {
     let detectScript: DetectScript
     if ("win32" == osPlat) {
         log.info('Windows detected: Running powershell script')
-        detectScript = new PowershellDetectScript()
-    } else {
-        log.info('Windows not detected: Running shell script')
-        detectScript = new BashDetectScript()
+        return detectScript = new PowershellDetectScript()
     }
 
-    return await detectScript.runScript(blackduckData, detectArguments)
+    log.info('Windows not detected: Running shell script')
+    return new BashDetectScript()
 }
 
 function getBlackduckConfiguration(): IBlackduckConfiguration {
