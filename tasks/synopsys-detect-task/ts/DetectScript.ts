@@ -13,12 +13,19 @@ const fileSystemExtra = require("fs-extra")
 
 export abstract class DetectScript {
     static readonly DETECT_DOWNLOAD_URL = "https://detect.synopsys.com"
+    scriptName: string
 
-    abstract getFilename(): string
+    protected constructor(scriptName: string) {
+        this.scriptName = scriptName
+    }
 
     abstract getTool(): ToolRunner
 
     abstract getCommands(): Array<string>
+
+    getScriptName(): string {
+        return this.scriptName
+    }
 
     async runScript(blackduckConfiguration: IBlackduckConfiguration, detectConfiguration: IDetectConfiguration): Promise<number> {
         const axiosAgent: AxiosInstance = this.createAxiosAgent(blackduckConfiguration)
@@ -27,6 +34,57 @@ export abstract class DetectScript {
         const env = this.createEnvironmentWithVariables(blackduckConfiguration, detectConfiguration)
         console.log("Calling detect script")
         return await this.invokeDetect(detectConfiguration.detectFolder, env)
+    }
+
+    createAxiosAgent(blackduckData: IBlackduckConfiguration): AxiosInstance {
+        if (blackduckData.useProxy) {
+            const proxyInfo: IProxyInfo = blackduckData.proxyInfo!
+            const proxyOpts = url.parse(proxyInfo.proxyUrl)
+
+            const proxyConfig: any = {
+                host: proxyOpts.hostname,
+                port: proxyOpts.port
+            }
+
+            if (proxyInfo.proxyUsername && proxyInfo.proxyPassword) {
+                proxyConfig.auth = proxyInfo.proxyUsername + ":" + proxyInfo.proxyPassword
+            }
+
+            const httpsAgent = new HttpsProxyAgent(proxyConfig)
+            return Axios.create({httpsAgent})
+        }
+
+        return Axios.create()
+    }
+
+    async downloadScript(axios: AxiosInstance, folder: string): Promise<boolean> {
+        if (fileSystem.existsSync(folder)) {
+            console.log('Cleaning existing folder')
+            // Clean out existing folder
+            fileSystemExtra.removeSync(folder);
+        }
+
+        console.log(`Creating folder '${folder}'`)
+        fileSystem.mkdirSync(folder, {recursive: true})
+        const downloadLink: string = this.getFullDownloadUrl()
+        const filePath: string = `${folder}/${this.getScriptName()}`
+        console.log(`Creating new file: ${filePath}`)
+        const writer: WriteStream = fileSystem.createWriteStream(filePath);
+        const response = await axios({
+            url: downloadLink,
+            method: 'GET',
+            responseType: 'stream'
+        })
+
+        response.data.pipe(writer)
+        return new Promise((resolve, reject) => {
+            writer.on('finish', resolve)
+            writer.on('error', reject)
+        })
+    }
+
+    getFullDownloadUrl(): string {
+        return `${DetectScript.DETECT_DOWNLOAD_URL}/${this.getScriptName()}`
     }
 
     createEnvironmentWithVariables(blackduckConfiguration: IBlackduckConfiguration, detectConfiguration: IDetectConfiguration): any {
@@ -59,57 +117,6 @@ export abstract class DetectScript {
         env['DETECT_SOURCE_PATH'] = task.getVariable('BUILD_SOURCESDIRECTORY')
 
         return env
-    }
-
-    getFullDownloadUrl(): string {
-        return `${DetectScript.DETECT_DOWNLOAD_URL}/${this.getFilename()}`
-    }
-
-    async downloadScript(axios: AxiosInstance, folder: string): Promise<boolean> {
-        if (fileSystem.existsSync(folder)) {
-            console.log('Cleaning existing folder')
-            // Clean out existing folder
-            fileSystemExtra.removeSync(folder);
-        }
-
-        console.log(`Creating folder '${folder}'`)
-        fileSystem.mkdirSync(folder, {recursive: true})
-        const downloadLink: string = this.getFullDownloadUrl()
-        const filePath: string = `${folder}/${this.getFilename()}`
-        console.log(`Creating new file: ${filePath}`)
-        const writer: WriteStream = fileSystem.createWriteStream(filePath);
-        const response = await axios({
-            url: downloadLink,
-            method: 'GET',
-            responseType: 'stream'
-        })
-
-        response.data.pipe(writer)
-        return new Promise((resolve, reject) => {
-            writer.on('finish', resolve)
-            writer.on('error', reject)
-        })
-    }
-
-    createAxiosAgent(blackduckData: IBlackduckConfiguration): AxiosInstance {
-        if (blackduckData.useProxy) {
-            const proxyInfo: IProxyInfo = blackduckData.proxyInfo!
-            const proxyOpts = url.parse(proxyInfo.proxyUrl)
-
-            const proxyConfig: any = {
-                host: proxyOpts.hostname,
-                port: proxyOpts.port
-            }
-
-            if (proxyInfo.proxyUsername && proxyInfo.proxyPassword) {
-                proxyConfig.auth = proxyInfo.proxyUsername + ":" + proxyInfo.proxyPassword
-            }
-
-            const httpsAgent = new HttpsProxyAgent(proxyConfig)
-            return Axios.create({httpsAgent})
-        }
-
-        return Axios.create()
     }
 
     async invokeDetect(scriptFolder: string, env: any): Promise<number> {

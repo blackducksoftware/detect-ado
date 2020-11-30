@@ -58,7 +58,7 @@ describe('BashDetect tests', function () {
 
         bashScript.downloadScript(axios, folder)
 
-        assert.ok(fileSystem.existsSync(`${folder}/${bashScript.getFilename()}`), "Downloaded file did not exist")
+        assert.ok(fileSystem.existsSync(`${folder}/${bashScript.getScriptName()}`), "Downloaded file did not exist")
         done()
     });
 
@@ -79,7 +79,7 @@ describe('BashDetect tests', function () {
         }
 
         const result: number = await bashScript.runScript(blackduckConfiguration, detectConfiguration)
-        assert.ok(fileSystem.existsSync(`${folder}/${bashScript.getFilename()}`), "Downloaded file did not exist")
+        assert.ok(fileSystem.existsSync(`${folder}/${bashScript.getScriptName()}`), "Downloaded file did not exist")
         assert.strictEqual(0, result, "Detect scan should have ended in success")
     });
 });

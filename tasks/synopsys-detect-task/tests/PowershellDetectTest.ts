@@ -39,7 +39,7 @@ describe('BashDetect tests', function () {
         }
 
         const result: number = await powershellScript.runScript(blackduckConfiguration, detectConfiguration)
-        assert.ok(fileSystem.existsSync(`${folder}/${powershellScript.getFilename()}`), "Downloaded file did not exist")
+        assert.ok(fileSystem.existsSync(`${folder}/${powershellScript.getScriptName()}`), "Downloaded file did not exist")
         assert.strictEqual(0, result, "Detect scan should have ended in success")
     });
 });

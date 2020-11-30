@@ -5,8 +5,8 @@ import {ToolRunner} from "azure-pipelines-task-lib/toolrunner";
 export class PowershellDetectScript extends DetectScript {
     static readonly DETECT_SCRIPT_NAME = "detect.ps1"
 
-    getFilename(): string {
-        return PowershellDetectScript.DETECT_SCRIPT_NAME;
+    constructor() {
+        super(PowershellDetectScript.DETECT_SCRIPT_NAME);
     }
 
     getCommands(): Array<string> {
