@@ -8,25 +8,13 @@ import {IProxyInfo} from "./ts/model/IProxyInfo"
 import {DetectScript} from "./ts/DetectScript";
 import {PowershellDetectScript} from "./ts/PowershellDetectScript";
 import {BashDetectScript} from "./ts/BashDetectScript";
-const winston = require("winston")
 import fileSystem from "fs";
-
-const log = winston.createLogger({
-    level: "debug",
-    transports: [
-        new (winston.transports.Console)({
-            format: winston.format.combine(
-                winston.format.colorize(),
-                winston.format.simple()
-            )
-        })
-    ],
-});
+import {logger} from './ts/DetectLogger'
 
 const osPlat: string = os.platform()
 
 async function run() {
-    log.info('Starting Detect Task')
+    logger.info('Starting Detect Task')
     try {
         const blackduckConfiguration: IBlackduckConfiguration = getBlackduckConfiguration()
         const detectConfiguration: IDetectConfiguration = getDetectConfiguration()
@@ -34,9 +22,9 @@ async function run() {
 
         const detectScript: DetectScript = createScript()
         const detectResult: number = await detectScript.runScript(blackduckConfiguration, detectConfiguration)
-        log.info('Finished running detect, updating task information')
+        logger.info('Finished running detect, updating task information')
         if (taskConfiguration.addTaskSummary) {
-            log.info('Adding task summary')
+            logger.info('Adding task summary')
             const content = (detectResult == 0) ? "Detect ran successfully" : `There was an issue running detect, exit code: ${detectResult}`
             const tempFile: string = Date.now().toString()
             const fullPath: string = `${__dirname}/${tempFile}`
@@ -51,16 +39,16 @@ async function run() {
 function createScript(): DetectScript {
     let detectScript: DetectScript
     if ("win32" == osPlat) {
-        log.info('Windows detected: Running powershell script')
+        logger.info('Windows detected: Running powershell script')
         return detectScript = new PowershellDetectScript()
     }
 
-    log.info('Windows not detected: Running shell script')
+    logger.info('Windows not detected: Running shell script')
     return new BashDetectScript()
 }
 
 function getBlackduckConfiguration(): IBlackduckConfiguration {
-    log.info('Retrieving Blackduck configuration')
+    logger.info('Retrieving Blackduck configuration')
     const blackduckService: string = task.getInput(DetectADOConstants.BLACKDUCK_ID, true)!
     const blackduckUrl: string = task.getEndpointUrl(blackduckService, false)!
     const blackduckToken: string | undefined = task.getEndpointAuthorizationParameter(blackduckService, DetectADOConstants.BLACKDUCK_API_TOKEN, true)
@@ -92,7 +80,7 @@ function getBlackduckConfiguration(): IBlackduckConfiguration {
 }
 
 function getDetectConfiguration(): IDetectConfiguration {
-    log.info('Retrieving Detect configuration')
+    logger.info('Retrieving Detect configuration')
     const additionalArguments: string = task.getInput(DetectADOConstants.DETECT_ARGUMENTS, false) || ""
     const detectFolder: string = task.getInput(DetectADOConstants.DETECT_FOLDER, false) || "detect"
     const detectVersion: string = task.getInput(DetectADOConstants.DETECT_VERSION, false) || "latest"
@@ -105,7 +93,7 @@ function getDetectConfiguration(): IDetectConfiguration {
 }
 
 function getTaskConfiguration(): ITaskConfiguration {
-    log.info('Retrieving Task configuration')
+    logger.info('Retrieving Task configuration')
     const addTask: boolean = task.getBoolInput(DetectADOConstants.ADD_TASK_SUMMARY, false)
 
     return {

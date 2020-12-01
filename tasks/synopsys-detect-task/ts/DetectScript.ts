@@ -8,6 +8,7 @@ import fileSystem, {WriteStream} from "fs";
 import {IDetectConfiguration} from "./model/IDetectConfiguration";
 import {parseArguments} from "./DetectUtils"
 import {IExecOptions, ToolRunner} from "azure-pipelines-task-lib/toolrunner";
+import {logger} from "./DetectLogger";
 
 const fileSystemExtra = require("fs-extra")
 
@@ -29,10 +30,8 @@ export abstract class DetectScript {
 
     async runScript(blackduckConfiguration: IBlackduckConfiguration, detectConfiguration: IDetectConfiguration): Promise<number> {
         const axiosAgent: AxiosInstance = this.createAxiosAgent(blackduckConfiguration)
-        console.log("Downloading detect script.")
         await this.downloadScript(axiosAgent, detectConfiguration.detectFolder)
         const env = this.createEnvironmentWithVariables(blackduckConfiguration, detectConfiguration)
-        console.log("Calling detect script")
         return await this.invokeDetect(detectConfiguration.detectFolder, env)
     }
 
@@ -58,17 +57,16 @@ export abstract class DetectScript {
     }
 
     async downloadScript(axios: AxiosInstance, folder: string): Promise<boolean> {
+        logger.info("Downloading detect script.")
         if (fileSystem.existsSync(folder)) {
-            console.log('Cleaning existing folder')
+            logger.info('Cleaning existing folder')
             // Clean out existing folder
             fileSystemExtra.removeSync(folder);
         }
 
-        console.log(`Creating folder '${folder}'`)
         fileSystem.mkdirSync(folder, {recursive: true})
         const downloadLink: string = this.getFullDownloadUrl()
         const filePath: string = `${folder}/${this.getScriptName()}`
-        console.log(`Creating new file: ${filePath}`)
         const writer: WriteStream = fileSystem.createWriteStream(filePath);
         const response = await axios({
             url: downloadLink,
@@ -103,10 +101,10 @@ export abstract class DetectScript {
         env['BLACKDUCK_URL'] = blackduckConfiguration.blackduckUrl
 
         if(blackduckConfiguration.blackduckApiToken) {
-            console.log("Using blackduck API token")
+            logger.info("Using blackduck API token")
             env['BLACKDUCK_API_TOKEN'] = blackduckConfiguration.blackduckApiToken
         } else {
-            console.log("Using blackduck username and password")
+            logger.info("Using blackduck username and password")
             env['BLACKDUCK_USERNAME'] = blackduckConfiguration.blackduckUsername
             env['BLACKDUCK_PASSWORD'] = blackduckConfiguration.blackduckPassword
         }
@@ -120,7 +118,8 @@ export abstract class DetectScript {
     }
 
     async invokeDetect(scriptFolder: string, env: any): Promise<number> {
-        console.log("Setting tool runner")
+        logger.info("Calling detect script")
+        logger.info("Setting tool runner")
         const tool: ToolRunner = this.getTool()
         tool.arg(this.getCommands())
         return tool.exec(<IExecOptions>{
