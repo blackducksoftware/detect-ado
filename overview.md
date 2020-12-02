@@ -38,4 +38,4 @@ If you do not have Black Duck, refer to [Azure Marketplace](https://azuremarketp
 
 ## Want to contribute? ##
 
-Running into an issue? Want to contribute? All code for this extension is [available on Github](https://github.com/blackducksoftware/detect-for-tfs).  
+Running into an issue? Want to contribute? All code for this extension is [available on Github](https://github.com/blackducksoftware/detect-ado).  
