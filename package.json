@@ -1,5 +1,5 @@
 {
-  "name": "detect-for-tfs",
+  "name": "detect-ado",
   "version": "3.0.0",
   "description": "Execute Synopsys Detect against your build",
   "scripts": {
@@ -14,7 +14,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/blackducksoftware/detect-for-tfs"
+    "url": "https://github.com/blackducksoftware/detect-ado"
   },
   "devDependencies": {
     "@types/mocha": "^8.0.3",
