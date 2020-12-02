@@ -11,33 +11,19 @@
   ],
   "demands": [],
   "version": {
-    "Major": "2",
-    "Minor": "0",
-    "Patch": "17"
+    "Major": 3,
+    "Minor": 0,
+    "Patch": 0
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "Run Synopsys Detect for your build $(message)",
   "inputs": [
-    {
-      "name": "Products",
-      "type": "radio",
-      "label": "Run Detect For The Following Products",
-      "required": true,
-      "defaultValue": "ALL",
-      "helpMarkDown": "Detect supports multiple Synopsys Products. All selected products will require configuration.",
-      "options": {
-        "ALL": "All Products",
-        "BD": "Black Duck Only",
-        "PS": "Polaris Only"
-      }
-    },
     {
       "name": "BlackDuckService",
       "type": "connectedService:SynopsysBlackDuck",
       "label": "Black Duck Service Endpoint",
       "defaultValue": "",
       "required": true,
-      "visibleRule": "Products != PS",
       "helpMarkDown": "Select the Black Duck end point to use. Click on 'manage' and add a new Service Endpoint of type 'Black Duck'"
     },
     {
@@ -46,17 +32,7 @@
       "label": "Black Duck Proxy Service Endpoint",
       "defaultValue": "",
       "required": false,
-      "visibleRule": "Products != PS",
       "helpMarkDown": "Select the Black Duck proxy to use. Click on 'manage' and add a new Service Endpoint of type 'Black Duck Proxy'"
-    },
-    {
-      "name": "PolarisService",
-      "type": "connectedService:SynopsysPolaris",
-      "label": "Polaris Service Endpoint",
-      "defaultValue": "",
-      "required": true,
-      "visibleRule": "Products != BD",
-      "helpMarkDown": "Select the Polaris end point to use. Click on 'manage' and add a new Service Endpoint of type 'Polaris'"
     },
     {
       "name": "DetectVersion",
@@ -65,22 +41,6 @@
       "defaultValue": "latest",
       "required": true,
       "helpMarkDown": "Version of the detect binary to use. Default: Latest."
-    },
-    {
-      "name": "DetectProjectName",
-      "type": "string",
-      "label": "Detect Project Name",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "The Project name. If empty, it defaults to the name of the folder where the tool is running"
-    },
-    {
-      "name": "DetectProjectVersion",
-      "type": "string",
-      "label": "Detect Project Version",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "The Version of the project. If empty, it defaults to 'Default Detect Version'"
     },
     {
       "name": "DetectArguments",
@@ -108,8 +68,8 @@
     }
   ],
   "execution": {
-    "PowerShell3": {
-      "target": "detect-task.ps1"
+    "Node10": {
+      "target": "detect-task.js"
     }
   }
 }
