@@ -24,8 +24,6 @@ Detect for Azure DevOps is architected to integrate seamlessly with build and re
 
 ![extension](images/new-extension.png)
 
-Using other tools in your CI/CD pipeline such as Jenkins, Artifactory, and others? We have easy to use plugins for the most popular development tools, and REST APIs that allow you to build your own integrations for virtually any commercial or custom development environment. Check out our [Integrations page](https://synopsys.atlassian.net/wiki/spaces/INTDOCS/overview) for more information! 
-
 ## Documentation ##
 
 Instructions and examples are available on our [Public Confluence](https://synopsys.atlassian.net/wiki/spaces/INTDOCS/pages/622618/Synopsys+Detect+for+Azure+DevOps)
@@ -34,11 +32,9 @@ For information on the full capabilities of Detect visit [Detect Public Confluen
 
 ## Pre-Requisites ##
 
-Before calling Detect in TFS or Azure DevOps, an active instance of Black Duck is required.
+Before calling Detect in Azure DevOps, an active instance of Black Duck is required.
 
 If you do not have Black Duck, refer to [Azure Marketplace](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/black-duck-software.blackduck_hub_431) for more information.
-
-Follow the steps to [Deploy on Azure](https://synopsys.atlassian.net/wiki/spaces/PARTNERS/pages/7471182/Installing+Black+Duck+in+Azure+Using+the+Azure+Marketplace) for more information on deploying from the Azure Marketplace.
 
 ## Want to contribute? ##
 
