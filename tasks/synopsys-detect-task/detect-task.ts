@@ -10,6 +10,8 @@ import {PowershellDetectScript} from "./ts/PowershellDetectScript";
 import {BashDetectScript} from "./ts/BashDetectScript";
 import fileSystem from "fs";
 import {logger} from './ts/DetectLogger'
+import {DetectScriptDownloader} from "./ts/DetectScriptDownloader";
+import {DetectSetup} from "./ts/DetectSetup";
 
 const osPlat: string = os.platform()
 
@@ -21,7 +23,15 @@ async function run() {
         const taskConfiguration: ITaskConfiguration = getTaskConfiguration()
 
         const detectScript: DetectScript = createScript()
-        const detectResult: number = await detectScript.runScript(blackduckConfiguration, detectConfiguration)
+
+        const scriptDownloader = new DetectScriptDownloader()
+        await scriptDownloader.downloadScript(blackduckConfiguration.proxyInfo, detectScript.getScriptName(), detectConfiguration.detectFolder)
+
+        const detectSetup = new DetectSetup()
+        const env = detectSetup.createEnvironmentWithVariables(blackduckConfiguration, detectConfiguration)
+
+        const detectResult: number = await detectScript.invokeDetect(detectConfiguration.detectAdditionalArguments, detectConfiguration.detectFolder, env)
+
         logger.info('Finished running detect, updating task information')
         if (taskConfiguration.addTaskSummary) {
             logger.info('Adding task summary')
@@ -37,10 +47,9 @@ async function run() {
 }
 
 function createScript(): DetectScript {
-    let detectScript: DetectScript
     if ("win32" == osPlat) {
         logger.info('Windows detected: Running powershell script')
-        return detectScript = new PowershellDetectScript()
+        return new PowershellDetectScript()
     }
 
     logger.info('Windows not detected: Running shell script')
@@ -74,7 +83,6 @@ function getBlackduckConfiguration(): IBlackduckConfiguration {
         blackduckApiToken: blackduckToken,
         blackduckUsername,
         blackduckPassword,
-        useProxy: (blackduckProxyInfo !== undefined),
         proxyInfo: blackduckProxyInfo
     }
 }

@@ -5,6 +5,7 @@ import * as fileSystem from 'fs'
 import {IBlackduckConfiguration} from "../ts/model/IBlackduckConfiguration";
 import {IDetectConfiguration} from "../ts/model/IDetectConfiguration";
 import {PowershellDetectScript} from "../ts/PowershellDetectScript";
+import {DetectSetup} from "../ts/DetectSetup";
 
 const fileSystemExtra = require("fs-extra")
 const assert = require('assert')
@@ -28,8 +29,7 @@ describe('BashDetect tests', function () {
             blackduckPassword: undefined,
             blackduckUrl: "",
             blackduckUsername: undefined,
-            proxyInfo: undefined,
-            useProxy: false
+            proxyInfo: undefined
         }
 
         const detectConfiguration: IDetectConfiguration = {
@@ -38,7 +38,9 @@ describe('BashDetect tests', function () {
             detectVersion: "latest"
         }
 
-        const result: number = await powershellScript.runScript(blackduckConfiguration, detectConfiguration)
+        const detectSetup = new DetectSetup()
+        const env = detectSetup.createEnvironmentWithVariables(blackduckConfiguration, detectConfiguration)
+        const result: number = await powershellScript.invokeDetect(detectConfiguration.detectAdditionalArguments, detectConfiguration.detectFolder, env)
         assert.ok(fileSystem.existsSync(`${folder}/${powershellScript.getScriptName()}`), "Downloaded file did not exist")
         assert.strictEqual(0, result, "Detect scan should have ended in success")
     });

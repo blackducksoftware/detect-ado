@@ -6,6 +6,5 @@ export interface IBlackduckConfiguration {
     blackduckUsername: string | undefined
     blackduckPassword: string | undefined
 
-    useProxy: boolean
     proxyInfo: IProxyInfo | undefined
 }

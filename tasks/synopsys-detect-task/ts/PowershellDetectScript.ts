@@ -1,6 +1,5 @@
 import {DetectScript} from "./DetectScript";
-import * as tl from "azure-pipelines-task-lib";
-import {ToolRunner} from "azure-pipelines-task-lib/toolrunner";
+import * as task from 'azure-pipelines-task-lib'
 
 export class PowershellDetectScript extends DetectScript {
     static readonly DETECT_SCRIPT_NAME = "detect.ps1"
@@ -12,12 +11,13 @@ export class PowershellDetectScript extends DetectScript {
     getCommands(): Array<string> {
         const script = `.\\${PowershellDetectScript.DETECT_SCRIPT_NAME}`
         const securityArg = "[Net.ServicePointManager]::SecurityProtocol = 'tls12';"
-        const command = `& {. ${script}; Detect }`
-
-        return ["-command", securityArg, command]
+        const command = `Import-Module '${script}'; Detect`
+        return [securityArg, command]
     }
 
-    getTool(): ToolRunner {
-        return tl.tool(tl.which('pwsh') || tl.which('powershell') || tl.which('pwsh', true))
+    // TODO try to abstract these calls into DetectScript and pass only the name strings here
+    getTool(): string {
+        return task.which('pwsh') || task.which('powershell') || task.which('pwsh', true)
     }
+
 }

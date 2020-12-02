@@ -1,6 +1,5 @@
 import {DetectScript} from "./DetectScript";
 import * as task from 'azure-pipelines-task-lib'
-import {ToolRunner} from "azure-pipelines-task-lib/toolrunner";
 
 export class BashDetectScript extends DetectScript {
     static readonly DETECT_SCRIPT_NAME = "detect.sh"
@@ -13,7 +12,7 @@ export class BashDetectScript extends DetectScript {
         return [`./${BashDetectScript.DETECT_SCRIPT_NAME}`];
     }
 
-    getTool(): ToolRunner {
-        return task.tool(task.which('sh', true))
+    getTool(): string {
+        return task.which('sh', true)
     }
 }
