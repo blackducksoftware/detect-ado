@@ -28,7 +28,7 @@ Using other tools in your CI/CD pipeline such as Jenkins, Artifactory, and other
 
 ## Documentation ##
 
-Instructions and examples are available on our [Public Confluence](https://synopsys.atlassian.net/wiki/spaces/INTDOCS/pages/622618/Synopsys+Detect+Extension+for+VSTS)
+Instructions and examples are available on our [Public Confluence](https://synopsys.atlassian.net/wiki/spaces/INTDOCS/pages/622618/Synopsys+Detect+for+Azure+DevOps)
 
 For information on the full capabilities of Detect visit [Detect Public Confluence](https://synopsys.atlassian.net/wiki/spaces/INTDOCS/pages/62423113/Synopsys+Detect)
 
