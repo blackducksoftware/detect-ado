@@ -1,8 +1,8 @@
-import {IBlackduckConfiguration} from "./model/IBlackduckConfiguration";
-import {IDetectConfiguration} from "./model/IDetectConfiguration";
-import {logger} from "./DetectLogger";
-import * as task from "azure-pipelines-task-lib";
-import path from "path";
+import {IBlackduckConfiguration} from './model/IBlackduckConfiguration';
+import {IDetectConfiguration} from './model/IDetectConfiguration';
+import {logger} from './DetectLogger';
+import * as task from 'azure-pipelines-task-lib';
+import path from 'path';
 
 export class DetectSetup {
     createEnvironmentWithVariables(blackduckConfiguration: IBlackduckConfiguration, detectConfiguration: IDetectConfiguration): any {
@@ -15,7 +15,7 @@ export class DetectSetup {
         env['BLACKDUCK_URL'] = blackduckConfiguration.blackduckUrl
 
         if(blackduckConfiguration.blackduckApiToken) {
-            logger.info("Using blackduck API token")
+            logger.info('Using blackduck API token')
             env['BLACKDUCK_API_TOKEN'] = blackduckConfiguration.blackduckApiToken
         } else {
             logger.info("Using blackduck username and password")
@@ -28,7 +28,7 @@ export class DetectSetup {
 
         const toolDirectory = task.getVariable('Agent.ToolsDirectory')
         if (toolDirectory) {
-            env["DETECT_JAR_DOWNLOAD_DIR"] = path.resolve(toolDirectory, "detect")
+            env['DETECT_JAR_DOWNLOAD_DIR'] = path.resolve(toolDirectory, 'detect')
         }
         env['DETECT_SOURCE_PATH'] = task.getVariable('BUILD_SOURCESDIRECTORY')
 

@@ -1,6 +1,6 @@
-import {IExecOptions, ToolRunner} from "azure-pipelines-task-lib/toolrunner";
-import {logger} from "./DetectLogger";
-import * as tl from "azure-pipelines-task-lib";
+import {IExecOptions, ToolRunner} from 'azure-pipelines-task-lib/toolrunner';
+import {logger} from './DetectLogger';
+import * as tl from 'azure-pipelines-task-lib';
 
 export abstract class DetectScript {
     scriptName: string
@@ -18,7 +18,7 @@ export abstract class DetectScript {
     }
 
     async invokeDetect(detectArguments: string, scriptFolder: string, env: any): Promise<number> {
-        logger.info("Calling detect script")
+        logger.info('Calling detect script')
         const tool: ToolRunner = tl.tool(this.getTool())
         tool.arg([...this.getCommands(), detectArguments])
         return tool.exec(<IExecOptions>{

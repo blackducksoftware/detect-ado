@@ -1,15 +1,14 @@
-import {IBlackduckConfiguration} from "./model/IBlackduckConfiguration";
-import Axios, {AxiosInstance} from "axios";
-import {IProxyInfo} from "./model/IProxyInfo";
-import url from "url";
-import HttpsProxyAgent from "https-proxy-agent/dist/agent";
-import {logger} from "./DetectLogger";
-import fileSystem, {WriteStream} from "fs";
+import Axios, {AxiosInstance} from 'axios';
+import {IProxyInfo} from './model/IProxyInfo';
+import url from 'url';
+import HttpsProxyAgent from 'https-proxy-agent/dist/agent';
+import {logger} from './DetectLogger';
+import fileSystem, {WriteStream} from 'fs';
 
-const fileSystemExtra = require("fs-extra")
+const fileSystemExtra = require('fs-extra')
 
 export class DetectScriptDownloader {
-    static readonly DETECT_DOWNLOAD_URL = "https://detect.synopsys.com"
+    static readonly DETECT_DOWNLOAD_URL = 'https://detect.synopsys.com'
 
     // TODO check for support of NTLM, Basic, Digest
     createAxiosAgent(proxyInfo: IProxyInfo | undefined): AxiosInstance {
@@ -33,7 +32,7 @@ export class DetectScriptDownloader {
     }
 
     async downloadScript(proxyInfo: IProxyInfo | undefined, scriptName: string, folder: string): Promise<boolean> {
-        logger.info("Downloading detect script.")
+        logger.info('Downloading detect script.')
         if (fileSystem.existsSync(folder)) {
             logger.info('Cleaning existing folder')
             // Clean out existing folder

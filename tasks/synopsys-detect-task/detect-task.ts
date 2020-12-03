@@ -1,17 +1,17 @@
 import * as task from 'azure-pipelines-task-lib/task'
 import * as os from 'os'
-import {IBlackduckConfiguration} from "./ts/model/IBlackduckConfiguration"
-import {IDetectConfiguration} from "./ts/model/IDetectConfiguration"
-import {ITaskConfiguration} from "./ts/model/ITaskConfiguration"
-import {DetectADOConstants} from "./ts/DetectADOConstants"
-import {IProxyInfo} from "./ts/model/IProxyInfo"
-import {DetectScript} from "./ts/DetectScript";
-import {PowershellDetectScript} from "./ts/PowershellDetectScript";
-import {BashDetectScript} from "./ts/BashDetectScript";
-import fileSystem from "fs";
+import {IBlackduckConfiguration} from './ts/model/IBlackduckConfiguration'
+import {IDetectConfiguration} from './ts/model/IDetectConfiguration'
+import {ITaskConfiguration} from './ts/model/ITaskConfiguration'
+import {DetectADOConstants} from './ts/DetectADOConstants'
+import {IProxyInfo} from './ts/model/IProxyInfo'
+import {DetectScript} from './ts/DetectScript';
+import {PowershellDetectScript} from './ts/PowershellDetectScript';
+import {BashDetectScript} from './ts/BashDetectScript';
+import fileSystem from 'fs';
 import {logger} from './ts/DetectLogger'
-import {DetectScriptDownloader} from "./ts/DetectScriptDownloader";
-import {DetectSetup} from "./ts/DetectSetup";
+import {DetectScriptDownloader} from './ts/DetectScriptDownloader';
+import {DetectSetup} from './ts/DetectSetup';
 
 const osPlat: string = os.platform()
 
@@ -35,11 +35,11 @@ async function run() {
         logger.info('Finished running detect, updating task information')
         if (taskConfiguration.addTaskSummary) {
             logger.info('Adding task summary')
-            const content = (detectResult == 0) ? "Detect ran successfully" : `There was an issue running detect, exit code: ${detectResult}`
+            const content = (detectResult == 0) ? 'Detect ran successfully' : `There was an issue running detect, exit code: ${detectResult}`
             const tempFile: string = Date.now().toString()
             const fullPath: string = `${__dirname}/${tempFile}`
             fileSystem.writeFileSync(fullPath, content)
-            task.addAttachment("Distributedtask.Core.Summary", "Synopsys Detect", fullPath)
+            task.addAttachment('Distributedtask.Core.Summary', 'Synopsys Detect', fullPath)
         }
     } catch (e) {
         task.setResult(task.TaskResult.Failed, `An unexpected error occurred: ${e}`)
@@ -47,7 +47,7 @@ async function run() {
 }
 
 function createScript(): DetectScript {
-    if ("win32" == osPlat) {
+    if ('win32' == osPlat) {
         logger.info('Windows detected: Running powershell script')
         return new PowershellDetectScript()
     }
@@ -89,9 +89,9 @@ function getBlackduckConfiguration(): IBlackduckConfiguration {
 
 function getDetectConfiguration(): IDetectConfiguration {
     logger.info('Retrieving Detect configuration')
-    const additionalArguments: string = task.getInput(DetectADOConstants.DETECT_ARGUMENTS, false) || ""
-    const detectFolder: string = task.getInput(DetectADOConstants.DETECT_FOLDER, false) || "detect"
-    const detectVersion: string = task.getInput(DetectADOConstants.DETECT_VERSION, false) || "latest"
+    const additionalArguments: string = task.getInput(DetectADOConstants.DETECT_ARGUMENTS, false) || ''
+    const detectFolder: string = task.getInput(DetectADOConstants.DETECT_FOLDER, false) || 'detect'
+    const detectVersion: string = task.getInput(DetectADOConstants.DETECT_VERSION, false) || 'latest'
 
     return {
         detectAdditionalArguments: additionalArguments,

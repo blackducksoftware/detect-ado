@@ -1,4 +1,4 @@
-import {IProxyInfo} from "./IProxyInfo";
+import {IProxyInfo} from './IProxyInfo';
 
 export interface IBlackduckConfiguration {
     blackduckUrl: string
