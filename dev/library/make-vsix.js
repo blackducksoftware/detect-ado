@@ -1,6 +1,5 @@
 var process = require('process');
 var fs = require('fs');
-var request = require('request-promise');
 
 var exec = require("child_process").exec;
 
@@ -25,13 +24,13 @@ lib.buildVsix = function(cb) {
         var vsixPath = lib.extractStdOutValue("VSIX: ", stdout);
         var packageId = lib.extractStdOutValue("Extension ID: ", stdout);
         var packageVersion = lib.extractStdOutValue("Extension Version: ", stdout);
-        
+
           cb(null, {
                      vsixPath: vsixPath,
                      packageId: packageId,
                      packageVersion: packageVersion
           });
-        
+
     });
 }
 
@@ -65,7 +64,7 @@ lib.rename = function (vsixPath, packageId, packageVersion, cb) {
             cb(null, newPath);
         }
     });
-} 
+}
 
 lib.extractStdOutValue = function (prefix, stdout) {
     if (stdout.indexOf(prefix)) {

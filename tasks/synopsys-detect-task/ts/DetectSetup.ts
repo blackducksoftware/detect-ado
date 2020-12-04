@@ -5,6 +5,8 @@ import * as task from 'azure-pipelines-task-lib';
 import path from 'path';
 
 export class DetectSetup {
+    static findTaskVersion = () => { var task = require("../task.json"); return task.version.Major + "." + task.version.Minor + "." + task.version.Patch; }
+
     createEnvironmentWithVariables(blackduckConfiguration: IBlackduckConfiguration, detectConfiguration: IDetectConfiguration): any {
         const env = process.env
         const detectVersion: string = detectConfiguration.detectVersion
@@ -31,6 +33,9 @@ export class DetectSetup {
             env['DETECT_JAR_DOWNLOAD_DIR'] = path.resolve(toolDirectory, 'detect')
         }
         env['DETECT_SOURCE_PATH'] = task.getVariable('BUILD_SOURCESDIRECTORY')
+
+        // TODO verify this works
+        env['detect.phone.home.passthrough.detect.for.ado.version'] = DetectSetup.findTaskVersion()
 
         return env
     }
