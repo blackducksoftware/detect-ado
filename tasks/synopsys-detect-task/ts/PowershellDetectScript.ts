@@ -1,5 +1,5 @@
 import {DetectScript} from './DetectScript';
-import * as task from 'azure-pipelines-task-lib'
+import task = require('azure-pipelines-task-lib/task')
 
 export class PowershellDetectScript extends DetectScript {
     static readonly DETECT_SCRIPT_NAME = 'detect.ps1'

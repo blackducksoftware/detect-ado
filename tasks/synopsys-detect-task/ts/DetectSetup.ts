@@ -1,8 +1,8 @@
-import {IBlackduckConfiguration} from './model/IBlackduckConfiguration';
-import {IDetectConfiguration} from './model/IDetectConfiguration';
-import {logger} from './DetectLogger';
-import * as task from 'azure-pipelines-task-lib';
-import path from 'path';
+import {IBlackduckConfiguration} from './model/IBlackduckConfiguration'
+import {IDetectConfiguration} from './model/IDetectConfiguration'
+import {logger} from './DetectLogger'
+import task = require('azure-pipelines-task-lib/task')
+import path from 'path'
 
 export class DetectSetup {
     static findTaskVersion = () => { var task = require("../task.json"); return task.version.Major + "." + task.version.Minor + "." + task.version.Patch; }

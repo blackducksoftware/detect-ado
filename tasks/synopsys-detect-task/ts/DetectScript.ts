@@ -1,6 +1,6 @@
-import {IExecOptions, ToolRunner} from 'azure-pipelines-task-lib/toolrunner';
-import {logger} from './DetectLogger';
-import * as tl from 'azure-pipelines-task-lib';
+import {IExecOptions, ToolRunner} from 'azure-pipelines-task-lib/toolrunner'
+import {logger} from './DetectLogger'
+import tl = require('azure-pipelines-task-lib/task')
 
 export abstract class DetectScript {
     scriptName: string
@@ -24,7 +24,7 @@ export abstract class DetectScript {
         return tool.exec(<IExecOptions>{
             cwd: scriptFolder,
             env
-        });
+        })
     }
 
 }

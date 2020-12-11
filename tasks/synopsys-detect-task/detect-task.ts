@@ -1,4 +1,4 @@
-import * as task from 'azure-pipelines-task-lib/task'
+import task = require("azure-pipelines-task-lib/task");
 import * as os from 'os'
 import {IBlackduckConfiguration} from './ts/model/IBlackduckConfiguration'
 import {IDetectConfiguration} from './ts/model/IDetectConfiguration'
