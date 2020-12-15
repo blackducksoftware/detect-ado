@@ -7,7 +7,7 @@ import {DetectADOConstants} from './ts/DetectADOConstants'
 import {IProxyInfo} from './ts/model/IProxyInfo'
 import {DetectScript} from './ts/DetectScript';
 import {PowershellDetectScript} from './ts/PowershellDetectScript';
-import {BashDetectScript} from './ts/BashDetectScript';
+import {ShellDetectScript} from './ts/ShellDetectScript';
 import fileSystem from 'fs';
 import {logger} from './ts/DetectLogger'
 import {DetectScriptDownloader} from './ts/DetectScriptDownloader';
@@ -53,7 +53,7 @@ function createScript(): DetectScript {
     }
 
     logger.info('Windows not detected: Running shell script')
-    return new BashDetectScript()
+    return new ShellDetectScript()
 }
 
 function getBlackduckConfiguration(): IBlackduckConfiguration {

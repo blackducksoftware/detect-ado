@@ -1,5 +1,5 @@
 import {DetectScript} from "../ts/DetectScript";
-import {BashDetectScript} from "../ts/BashDetectScript";
+import {ShellDetectScript} from "../ts/ShellDetectScript";
 import {Done} from "mocha";
 import * as fileSystem from 'fs'
 import {IBlackduckConfiguration} from "../ts/model/IBlackduckConfiguration";
@@ -15,7 +15,7 @@ describe('BashDetect tests', function () {
     let bashScript: DetectScript
 
     before( function() {
-        bashScript = new BashDetectScript()
+        bashScript = new ShellDetectScript()
     })
 
     after(function () {
