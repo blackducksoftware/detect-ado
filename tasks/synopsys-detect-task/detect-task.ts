@@ -12,6 +12,7 @@ import fileSystem from 'fs';
 import {logger} from './ts/DetectLogger'
 import {DetectScriptDownloader} from './ts/DetectScriptDownloader';
 import {DetectSetup} from './ts/DetectSetup';
+import {BashDetectScript} from "./ts/BashDetectScript";
 
 const osPlat: string = os.platform()
 
@@ -50,10 +51,13 @@ function createScript(): DetectScript {
     if ('win32' == osPlat) {
         logger.info('Windows detected: Running powershell script')
         return new PowershellDetectScript()
+    } else if ('darwin' == osPlat) {
+        logger.info('Mac detected: Running shell script')
+        return new ShellDetectScript()
     }
 
-    logger.info('Windows not detected: Running shell script')
-    return new ShellDetectScript()
+    logger.info('Linux detected: Running bash script')
+    return new BashDetectScript()
 }
 
 function getBlackduckConfiguration(): IBlackduckConfiguration {
