@@ -30,7 +30,7 @@ export class DetectSetup {
 
         const toolDirectory = task.getVariable('Agent.ToolsDirectory')
         if (toolDirectory) {
-            env['DETECT_JAR_DOWNLOAD_DIR'] = path.resolve(toolDirectory, 'detect')
+            env['DETECT_JAR_DOWNLOAD_DIR'] = path.resolve(toolDirectory, detectConfiguration.detectFolder)
         }
         env['DETECT_SOURCE_PATH'] = task.getVariable('BUILD_SOURCESDIRECTORY')
 
