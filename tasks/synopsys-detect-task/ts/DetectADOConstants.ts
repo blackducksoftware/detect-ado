@@ -14,4 +14,6 @@ export abstract class DetectADOConstants {
     static readonly DETECT_ARGUMENTS = 'DetectArguments'
 
     static readonly ADD_TASK_SUMMARY = 'AddTaskSummary'
+
+    static readonly SCRIPT_DETECT_FOLDER = 'detect'
 }

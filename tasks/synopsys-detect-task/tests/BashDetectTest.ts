@@ -1,16 +1,16 @@
-import {DetectScript} from "../ts/DetectScript";
-import {ShellDetectScript} from "../ts/ShellDetectScript";
-import {Done} from "mocha";
+import {DetectScript} from '../ts/script/DetectScript';
+import {ShellDetectScript} from '../ts/script/ShellDetectScript';
 import * as fileSystem from 'fs'
 import {IBlackduckConfiguration} from "../ts/model/IBlackduckConfiguration";
 import {IDetectConfiguration} from "../ts/model/IDetectConfiguration";
 import {DetectSetup} from "../ts/DetectSetup";
+import {DetectScriptDownloader} from "../ts/DetectScriptDownloader";
 
 const fileSystemExtra = require("fs-extra")
 const assert = require('assert')
 
 describe('BashDetect tests', function () {
-    const folder = "test_folder"
+    const folder = "detect"
 
     let bashScript: DetectScript
 
@@ -38,7 +38,10 @@ describe('BashDetect tests', function () {
         }
 
         const detectSetup = new DetectSetup()
-        const env = detectSetup.createEnvironmentWithVariables(blackduckConfiguration, detectConfiguration)
+        const env = detectSetup.createEnvironmentWithVariables(blackduckConfiguration, detectConfiguration.detectVersion, folder)
+
+        const scriptDownloader = new DetectScriptDownloader()
+        await scriptDownloader.downloadScript(undefined, bashScript.getScriptName(), folder)
 
         const result: number = await bashScript.invokeDetect(detectConfiguration.detectAdditionalArguments, detectConfiguration.detectFolder, env)
         assert.ok(fileSystem.existsSync(`${folder}/${bashScript.getScriptName()}`), "Downloaded file did not exist")

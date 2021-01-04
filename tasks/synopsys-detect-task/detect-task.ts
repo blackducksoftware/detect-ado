@@ -5,14 +5,15 @@ import {IDetectConfiguration} from './ts/model/IDetectConfiguration'
 import {ITaskConfiguration} from './ts/model/ITaskConfiguration'
 import {DetectADOConstants} from './ts/DetectADOConstants'
 import {IProxyInfo} from './ts/model/IProxyInfo'
-import {DetectScript} from './ts/DetectScript';
-import {PowershellDetectScript} from './ts/PowershellDetectScript';
-import {ShellDetectScript} from './ts/ShellDetectScript';
+import {DetectScript} from './ts/script/DetectScript';
+import {PowershellDetectScript} from './ts/script/PowershellDetectScript';
+import {ShellDetectScript} from './ts/script/ShellDetectScript';
 import fileSystem from 'fs';
 import {logger} from './ts/DetectLogger'
 import {DetectScriptDownloader} from './ts/DetectScriptDownloader';
 import {DetectSetup} from './ts/DetectSetup';
-import {BashDetectScript} from "./ts/BashDetectScript";
+import {BashDetectScript} from "./ts/script/BashDetectScript";
+import {PathResolver} from "./ts/PathResolver";
 
 const osPlat: string = os.platform()
 
@@ -24,21 +25,22 @@ async function run() {
         const taskConfiguration: ITaskConfiguration = getTaskConfiguration()
 
         const detectScript: DetectScript = createScript()
+        const scriptFolder: string = DetectADOConstants.SCRIPT_DETECT_FOLDER
 
         const scriptDownloader = new DetectScriptDownloader()
-        await scriptDownloader.downloadScript(blackduckConfiguration.proxyInfo, detectScript.getScriptName(), detectConfiguration.detectFolder)
+        await scriptDownloader.downloadScript(blackduckConfiguration.proxyInfo, detectScript.getScriptName(), scriptFolder)
 
         const detectSetup = new DetectSetup()
-        const env = detectSetup.createEnvironmentWithVariables(blackduckConfiguration, detectConfiguration)
+        const env = detectSetup.createEnvironmentWithVariables(blackduckConfiguration, detectConfiguration.detectVersion, detectConfiguration.detectFolder)
 
-        const detectResult: number = await detectScript.invokeDetect(detectConfiguration.detectAdditionalArguments, detectConfiguration.detectFolder, env)
+        const detectResult: number = await detectScript.invokeDetect(detectConfiguration.detectAdditionalArguments, scriptFolder, env)
 
         logger.info('Finished running detect, updating task information')
         if (taskConfiguration.addTaskSummary) {
             logger.info('Adding task summary')
             const content = (detectResult == 0) ? 'Detect ran successfully' : `There was an issue running detect, exit code: ${detectResult}`
             const tempFile: string = Date.now().toString()
-            const fullPath: string = `${__dirname}/${tempFile}`
+            const fullPath: string = PathResolver.combinePathSegments(__dirname, tempFile)
             fileSystem.writeFileSync(fullPath, content)
             task.addAttachment('Distributedtask.Core.Summary', 'Synopsys Detect', fullPath)
         }
@@ -94,7 +96,7 @@ function getBlackduckConfiguration(): IBlackduckConfiguration {
 function getDetectConfiguration(): IDetectConfiguration {
     logger.info('Retrieving Detect configuration')
     const additionalArguments: string = task.getInput(DetectADOConstants.DETECT_ARGUMENTS, false) || ''
-    const detectFolder: string = task.getInput(DetectADOConstants.DETECT_FOLDER, false) || 'detect'
+    const detectFolder: string = task.getInput(DetectADOConstants.DETECT_FOLDER, false) || PathResolver.getToolDirectory() || 'detect'
     const detectVersion: string = task.getInput(DetectADOConstants.DETECT_VERSION, false) || 'latest'
 
     return {

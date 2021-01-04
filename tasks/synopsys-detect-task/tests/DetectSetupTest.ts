@@ -25,7 +25,7 @@ describe('Detect setup tests', function () {
         }
 
         const detectSetup = new DetectSetup()
-        const env = detectSetup.createEnvironmentWithVariables({} as IBlackduckConfiguration, config)
+        const env = detectSetup.createEnvironmentWithVariables({} as IBlackduckConfiguration, config.detectVersion, config.detectFolder)
 
         assert.strictEqual(env['DETECT_LATEST_RELEASE_VERSION'], version)
         assert.strictEqual(env['DETECT_EXIT_CODE_PASSTHRU'], "1")
