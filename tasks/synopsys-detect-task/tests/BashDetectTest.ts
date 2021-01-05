@@ -9,7 +9,7 @@ import {DetectScriptDownloader} from "../ts/DetectScriptDownloader";
 const fileSystemExtra = require("fs-extra")
 const assert = require('assert')
 
-describe('BashDetect tests', function () {
+describe.skip('BashDetect tests', function () {
     const folder = "detect"
 
     let bashScript: DetectScript
@@ -22,7 +22,7 @@ describe('BashDetect tests', function () {
         fileSystemExtra.removeSync(folder)
     })
 
-    it.skip('run detect script', async() => {
+    it('run detect script', async() => {
         const blackduckConfiguration: IBlackduckConfiguration = {
             blackduckApiToken: undefined,
             blackduckPassword: undefined,

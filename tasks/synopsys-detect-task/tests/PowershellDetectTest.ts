@@ -8,7 +8,7 @@ import {DetectSetup} from "../ts/DetectSetup";
 const fileSystemExtra = require("fs-extra")
 const assert = require('assert')
 
-describe('BashDetect tests', function () {
+describe.skip('PowershellDetect tests', function () {
     const folder = "detect"
 
     let powershellScript: DetectScript
@@ -21,7 +21,7 @@ describe('BashDetect tests', function () {
         fileSystemExtra.removeSync(folder)
     })
 
-    it.skip('run detect script', async() => {
+    it('run detect script', async() => {
         const blackduckConfiguration: IBlackduckConfiguration = {
             blackduckApiToken: undefined,
             blackduckPassword: undefined,
