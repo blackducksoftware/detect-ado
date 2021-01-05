@@ -24,6 +24,8 @@ export class DetectSetup {
 
         // Set according to the Powershell script
         env['DETECT_EXIT_CODE_PASSTHRU'] = "1"
+        // Something was setting this to 'undefined' which could cause issues with the script
+        env['DETECT_SOURCE'] = ""
 
         if (detectDownloadPath) {
             env['DETECT_JAR_DOWNLOAD_DIR'] = detectDownloadPath

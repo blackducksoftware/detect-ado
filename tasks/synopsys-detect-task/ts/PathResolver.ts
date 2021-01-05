@@ -12,10 +12,6 @@ export class PathResolver {
         return task.getVariable('Agent.ToolsDirectory')
     }
 
-    static getTempDirectory(): string {
-        return task.getVariable('Agent.TempDirectory') || DetectADOConstants.SCRIPT_DETECT_FOLDER
-    }
-
     static combinePathSegments(...pathSegments: string[]): string {
         return path.resolve(...pathSegments)
     }
