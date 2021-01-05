@@ -1,13 +1,13 @@
-import {Done} from "mocha";
+import {Done} from 'mocha';
 import * as fileSystem from 'fs'
-import {DetectScriptDownloader} from "../ts/DetectScriptDownloader";
-import {ShellDetectScript} from "../ts/ShellDetectScript";
+import {DetectScriptDownloader} from '../ts/DetectScriptDownloader';
+import {ShellDetectScript} from '../ts/script/ShellDetectScript';
 
-const fileSystemExtra = require("fs-extra")
+const fileSystemExtra = require('fs-extra')
 const assert = require('assert')
 
 describe('Detect script downloader tests', function () {
-    const folder = "test_folder"
+    const folder = 'detect'
 
     after(function () {
         fileSystemExtra.removeSync(folder)
@@ -17,7 +17,7 @@ describe('Detect script downloader tests', function () {
         const detectScriptDownloader = new DetectScriptDownloader()
         detectScriptDownloader.downloadScript(undefined, ShellDetectScript.DETECT_SCRIPT_NAME, folder)
 
-        assert.ok(fileSystem.existsSync(`${folder}/${ShellDetectScript.DETECT_SCRIPT_NAME}`), "Downloaded file did not exist")
+        assert.ok(fileSystem.existsSync(`${folder}/${ShellDetectScript.DETECT_SCRIPT_NAME}`), 'Downloaded file did not exist')
         done()
     });
 

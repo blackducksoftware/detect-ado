@@ -4,8 +4,7 @@ import url from 'url';
 import HttpsProxyAgent from 'https-proxy-agent/dist/agent';
 import {logger} from './DetectLogger';
 import fileSystem, {WriteStream} from 'fs';
-
-const fileSystemExtra = require('fs-extra')
+import {PathResolver} from "./PathResolver";
 
 export class DetectScriptDownloader {
     static readonly DETECT_DOWNLOAD_URL = 'https://detect.synopsys.com'
@@ -31,17 +30,14 @@ export class DetectScriptDownloader {
         return Axios.create()
     }
 
-    async downloadScript(proxyInfo: IProxyInfo | undefined, scriptName: string, folder: string): Promise<boolean> {
+    async downloadScript(proxyInfo: IProxyInfo | undefined, scriptName: string, scriptDirectory: string): Promise<boolean> {
         logger.info('Downloading detect script.')
-        if (fileSystem.existsSync(folder)) {
-            logger.info('Cleaning existing folder')
-            // Clean out existing folder
-            fileSystemExtra.removeSync(folder);
+        if (!fileSystem.existsSync(scriptDirectory)) {
+            fileSystem.mkdirSync(scriptDirectory, {recursive: true})
         }
 
-        fileSystem.mkdirSync(folder, {recursive: true})
         const downloadLink: string = this.getFullDownloadUrl(scriptName)
-        const filePath: string = `${folder}/${scriptName}`
+        const filePath: string = PathResolver.combinePathSegments(scriptDirectory, scriptName)
         const writer: WriteStream = fileSystem.createWriteStream(filePath);
         const axios: AxiosInstance = this.createAxiosAgent(proxyInfo)
         const response = await axios({
