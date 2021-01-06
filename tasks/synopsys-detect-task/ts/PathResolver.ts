@@ -12,6 +12,10 @@ export class PathResolver {
         return task.getVariable('Agent.ToolsDirectory')
     }
 
+    static getWorkingDirectory(): string | undefined {
+        return task.getVariable('Agent.WorkFolder')
+    }
+
     static combinePathSegments(...pathSegments: string[]): string {
         return path.resolve(...pathSegments)
     }

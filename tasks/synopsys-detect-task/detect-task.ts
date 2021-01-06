@@ -25,7 +25,8 @@ async function run() {
         const taskConfiguration: ITaskConfiguration = getTaskConfiguration()
 
         const detectScript: DetectScript = createScript()
-        const scriptFolder: string = DetectADOConstants.SCRIPT_DETECT_FOLDER
+        const workingDirectory = PathResolver.getWorkingDirectory() || ""
+        const scriptFolder: string = PathResolver.combinePathSegments(workingDirectory, DetectADOConstants.SCRIPT_DETECT_FOLDER)
 
         const scriptDownloader = new DetectScriptDownloader()
         await scriptDownloader.downloadScript(blackduckConfiguration.proxyInfo, detectScript.getScriptName(), scriptFolder)
@@ -43,6 +44,11 @@ async function run() {
             const fullPath: string = PathResolver.combinePathSegments(__dirname, tempFile)
             fileSystem.writeFileSync(fullPath, content)
             task.addAttachment('Distributedtask.Core.Summary', 'Synopsys Detect', fullPath)
+        }
+
+        if (detectResult != 0) {
+            task.setResult(task.TaskResult.Failed, `Detect run failed, received error code: ${detectResult}`)
+            return
         }
     } catch (e) {
         task.setResult(task.TaskResult.Failed, `An unexpected error occurred: ${e}`)
