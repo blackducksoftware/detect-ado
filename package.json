@@ -25,18 +25,19 @@
     "rimraf": "^2.5.4",
     "sync-request": "^6.1.0",
     "tfx-cli": "^0.6.3",
-    "typescript": "^4.0.2"
+    "typescript": "^4.0.2",
+    "y18n": "^4.0.1"
   },
   "dependencies": {
-    "@types/node": "^14.14.5",
-    "ts-node": "^9.0.0",
     "@types/jquery": "^2.0.34",
-    "axios": "^0.21.0",
+    "@types/node": "^14.14.5",
+    "axios": "^0.21.1",
     "azure-pipelines-task-lib": "^3.0.4-preview.0",
     "azure-pipelines-tool-lib": "^0.13.2",
     "fs-extra": "^9.0.1",
     "https-proxy-agent": "^5.0.0",
     "request-promise": "^4.2.2",
+    "ts-node": "^9.0.0",
     "vss-web-extension-sdk": "^2.109.0",
     "winston": "^3.3.3"
   }
