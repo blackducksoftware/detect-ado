@@ -1,7 +1,6 @@
 import {DetectScript} from './DetectScript';
 import task = require('azure-pipelines-task-lib/task')
 import {PathResolver} from "../PathResolver";
-import {DetectADOConstants} from "../DetectADOConstants";
 
 export class PowershellDetectScript extends DetectScript {
     static readonly DETECT_SCRIPT_NAME = 'detect.ps1'
@@ -10,8 +9,8 @@ export class PowershellDetectScript extends DetectScript {
         super(PowershellDetectScript.DETECT_SCRIPT_NAME);
     }
 
-    getCommands(): Array<string> {
-        const script = PathResolver.combinePathSegments(".", DetectADOConstants.SCRIPT_DETECT_FOLDER, PowershellDetectScript.DETECT_SCRIPT_NAME)
+    getCommands(scriptFolder: string): Array<string> {
+        const script = PathResolver.combinePathSegments(scriptFolder, PowershellDetectScript.DETECT_SCRIPT_NAME)
         const securityArg = "[Net.ServicePointManager]::SecurityProtocol = 'tls12';"
         const command = `Import-Module '${script}'; Detect`
         return [securityArg, command]
