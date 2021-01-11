@@ -14,6 +14,7 @@ describe('Detect setup tests', function () {
         const actualPropertyKey = "blackduck.trust.cert"
         const actualPropertyValue = "true"
         const version = "test"
+        const bd_proxy = "http://proxy.test:8080"
 
         const detectArgs = `--${detectKey1}=${detectValue1}
                             --${detectKey2}=${detectValue2}
@@ -23,12 +24,25 @@ describe('Detect setup tests', function () {
             detectVersion: version,
             detectAdditionalArguments: detectArgs
         }
+        const bdConfig: IBlackduckConfiguration = {
+            blackduckApiToken: undefined,
+            blackduckPassword: undefined,
+            blackduckUrl: "",
+            blackduckUsername: undefined,
+            proxyInfo: {
+                proxyUrl: bd_proxy,
+                proxyUsername: 'proxyUsername',
+                proxyPassword: 'proxypassword'
+            }
+        }
 
         const detectSetup = new DetectSetup()
-        const env = detectSetup.createEnvironmentWithVariables({} as IBlackduckConfiguration, config.detectVersion, config.detectFolder)
+        const env = detectSetup.createEnvironmentWithVariables(bdConfig, config.detectVersion, config.detectFolder)
 
         assert.strictEqual(env['DETECT_LATEST_RELEASE_VERSION'], version)
         assert.strictEqual(env['DETECT_SOURCE'], "")
+        assert.strictEqual(env['blackduck.proxy.host'], "proxy.test")
+        assert.strictEqual(env['blackduck.proxy.port'], "8080")
     });
 
 })

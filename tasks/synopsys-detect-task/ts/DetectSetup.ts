@@ -1,6 +1,7 @@
 import {IBlackduckConfiguration} from './model/IBlackduckConfiguration'
 import {logger} from './DetectLogger'
 import {PathResolver} from './PathResolver';
+import {IProxyInfo} from "./model/IProxyInfo";
 
 export class DetectSetup {
     static findTaskVersion = () => { var task = require("../task.json"); return task.version.Major + "." + task.version.Minor + "." + task.version.Patch; }
@@ -20,6 +21,15 @@ export class DetectSetup {
             logger.info("Using blackduck username and password")
             env['BLACKDUCK_USERNAME'] = blackduckConfiguration.blackduckUsername
             env['BLACKDUCK_PASSWORD'] = blackduckConfiguration.blackduckPassword
+        }
+
+        const proxyInfo: IProxyInfo | undefined = blackduckConfiguration.proxyInfo
+        if (proxyInfo) {
+            const proxyUrl = new URL(proxyInfo.proxyUrl)
+            env['blackduck.proxy.host'] = proxyUrl.hostname
+            env['blackduck.proxy.port'] = proxyUrl.port
+            env['blackduck.proxy.username'] = proxyInfo.proxyUsername
+            env['blackduck.proxy.password'] = proxyInfo.proxyPassword
         }
 
         // Something was setting this to 'undefined' which could cause issues with the script
