@@ -45,4 +45,42 @@ describe('Detect setup tests', function () {
         assert.strictEqual(env['blackduck.proxy.port'], "8080")
     });
 
+    it('clean detect multiline arguments', function() {
+        const fakeOne = '--fake.one'
+        const fakeTwo = '--fake.two'
+        const fakeThree = '--fake.three'
+        const fakeFour = '--fake.four'
+
+        const args: string = `${fakeOne} ${fakeTwo}
+        ${fakeThree}
+        ${fakeFour}`
+
+        const detectSetup = new DetectSetup()
+        const cleanedValues: string = detectSetup.convertArgumentsToPassableValues(args)
+        const parsedCleanValues: Array<string> = cleanedValues.split(' ')
+
+        assert.strictEqual(4, parsedCleanValues.length)
+
+        assert.strictEqual(fakeOne, parsedCleanValues[0])
+        assert.strictEqual(fakeTwo, parsedCleanValues[1])
+        assert.strictEqual(fakeThree, parsedCleanValues[2])
+        assert.strictEqual(fakeFour, parsedCleanValues[3])
+    });
+
+    it('clean detect arguments', function() {
+        const fakeOne = '--fake.one'
+        const fakeTwo = '--fake.two'
+
+        const args: string = `${fakeOne} ${fakeTwo}`
+
+        const detectSetup = new DetectSetup()
+        const cleanedValues = detectSetup.convertArgumentsToPassableValues(args)
+        const parsedCleanValues: Array<string> = cleanedValues.split(' ')
+
+        assert.strictEqual(2, parsedCleanValues.length)
+
+        assert.strictEqual(fakeOne, parsedCleanValues[0])
+        assert.strictEqual(fakeTwo, parsedCleanValues[1])
+    });
+
 })

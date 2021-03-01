@@ -33,8 +33,9 @@ async function run() {
 
         const detectSetup = new DetectSetup()
         const env = detectSetup.createEnvironmentWithVariables(blackduckConfiguration, detectConfiguration.detectVersion, detectConfiguration.detectFolder)
+        const cleanedArguments = detectSetup.convertArgumentsToPassableValues(detectConfiguration.detectAdditionalArguments)
 
-        const detectResult: number = await detectScript.invokeDetect(detectConfiguration.detectAdditionalArguments, scriptFolder, env)
+        const detectResult: number = await detectScript.invokeDetect(cleanedArguments, scriptFolder, env)
 
         logger.info('Finished running detect, updating task information')
         if (taskConfiguration.addTaskSummary) {

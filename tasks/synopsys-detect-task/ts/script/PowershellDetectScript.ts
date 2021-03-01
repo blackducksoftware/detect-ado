@@ -11,9 +11,8 @@ export class PowershellDetectScript extends DetectScript {
 
     getCommands(scriptFolder: string): Array<string> {
         const script = PathResolver.combinePathSegments(scriptFolder, PowershellDetectScript.DETECT_SCRIPT_NAME)
-        const securityArg = "[Net.ServicePointManager]::SecurityProtocol = 'tls12';"
         const command = `Import-Module '${script}'; Detect`
-        return [securityArg, command]
+        return [command]
     }
 
     // TODO try to abstract these calls into DetectScript and pass only the name strings here

@@ -45,4 +45,12 @@ export class DetectSetup {
 
         return env
     }
+
+    convertArgumentsToPassableValues(detectArguments: string): string {
+        const recombinedValues = detectArguments.split('--')
+            .map((value) => value.trim())
+            .filter(value => value)
+            .join(' --')
+        return `--${recombinedValues}`
+    }
 }
