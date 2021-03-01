@@ -40,7 +40,7 @@
       "label": "Detect Version",
       "defaultValue": "latest",
       "required": true,
-      "helpMarkDown": "Version of the detect binary to use. Default: Latest."
+      "helpMarkDown": "Version of the detect binary to use. Default: latest."
     },
     {
       "name": "DetectArguments",
