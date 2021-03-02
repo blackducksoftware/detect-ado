@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
-  "id": "synopsys-detect",
-  "version": "3.1.0",
-  "name": "Synopsys Detect",
+  "id": "synopsys-detect-3",
+  "version": "3.1.1",
+  "name": "Synopsys Detect 3.1.0",
   "publisher": "synopsys-detect",
   "public": false,
   "targets": [

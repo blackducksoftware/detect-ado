@@ -15,9 +15,8 @@ export class PowershellDetectScript extends DetectScript {
         return [command]
     }
 
-    // TODO try to abstract these calls into DetectScript and pass only the name strings here
     getTool(): string {
-        return task.which('pwsh') || task.which('powershell') || task.which('pwsh', true)
+        return task.which('powershell', true)
     }
 
 }
