@@ -1,10 +1,10 @@
 {
   "manifestVersion": 1,
   "id": "synopsys-detect",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "name": "Synopsys Detect",
   "publisher": "synopsys-detect",
-  "public": true,
+  "public": false,
   "targets": [
     {
       "id": "Microsoft.VisualStudio.Services"
