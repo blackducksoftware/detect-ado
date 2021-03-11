@@ -29,7 +29,17 @@ async function run() {
         const scriptFolder: string = PathResolver.combinePathSegments(workingDirectory, DetectADOConstants.SCRIPT_DETECT_FOLDER)
 
         const scriptDownloader = new DetectScriptDownloader()
+        let foundError
         await scriptDownloader.downloadScript(blackduckConfiguration.proxyInfo, detectScript.getScriptName(), scriptFolder)
+            .catch(error => {
+                foundError = error
+            })
+
+        if (foundError) {
+            logger.debug(`Ran into an issue while downloading script: ${foundError}`)
+            task.setResult(task.TaskResult.Failed, `Detect run failed, there was an issue downloading the Detect script`)
+            return
+        }
 
         const detectSetup = new DetectSetup()
         const env = detectSetup.createEnvironmentWithVariables(blackduckConfiguration, detectConfiguration.detectVersion, detectConfiguration.detectFolder)
