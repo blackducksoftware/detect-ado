@@ -1,7 +1,7 @@
 import * as fileSystem from 'fs'
 import {DetectScriptDownloader} from '../ts/DetectScriptDownloader';
-import {ShellDetectScript} from '../ts/script/ShellDetectScript';
 import {IProxyInfo} from "../ts/model/IProxyInfo";
+import {DetectScriptBuilder} from "../ts/script/DetectScriptBuilder";
 
 const fileSystemExtra = require('fs-extra')
 const assert = require('assert')
@@ -15,9 +15,9 @@ describe('Detect script downloader tests', function () {
 
     it('test script download', async function() {
         const detectScriptDownloader = new DetectScriptDownloader()
-        await detectScriptDownloader.downloadScript(undefined, ShellDetectScript.DETECT_SCRIPT_NAME, folder)
+        await detectScriptDownloader.downloadScript(undefined, DetectScriptBuilder.DETECT_SH_SCRIPT_NAME, folder)
 
-        assert.ok(fileSystem.existsSync(`${folder}/${ShellDetectScript.DETECT_SCRIPT_NAME}`), 'Downloaded file did not exist')
+        assert.ok(fileSystem.existsSync(`${folder}/${DetectScriptBuilder.DETECT_SH_SCRIPT_NAME}`), 'Downloaded file did not exist')
     });
 
     it('test script download bad proxy', async function() {
@@ -29,7 +29,7 @@ describe('Detect script downloader tests', function () {
         }
 
         let exceptionThrown = false
-        await detectScriptDownloader.downloadScript(proxyInfo, ShellDetectScript.DETECT_SCRIPT_NAME, folder)
+        await detectScriptDownloader.downloadScript(proxyInfo, DetectScriptBuilder.DETECT_SH_SCRIPT_NAME, folder)
             .then(() => {
                 assert.fail("Should have thrown exception")
             })

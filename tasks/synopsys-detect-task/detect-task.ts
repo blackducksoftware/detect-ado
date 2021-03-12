@@ -1,21 +1,17 @@
 import task = require("azure-pipelines-task-lib/task");
-import * as os from 'os'
 import {IBlackduckConfiguration} from './ts/model/IBlackduckConfiguration'
 import {IDetectConfiguration} from './ts/model/IDetectConfiguration'
 import {ITaskConfiguration} from './ts/model/ITaskConfiguration'
 import {DetectADOConstants} from './ts/DetectADOConstants'
 import {IProxyInfo} from './ts/model/IProxyInfo'
 import {DetectScript} from './ts/script/DetectScript';
-import {PowershellDetectScript} from './ts/script/PowershellDetectScript';
-import {ShellDetectScript} from './ts/script/ShellDetectScript';
 import fileSystem from 'fs';
 import {logger} from './ts/DetectLogger'
 import {DetectScriptDownloader} from './ts/DetectScriptDownloader';
 import {DetectSetup} from './ts/DetectSetup';
-import {BashDetectScript} from "./ts/script/BashDetectScript";
 import {PathResolver} from "./ts/PathResolver";
-
-const osPlat: string = os.platform()
+import {DetectScriptBuilder} from "./ts/script/DetectScriptBuilder";
+import {IDetectScriptConfiguration} from "./ts/model/IDetectScriptConfiguration";
 
 async function run() {
     logger.info('Starting Detect Task')
@@ -24,7 +20,9 @@ async function run() {
         const detectConfiguration: IDetectConfiguration = getDetectConfiguration()
         const taskConfiguration: ITaskConfiguration = getTaskConfiguration()
 
-        const detectScript: DetectScript = createScript()
+        const detectScriptConfiguration: IDetectScriptConfiguration = DetectScriptBuilder.createScriptConfiguration()
+        const detectScript: DetectScript = new DetectScript(detectScriptConfiguration)
+
         const workingDirectory = PathResolver.getWorkingDirectory() || ""
         const scriptFolder: string = PathResolver.combinePathSegments(workingDirectory, DetectADOConstants.SCRIPT_DETECT_FOLDER)
 
@@ -37,6 +35,10 @@ async function run() {
 
         if (foundError) {
             logger.debug(`Ran into an issue while downloading script: ${foundError}`)
+
+            if(taskConfiguration.addTaskSummary) {
+                addSummaryAttachment('There was an issue downloading the Detect script')
+            }
             task.setResult(task.TaskResult.Failed, `Detect run failed, there was an issue downloading the Detect script`)
             return
         }
@@ -44,17 +46,13 @@ async function run() {
         const detectSetup = new DetectSetup()
         const env = detectSetup.createEnvironmentWithVariables(blackduckConfiguration, detectConfiguration.detectVersion, detectConfiguration.detectFolder)
         const cleanedArguments = detectSetup.convertArgumentsToPassableValues(detectConfiguration.detectAdditionalArguments)
-
         const detectResult: number = await detectScript.invokeDetect(cleanedArguments, scriptFolder, env)
 
         logger.info('Finished running detect, updating task information')
         if (taskConfiguration.addTaskSummary) {
             logger.info('Adding task summary')
             const content = (detectResult == 0) ? 'Detect ran successfully' : `There was an issue running detect, exit code: ${detectResult}`
-            const tempFile: string = Date.now().toString()
-            const fullPath: string = PathResolver.combinePathSegments(__dirname, tempFile)
-            fileSystem.writeFileSync(fullPath, content)
-            task.addAttachment('Distributedtask.Core.Summary', 'Synopsys Detect', fullPath)
+            addSummaryAttachment(content)
         }
 
         if (detectResult != 0) {
@@ -66,17 +64,11 @@ async function run() {
     }
 }
 
-function createScript(): DetectScript {
-    if ('win32' == osPlat) {
-        logger.info('Windows detected: Running powershell script')
-        return new PowershellDetectScript()
-    } else if ('darwin' == osPlat) {
-        logger.info('Mac detected: Running shell script')
-        return new ShellDetectScript()
-    }
-
-    logger.info('Linux detected: Running bash script')
-    return new BashDetectScript()
+function addSummaryAttachment(content: string) {
+    const attachmentFilePath: string = Date.now().toString()
+    const fullPath: string = PathResolver.combinePathSegments(__dirname, attachmentFilePath)
+    fileSystem.writeFileSync(fullPath, content)
+    task.addAttachment('Distributedtask.Core.Summary', 'Synopsys Detect', fullPath)
 }
 
 function getBlackduckConfiguration(): IBlackduckConfiguration {

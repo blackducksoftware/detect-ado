@@ -40,9 +40,10 @@ describe('Detect setup tests', function () {
         const env = detectSetup.createEnvironmentWithVariables(bdConfig, config.detectVersion, config.detectFolder)
 
         assert.strictEqual(env['DETECT_LATEST_RELEASE_VERSION'], version)
-        assert.strictEqual(env['DETECT_SOURCE'], "")
         assert.strictEqual(env['blackduck.proxy.host'], "proxy.test")
         assert.strictEqual(env['blackduck.proxy.port'], "8080")
+
+
     });
 
     it('clean detect multiline arguments', function() {
