@@ -3,7 +3,7 @@ import * as fileSystem from 'fs'
 import {IBlackduckConfiguration} from "../ts/model/IBlackduckConfiguration";
 import {IDetectConfiguration} from "../ts/model/IDetectConfiguration";
 import {DetectSetup} from "../ts/DetectSetup";
-import {DetectScriptBuilder} from "../ts/script/DetectScriptBuilder";
+import {DetectScriptConfigurationBuilder} from "../ts/script/DetectScriptConfigurationBuilder";
 
 const fileSystemExtra = require("fs-extra")
 const assert = require('assert')
@@ -14,7 +14,7 @@ describe.skip('PowershellDetect tests', function () {
     let powershellScript: DetectScript
 
     before( function() {
-        const scriptConfig = DetectScriptBuilder.POWERSHELL_SCRIPT
+        const scriptConfig = DetectScriptConfigurationBuilder.POWERSHELL_SCRIPT
         powershellScript = new DetectScript(scriptConfig)
     })
 
@@ -36,9 +36,7 @@ describe.skip('PowershellDetect tests', function () {
             detectFolder: folder,
             detectVersion: "latest"
         }
-
-        const detectSetup = new DetectSetup()
-        const env = detectSetup.createEnvironmentWithVariables(blackduckConfiguration, detectConfiguration.detectVersion, folder)
+        const env = DetectSetup.createEnvironmentWithVariables(blackduckConfiguration, detectConfiguration.detectVersion, folder)
 
         // Remove detectVersion from other items that might have put it into the env
         delete env['DETECT_LATEST_RELEASE_VERSION']

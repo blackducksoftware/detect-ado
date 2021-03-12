@@ -1,7 +1,7 @@
 import task = require("azure-pipelines-task-lib/task");
 import {IBlackduckConfiguration} from './ts/model/IBlackduckConfiguration'
 import {IDetectConfiguration} from './ts/model/IDetectConfiguration'
-import {ITaskConfiguration} from './ts/model/ITaskConfiguration'
+import {IAdditionalConfiguration} from './ts/model/IAdditionalConfiguration'
 import {DetectADOConstants} from './ts/DetectADOConstants'
 import {IProxyInfo} from './ts/model/IProxyInfo'
 import {DetectScript} from './ts/script/DetectScript';
@@ -10,7 +10,7 @@ import {logger} from './ts/DetectLogger'
 import {DetectScriptDownloader} from './ts/DetectScriptDownloader';
 import {DetectSetup} from './ts/DetectSetup';
 import {PathResolver} from "./ts/PathResolver";
-import {DetectScriptBuilder} from "./ts/script/DetectScriptBuilder";
+import {DetectScriptConfigurationBuilder} from "./ts/script/DetectScriptConfigurationBuilder";
 import {IDetectScriptConfiguration} from "./ts/model/IDetectScriptConfiguration";
 
 async function run() {
@@ -18,38 +18,32 @@ async function run() {
     try {
         const blackduckConfiguration: IBlackduckConfiguration = getBlackduckConfiguration()
         const detectConfiguration: IDetectConfiguration = getDetectConfiguration()
-        const taskConfiguration: ITaskConfiguration = getTaskConfiguration()
+        const additionalConfiguration: IAdditionalConfiguration = getAdditionalConfiguration()
 
-        const detectScriptConfiguration: IDetectScriptConfiguration = DetectScriptBuilder.createScriptConfiguration()
+        const detectScriptConfiguration: IDetectScriptConfiguration = DetectScriptConfigurationBuilder.createScriptConfiguration()
         const detectScript: DetectScript = new DetectScript(detectScriptConfiguration)
 
         const workingDirectory = PathResolver.getWorkingDirectory() || ""
         const scriptFolder: string = PathResolver.combinePathSegments(workingDirectory, DetectADOConstants.SCRIPT_DETECT_FOLDER)
 
-        const scriptDownloader = new DetectScriptDownloader()
-        let foundError
-        await scriptDownloader.downloadScript(blackduckConfiguration.proxyInfo, detectScript.getScriptName(), scriptFolder)
-            .catch(error => {
-                foundError = error
-            })
+        try {
+            await DetectScriptDownloader.downloadScript(blackduckConfiguration.proxyInfo, detectScript.getScriptName(), scriptFolder)
+        } catch (error) {
+            logger.debug(`Ran into an issue while downloading script: ${error}`)
 
-        if (foundError) {
-            logger.debug(`Ran into an issue while downloading script: ${foundError}`)
-
-            if(taskConfiguration.addTaskSummary) {
+            if(additionalConfiguration.addTaskSummary) {
                 addSummaryAttachment('There was an issue downloading the Detect script')
             }
             task.setResult(task.TaskResult.Failed, `Detect run failed, there was an issue downloading the Detect script`)
             return
         }
 
-        const detectSetup = new DetectSetup()
-        const env = detectSetup.createEnvironmentWithVariables(blackduckConfiguration, detectConfiguration.detectVersion, detectConfiguration.detectFolder)
-        const cleanedArguments = detectSetup.convertArgumentsToPassableValues(detectConfiguration.detectAdditionalArguments)
+        const env = DetectSetup.createEnvironmentWithVariables(blackduckConfiguration, detectConfiguration.detectVersion, detectConfiguration.detectFolder)
+        const cleanedArguments = DetectSetup.convertArgumentsToPassableValues(detectConfiguration.detectAdditionalArguments)
         const detectResult: number = await detectScript.invokeDetect(cleanedArguments, scriptFolder, env)
 
         logger.info('Finished running detect, updating task information')
-        if (taskConfiguration.addTaskSummary) {
+        if (additionalConfiguration.addTaskSummary) {
             logger.info('Adding task summary')
             const content = (detectResult == 0) ? 'Detect ran successfully' : `There was an issue running detect, exit code: ${detectResult}`
             addSummaryAttachment(content)
@@ -115,8 +109,8 @@ function getDetectConfiguration(): IDetectConfiguration {
     }
 }
 
-function getTaskConfiguration(): ITaskConfiguration {
-    logger.info('Retrieving Task configuration')
+function getAdditionalConfiguration(): IAdditionalConfiguration {
+    logger.info('Retrieving additional configuration')
     const addTask: boolean = task.getBoolInput(DetectADOConstants.ADD_TASK_SUMMARY, false)
 
     return {

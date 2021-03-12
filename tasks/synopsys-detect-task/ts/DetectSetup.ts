@@ -4,9 +4,11 @@ import {PathResolver} from './PathResolver';
 import {IProxyInfo} from "./model/IProxyInfo";
 
 export class DetectSetup {
+    private constructor() {}
+
     static findTaskVersion = () => { var task = require("../task.json"); return task.version.Major + "." + task.version.Minor + "." + task.version.Patch; }
 
-    createEnvironmentWithVariables(blackduckConfiguration: IBlackduckConfiguration, detectVersion: string, detectDownloadPath: string): any {
+    static createEnvironmentWithVariables(blackduckConfiguration: IBlackduckConfiguration, detectVersion: string, detectDownloadPath: string): any {
         const env = process.env
         if (detectVersion && ('latest' != detectVersion)) {
             env['DETECT_LATEST_RELEASE_VERSION'] = detectVersion
@@ -43,7 +45,7 @@ export class DetectSetup {
         return env
     }
 
-    convertArgumentsToPassableValues(detectArguments: string): string {
+    static convertArgumentsToPassableValues(detectArguments: string): string {
         const recombinedValues = detectArguments.split('--')
             .map((value) => value.trim())
             .filter(value => value)

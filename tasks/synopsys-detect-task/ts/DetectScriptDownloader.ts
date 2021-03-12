@@ -9,28 +9,9 @@ import {PathResolver} from "./PathResolver";
 export class DetectScriptDownloader {
     static readonly DETECT_DOWNLOAD_URL = 'https://detect.synopsys.com'
 
-    // TODO check for support of NTLM, Basic, Digest
-    createAxiosAgent(proxyInfo: IProxyInfo | undefined): AxiosInstance {
-        if (proxyInfo) {
-            const proxyOpts = url.parse(proxyInfo.proxyUrl)
+    private constructor() {}
 
-            const proxyConfig: any = {
-                host: proxyOpts.hostname,
-                port: proxyOpts.port
-            }
-
-            if (proxyInfo.proxyUsername && proxyInfo.proxyPassword) {
-                proxyConfig.auth = proxyInfo.proxyUsername + ":" + proxyInfo.proxyPassword
-            }
-
-            const httpsAgent = new HttpsProxyAgent(proxyConfig)
-            return Axios.create({httpsAgent})
-        }
-
-        return Axios.create()
-    }
-
-    async downloadScript(proxyInfo: IProxyInfo | undefined, scriptName: string, scriptDirectory: string): Promise<boolean> {
+    static async downloadScript(proxyInfo: IProxyInfo | undefined, scriptName: string, scriptDirectory: string): Promise<boolean> {
         logger.info('Downloading detect script.')
         if (!fileSystem.existsSync(scriptDirectory)) {
             fileSystem.mkdirSync(scriptDirectory, {recursive: true})
@@ -53,7 +34,28 @@ export class DetectScriptDownloader {
         })
     }
 
-    getFullDownloadUrl(scriptName: string): string {
+    // TODO check for support of NTLM, Basic, Digest
+    private static createAxiosAgent(proxyInfo: IProxyInfo | undefined): AxiosInstance {
+        if (proxyInfo) {
+            const proxyOpts = url.parse(proxyInfo.proxyUrl)
+
+            const proxyConfig: any = {
+                host: proxyOpts.hostname,
+                port: proxyOpts.port
+            }
+
+            if (proxyInfo.proxyUsername && proxyInfo.proxyPassword) {
+                proxyConfig.auth = proxyInfo.proxyUsername + ":" + proxyInfo.proxyPassword
+            }
+
+            const httpsAgent = new HttpsProxyAgent(proxyConfig)
+            return Axios.create({httpsAgent})
+        }
+
+        return Axios.create()
+    }
+
+    private static getFullDownloadUrl(scriptName: string): string {
         return `${DetectScriptDownloader.DETECT_DOWNLOAD_URL}/${scriptName}`
     }
 }
