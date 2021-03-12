@@ -36,13 +36,13 @@ describe('Detect setup tests', function () {
             }
         }
 
-        const detectSetup = new DetectSetup()
-        const env = detectSetup.createEnvironmentWithVariables(bdConfig, config.detectVersion, config.detectFolder)
+        const env = DetectSetup.createEnvironmentWithVariables(bdConfig, config.detectVersion, config.detectFolder)
 
         assert.strictEqual(env['DETECT_LATEST_RELEASE_VERSION'], version)
-        assert.strictEqual(env['DETECT_SOURCE'], "")
         assert.strictEqual(env['blackduck.proxy.host'], "proxy.test")
         assert.strictEqual(env['blackduck.proxy.port'], "8080")
+
+
     });
 
     it('clean detect multiline arguments', function() {
@@ -55,8 +55,7 @@ describe('Detect setup tests', function () {
         ${fakeThree}
         ${fakeFour}`
 
-        const detectSetup = new DetectSetup()
-        const cleanedValues: string = detectSetup.convertArgumentsToPassableValues(args)
+        const cleanedValues: string = DetectSetup.convertArgumentsToPassableValues(args)
         const parsedCleanValues: Array<string> = cleanedValues.split(' ')
 
         assert.strictEqual(4, parsedCleanValues.length)
@@ -73,8 +72,7 @@ describe('Detect setup tests', function () {
 
         const args: string = `${fakeOne} ${fakeTwo}`
 
-        const detectSetup = new DetectSetup()
-        const cleanedValues = detectSetup.convertArgumentsToPassableValues(args)
+        const cleanedValues = DetectSetup.convertArgumentsToPassableValues(args)
         const parsedCleanValues: Array<string> = cleanedValues.split(' ')
 
         assert.strictEqual(2, parsedCleanValues.length)
