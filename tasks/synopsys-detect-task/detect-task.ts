@@ -29,12 +29,14 @@ async function run() {
         try {
             await DetectScriptDownloader.downloadScript(blackduckConfiguration.proxyInfo, detectScript.getScriptName(), scriptFolder)
         } catch (error) {
-            logger.debug(`Ran into an issue while downloading script: ${error}`)
+            logger.error(`Unable to connect with ${DetectScriptDownloader.DETECT_DOWNLOAD_URL}`)
+            logger.error('This may be a problem with your proxy setup or network.')
 
+            const resultError = `There was an issue downloading the Detect script: ${error}`
             if(additionalConfiguration.addTaskSummary) {
-                addSummaryAttachment('There was an issue downloading the Detect script')
+                addSummaryAttachment(resultError)
             }
-            task.setResult(task.TaskResult.Failed, `Detect run failed, there was an issue downloading the Detect script`)
+            task.setResult(task.TaskResult.Failed, resultError)
             return
         }
 
