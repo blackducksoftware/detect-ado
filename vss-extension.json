@@ -1,10 +1,10 @@
 {
   "manifestVersion": 1,
-  "id": "synopsys-detect-QA",
-  "version": "3.1.41",
-  "name": "Synopsys Detect QA",
+  "id": "synopsys-detect",
+  "version": "6.0.0",
+  "name": "Synopsys Detect",
   "publisher": "synopsys-detect",
-  "public": false,
+  "public": true,
   "targets": [
     {
       "id": "Microsoft.VisualStudio.Services"
