@@ -9,7 +9,7 @@ var lib = {};
 lib.buildVsix = function(cb) {
     process.chdir('../../');
 
-    var tfxCreateCommand = "tfx extension create --manifest-globs vsts-extension.json";
+    var tfxCreateCommand = "tfx extension create --manifest-globs vss-extension.json";
 
     console.log(`Calling '${tfxCreateCommand}'`);
 
@@ -25,13 +25,13 @@ lib.buildVsix = function(cb) {
         var vsixPath = lib.extractStdOutValue("VSIX: ", stdout);
         var packageId = lib.extractStdOutValue("Extension ID: ", stdout);
         var packageVersion = lib.extractStdOutValue("Extension Version: ", stdout);
-        
+
           cb(null, {
                      vsixPath: vsixPath,
                      packageId: packageId,
                      packageVersion: packageVersion
           });
-        
+
     });
 }
 
@@ -65,7 +65,7 @@ lib.rename = function (vsixPath, packageId, packageVersion, cb) {
             cb(null, newPath);
         }
     });
-} 
+}
 
 lib.extractStdOutValue = function (prefix, stdout) {
     if (stdout.indexOf(prefix)) {
