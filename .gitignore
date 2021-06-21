@@ -1,5 +1,4 @@
 test_folder
-*.js
 *.vsix
 .idea
 node_modules/
