@@ -26,9 +26,7 @@ describe.skip('ShellDetect tests', function () {
     it('run detect script', async() => {
         const blackduckConfiguration: IBlackduckConfiguration = {
             blackduckApiToken: undefined,
-            blackduckPassword: undefined,
             blackduckUrl: "",
-            blackduckUsername: undefined,
             proxyInfo: undefined
         }
 

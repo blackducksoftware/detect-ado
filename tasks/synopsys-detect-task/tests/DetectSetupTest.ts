@@ -26,9 +26,7 @@ describe('Detect setup tests', function () {
         }
         const bdConfig: IBlackduckConfiguration = {
             blackduckApiToken: undefined,
-            blackduckPassword: undefined,
             blackduckUrl: "",
-            blackduckUsername: undefined,
             proxyInfo: {
                 proxyUrl: bd_proxy,
                 proxyUsername: 'proxyUsername',

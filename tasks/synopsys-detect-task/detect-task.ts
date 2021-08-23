@@ -72,8 +72,6 @@ function getBlackduckConfiguration(): IBlackduckConfiguration {
     const blackduckService: string = task.getInput(DetectADOConstants.BLACKDUCK_ID, true)!
     const blackduckUrl: string = task.getEndpointUrl(blackduckService, false)!
     const blackduckToken: string | undefined = task.getEndpointAuthorizationParameter(blackduckService, DetectADOConstants.BLACKDUCK_API_TOKEN, true)
-    const blackduckUsername: string | undefined = task.getEndpointAuthorizationParameter(blackduckService, DetectADOConstants.BLACKDUCK_USERNAME, true)
-    const blackduckPassword: string | undefined = task.getEndpointAuthorizationParameter(blackduckService, DetectADOConstants.BLACKDUCK_PASSWORD, true)
 
     let blackduckProxyInfo: IProxyInfo | undefined
     const blackduckProxyService: string | undefined = task.getInput(DetectADOConstants.BLACKDUCK_PROXY_ID, false)
@@ -92,8 +90,6 @@ function getBlackduckConfiguration(): IBlackduckConfiguration {
     return {
         blackduckUrl,
         blackduckApiToken: blackduckToken,
-        blackduckUsername,
-        blackduckPassword,
         proxyInfo: blackduckProxyInfo
     }
 }

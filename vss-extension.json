@@ -1,10 +1,10 @@
 {
   "manifestVersion": 1,
-  "id": "synopsys-detect",
-  "version": "6.0.0",
-  "name": "Synopsys Detect",
+  "id": "synopsys-detect-qa",
+  "version": "7.0.0",
+  "name": "Synopsys Detect QA",
   "publisher": "synopsys-detect",
-  "public": true,
+  "public": false,
   "targets": [
     {
       "id": "Microsoft.VisualStudio.Services"
@@ -138,34 +138,6 @@
                   "isRequired": true,
                   "dataType": "string",
                   "maxLength": 300
-                }
-              }
-            ]
-          },
-          {
-            "name": "Basic Authorization",
-            "displayName": "Basic Authentication",
-            "type": "ms.vss-endpoint.endpoint-auth-scheme-basic",
-            "inputDescriptors": [
-              {
-                "id": "username",
-                "name": "Username",
-                "description": "The username to access your Black Duck instance",
-                "inputMode": "textbox",
-                "validation": {
-                  "isRequired": true,
-                  "dataType": "string"
-                }
-              },
-              {
-                "id": "password",
-                "name": "Password",
-                "description": "The password to access your Black Duck instance",
-                "inputMode": "passwordbox",
-                "isConfidential": true,
-                "validation": {
-                  "isRequired": true,
-                  "dataType": "string"
                 }
               }
             ]
