@@ -5,8 +5,8 @@ import os from "os";
 const osPlat: string = os.platform()
 
 export class DetectScriptConfigurationBuilder {
-    static readonly DETECT_SH_SCRIPT_NAME = 'detect.sh'
-    static readonly DETECT_PS_SCRIPT_NAME = 'detect.ps1'
+    static readonly DETECT_SH_SCRIPT_NAME = 'detect7.sh'
+    static readonly DETECT_PS_SCRIPT_NAME = 'detect7.ps1'
 
     private constructor() {}
 
