@@ -1,7 +1,7 @@
 {
   "id": "5e9b6b5e-3130-47dc-89c5-77a58949f2cf",
   "name": "SynopsysDetectTask",
-  "friendlyName": "Synopsys Detect",
+  "friendlyName": "Synopsys Detect Dev",
   "description": "Execute Synopsys Detect against your build",
   "author": "Synopsys",
   "category": "Utility",
@@ -13,10 +13,17 @@
   "version": {
     "Major": 7,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 5
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "Run Synopsys Detect for your build $(message)",
+  "groups": [
+    {
+      "name": "airGap",
+      "displayName": "Air Gap",
+      "isExpanded": true
+    }
+  ],
   "inputs": [
     {
       "name": "BlackDuckService",
@@ -65,6 +72,24 @@
       "label": "Add Detect Task Summary",
       "required": false,
       "helpMarkDown": "If set to true, will add a summary of the detect task to the build summary tab."
+    },
+    {
+      "name": "DetectUseAirGap",
+      "type": "boolean",
+      "defaultValue": false,
+      "label": "Use Detect Air Gap Mode",
+      "required": false,
+      "helpMarkDown": "If set to true, will run Detect using Air Gap mode.",
+      "groupName": "airGap"
+    },
+    {
+      "name": "DetectAirGapJarPath",
+      "type": "string",
+      "defaultValue": "",
+      "label": "Detect Air Gap Jar Path",
+      "required": false,
+      "helpMarkDown": "The location of the extracted Detect jar that will be used in Air Gap mode.",
+      "groupName": "airGap"
     }
   ],
   "execution": {

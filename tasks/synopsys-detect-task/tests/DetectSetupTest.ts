@@ -22,7 +22,9 @@ describe('Detect setup tests', function () {
         const config: IDetectConfiguration = {
             detectFolder: "folder",
             detectVersion: version,
-            detectAdditionalArguments: detectArgs
+            detectAdditionalArguments: detectArgs,
+            useAirGap: false,
+            detectAirGapJarPath: ''
         }
         const bdConfig: IBlackduckConfiguration = {
             blackduckApiToken: undefined,

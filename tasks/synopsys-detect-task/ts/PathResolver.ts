@@ -1,6 +1,5 @@
 import task = require('azure-pipelines-task-lib/task')
 import path from 'path'
-import {DetectADOConstants} from "./DetectADOConstants";
 
 export class PathResolver {
 

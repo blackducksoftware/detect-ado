@@ -1,4 +1,4 @@
-import {DetectScript} from '../ts/script/DetectScript';
+import {DetectRunner} from '../ts/script/DetectRunner';
 import * as fileSystem from 'fs'
 import {IBlackduckConfiguration} from "../ts/model/IBlackduckConfiguration";
 import {IDetectConfiguration} from "../ts/model/IDetectConfiguration";
@@ -12,11 +12,11 @@ const assert = require('assert')
 describe.skip('ShellDetect tests', function () {
     const folder = "detect"
 
-    let shellScript: DetectScript
+    let shellScript: DetectRunner
 
     before( function() {
         const scriptConfig = DetectScriptConfigurationBuilder.SHELL_SCRIPT
-        shellScript = new DetectScript(scriptConfig)
+        shellScript = DetectRunner.createFromScript(scriptConfig)
     })
 
     after(function () {
@@ -33,7 +33,9 @@ describe.skip('ShellDetect tests', function () {
         const detectConfiguration: IDetectConfiguration = {
             detectAdditionalArguments: "--blackduck.offline.mode=true --detect.tools.excluded=SIGNATURE_SCAN",
             detectFolder: folder,
-            detectVersion: "latest"
+            detectVersion: "latest",
+            useAirGap: false,
+            detectAirGapJarPath: ''
         }
 
         const env = DetectSetup.createEnvironmentWithVariables(blackduckConfiguration, detectConfiguration.detectVersion, folder)

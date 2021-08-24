@@ -1,4 +1,4 @@
-import {DetectScript} from "../ts/script/DetectScript";
+import {DetectRunner} from "../ts/script/DetectRunner";
 import * as fileSystem from 'fs'
 import {IBlackduckConfiguration} from "../ts/model/IBlackduckConfiguration";
 import {IDetectConfiguration} from "../ts/model/IDetectConfiguration";
@@ -11,11 +11,11 @@ const assert = require('assert')
 describe.skip('PowershellDetect tests', function () {
     const folder = "detect"
 
-    let powershellScript: DetectScript
+    let powershellScript: DetectRunner
 
     before( function() {
         const scriptConfig = DetectScriptConfigurationBuilder.POWERSHELL_SCRIPT
-        powershellScript = new DetectScript(scriptConfig)
+        powershellScript = DetectRunner.createFromScript(scriptConfig)
     })
 
     after(function () {
@@ -32,7 +32,9 @@ describe.skip('PowershellDetect tests', function () {
         const detectConfiguration: IDetectConfiguration = {
             detectAdditionalArguments: "--blackduck.offline.mode=true",
             detectFolder: folder,
-            detectVersion: "latest"
+            detectVersion: "latest",
+            useAirGap: false,
+            detectAirGapJarPath: ''
         }
         const env = DetectSetup.createEnvironmentWithVariables(blackduckConfiguration, detectConfiguration.detectVersion, folder)
 

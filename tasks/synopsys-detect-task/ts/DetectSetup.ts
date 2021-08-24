@@ -1,5 +1,4 @@
 import {IBlackduckConfiguration} from './model/IBlackduckConfiguration'
-import {logger} from './DetectLogger'
 import {PathResolver} from './PathResolver';
 import {IProxyInfo} from "./model/IProxyInfo";
 
