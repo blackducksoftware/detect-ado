@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
-  "id": "synopsys-detect-dev",
-  "version": "7.0.11",
-  "name": "Synopsys Detect Dev",
+  "id": "synopsys-detect-qa",
+  "version": "7.0.1",
+  "name": "Synopsys Detect QA",
   "publisher": "synopsys-detect",
   "public": false,
   "targets": [

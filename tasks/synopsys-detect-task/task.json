@@ -1,7 +1,7 @@
 {
   "id": "5e9b6b5e-3130-47dc-89c5-77a58949f2cf",
   "name": "SynopsysDetectTask",
-  "friendlyName": "Synopsys Detect Dev",
+  "friendlyName": "Synopsys Detect QA",
   "description": "Execute Synopsys Detect against your build",
   "author": "Synopsys",
   "category": "Utility",
@@ -13,7 +13,7 @@
   "version": {
     "Major": 7,
     "Minor": 0,
-    "Patch": 11
+    "Patch": 1
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "Run Synopsys Detect for your build $(message)",
