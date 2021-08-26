@@ -1,5 +1,4 @@
 import {IBlackduckConfiguration} from './model/IBlackduckConfiguration'
-import {logger} from './DetectLogger'
 import {PathResolver} from './PathResolver';
 import {IProxyInfo} from "./model/IProxyInfo";
 
@@ -37,11 +36,10 @@ export class DetectSetup {
         return env
     }
 
-    static convertArgumentsToPassableValues(detectArguments: string): string {
+    static convertArgumentsToPassableValues(detectArguments: string): string[] {
         const recombinedValues = detectArguments.split('--')
-            .map((value) => value.trim())
-            .filter(value => value)
-            .join(' --')
-        return `--${recombinedValues}`
+            .map((value) => `--${value.trim()}`)
+            .filter(value => '--' !== value)
+        return recombinedValues
     }
 }

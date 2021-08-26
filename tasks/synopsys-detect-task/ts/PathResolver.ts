@@ -1,19 +1,18 @@
 import task = require('azure-pipelines-task-lib/task')
 import path from 'path'
-import {DetectADOConstants} from "./DetectADOConstants";
 
 export class PathResolver {
 
-    static getBuildSourceDirectory(): string | undefined {
-        return task.getVariable('BUILD_SOURCESDIRECTORY')
+    static getBuildSourceDirectory(): string {
+        return task.getVariable('BUILD_SOURCESDIRECTORY') || __dirname
     }
 
-    static getToolDirectory(): string | undefined {
-        return task.getVariable('Agent.ToolsDirectory')
+    static getToolDirectory(): string {
+        return task.getVariable('Agent.ToolsDirectory') || __dirname
     }
 
-    static getWorkingDirectory(): string | undefined {
-        return task.getVariable('Agent.WorkFolder')
+    static getWorkingDirectory(): string {
+        return task.getVariable('Agent.WorkFolder') || __dirname
     }
 
     static combinePathSegments(...pathSegments: string[]): string {

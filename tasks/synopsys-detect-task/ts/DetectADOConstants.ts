@@ -13,6 +13,9 @@ export abstract class DetectADOConstants {
     static readonly DETECT_VERSION = 'DetectVersion'
     static readonly DETECT_ARGUMENTS = 'DetectArguments'
 
+    static readonly DETECT_USE_AIR_GAP = 'DetectUseAirGap'
+    static readonly DETECT_AIR_GAP_JAR_PATH = 'DetectAirGapJarPath'
+
     static readonly ADD_TASK_SUMMARY = 'AddTaskSummary'
 
     static readonly SCRIPT_DETECT_FOLDER = 'detect'

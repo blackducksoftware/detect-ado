@@ -8,7 +8,7 @@
     "package": "tfx extension create",
     "tick": "tsc && node dev/tick.js && tfx extension create --manifest-globs vss-extension.json",
     "clean": "rimraf ./dist && rimraf ./*.vsix",
-    "test": "tsc && mocha --timeout 10000 tasks/synopsys-detect-task/tests/*.js"
+    "test": "tsc && mocha --timeout 30000 tasks/synopsys-detect-task/tests/*.js"
   },
   "author": "Black Duck Software, Inc.",
   "license": "Apache-2.0",

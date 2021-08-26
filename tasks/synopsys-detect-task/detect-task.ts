@@ -4,14 +4,13 @@ import {IDetectConfiguration} from './ts/model/IDetectConfiguration'
 import {IAdditionalConfiguration} from './ts/model/IAdditionalConfiguration'
 import {DetectADOConstants} from './ts/DetectADOConstants'
 import {IProxyInfo} from './ts/model/IProxyInfo'
-import {DetectScript} from './ts/script/DetectScript';
 import fileSystem from 'fs';
 import {logger} from './ts/DetectLogger'
-import {DetectScriptDownloader} from './ts/DetectScriptDownloader';
-import {DetectSetup} from './ts/DetectSetup';
-import {PathResolver} from "./ts/PathResolver";
-import {DetectScriptConfigurationBuilder} from "./ts/script/DetectScriptConfigurationBuilder";
-import {IDetectScriptConfiguration} from "./ts/model/IDetectScriptConfiguration";
+import {PathResolver} from './ts/PathResolver';
+import {DetectScriptConfigurationRunner} from './ts/runner/DetectScriptConfigurationRunner';
+import {DetectRunner} from './ts/runner/DetectRunner';
+import {DetectJarConfigurationRunner} from './ts/runner/DetectJarConfigurationRunner';
+import {TaskResult} from "azure-pipelines-task-lib";
 
 async function run() {
     logger.info('Starting Detect Task')
@@ -20,29 +19,11 @@ async function run() {
         const detectConfiguration: IDetectConfiguration = getDetectConfiguration()
         const additionalConfiguration: IAdditionalConfiguration = getAdditionalConfiguration()
 
-        const detectScriptConfiguration: IDetectScriptConfiguration = DetectScriptConfigurationBuilder.createScriptConfiguration()
-        const detectScript: DetectScript = new DetectScript(detectScriptConfiguration)
+        const detectRunner: DetectRunner = (detectConfiguration.useAirGap) ?
+            new DetectJarConfigurationRunner(blackduckConfiguration, detectConfiguration) :
+            new DetectScriptConfigurationRunner(blackduckConfiguration, detectConfiguration)
 
-        const workingDirectory = PathResolver.getWorkingDirectory() || ""
-        const scriptFolder: string = PathResolver.combinePathSegments(workingDirectory, DetectADOConstants.SCRIPT_DETECT_FOLDER)
-
-        try {
-            await DetectScriptDownloader.downloadScript(blackduckConfiguration.proxyInfo, detectScript.getScriptName(), scriptFolder)
-        } catch (error) {
-            logger.error(`Unable to connect with ${DetectScriptDownloader.DETECT_DOWNLOAD_URL}`)
-            logger.error('This may be a problem with your proxy setup or network.')
-
-            const resultError = `There was an issue downloading the Detect script: ${error}`
-            if(additionalConfiguration.addTaskSummary) {
-                addSummaryAttachment(resultError)
-            }
-            task.setResult(task.TaskResult.Failed, resultError)
-            return
-        }
-
-        const env = DetectSetup.createEnvironmentWithVariables(blackduckConfiguration, detectConfiguration.detectVersion, detectConfiguration.detectFolder)
-        const cleanedArguments = DetectSetup.convertArgumentsToPassableValues(detectConfiguration.detectAdditionalArguments)
-        const detectResult: number = await detectScript.invokeDetect(cleanedArguments, scriptFolder, env)
+        const detectResult: number = await detectRunner.invokeDetect()
 
         logger.info('Finished running detect, updating task information')
         if (additionalConfiguration.addTaskSummary) {
@@ -52,11 +33,13 @@ async function run() {
         }
 
         if (detectResult != 0) {
-            task.setResult(task.TaskResult.Failed, `Detect run failed, received error code: ${detectResult}`)
+            task.setResult(task.TaskResult.Failed, `Detect run failed, received error code: ${detectResult}`, true)
             return
         }
+        task.setResult(TaskResult.Succeeded, "Success", true)
     } catch (e) {
-        task.setResult(task.TaskResult.Failed, `An unexpected error occurred: ${e}`)
+        task.setResult(task.TaskResult.Failed, `An unexpected error occurred: ${e}`, true)
+        return
     }
 }
 
@@ -100,10 +83,15 @@ function getDetectConfiguration(): IDetectConfiguration {
     const detectFolder: string = task.getInput(DetectADOConstants.DETECT_FOLDER, false) || PathResolver.getToolDirectory() || 'detect'
     const detectVersion: string = task.getInput(DetectADOConstants.DETECT_VERSION, false) || 'latest'
 
+    const useAirGap: boolean = task.getBoolInput(DetectADOConstants.DETECT_USE_AIR_GAP, false) || false
+    const detectAirGapJarPath = task.getInput(DetectADOConstants.DETECT_AIR_GAP_JAR_PATH, useAirGap) || PathResolver.getToolDirectory() || ''
+
     return {
         detectAdditionalArguments: additionalArguments,
         detectFolder,
-        detectVersion
+        detectVersion,
+        useAirGap,
+        detectAirGapJarPath
     }
 }
 
