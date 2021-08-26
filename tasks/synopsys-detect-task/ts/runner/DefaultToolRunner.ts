@@ -5,21 +5,21 @@ import {IDetectRunnerConfiguration} from '../model/IDetectRunnerConfiguration';
 
 export class DefaultToolRunner {
     private readonly runnerTool: string
-    private readonly runnerCommand: string
+    private readonly runnerCommands: Array<string>
     private readonly runnerFileName: string
 
     constructor(detectRunnerConfiguration: IDetectRunnerConfiguration) {
         this.runnerTool = detectRunnerConfiguration.runnerTool
-        this.runnerCommand = detectRunnerConfiguration.runCommand
+        this.runnerCommands = detectRunnerConfiguration.runCommands
         this.runnerFileName = detectRunnerConfiguration.fileName
     }
 
-    async invoke(args: string, folder: string, env: any): Promise<number> {
+    async invoke(args: string[], folder: string, env: any): Promise<number> {
         logger.info(`Calling ${this.runnerFileName} at '${folder}'`)
 
         const tool: string = task.which(this.runnerTool, true)
         const toolRunner: ToolRunner = task.tool(tool)
-        toolRunner.arg([this.runnerCommand, args])
+        toolRunner.arg([...this.runnerCommands, ...args])
         return toolRunner.exec(<IExecOptions>{
             cwd: folder,
             env

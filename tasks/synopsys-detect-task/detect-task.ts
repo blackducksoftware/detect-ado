@@ -10,6 +10,7 @@ import {PathResolver} from './ts/PathResolver';
 import {DetectScriptConfigurationRunner} from './ts/runner/DetectScriptConfigurationRunner';
 import {DetectRunner} from './ts/runner/DetectRunner';
 import {DetectJarConfigurationRunner} from './ts/runner/DetectJarConfigurationRunner';
+import {TaskResult} from "azure-pipelines-task-lib";
 
 async function run() {
     logger.info('Starting Detect Task')
@@ -32,11 +33,13 @@ async function run() {
         }
 
         if (detectResult != 0) {
-            task.setResult(task.TaskResult.Failed, `Detect run failed, received error code: ${detectResult}`)
+            task.setResult(task.TaskResult.Failed, `Detect run failed, received error code: ${detectResult}`, true)
             return
         }
+        task.setResult(TaskResult.Succeeded, "Success", true)
     } catch (e) {
-        task.setResult(task.TaskResult.Failed, `An unexpected error occurred: ${e}`)
+        task.setResult(task.TaskResult.Failed, `An unexpected error occurred: ${e}`, true)
+        return
     }
 }
 
@@ -81,7 +84,7 @@ function getDetectConfiguration(): IDetectConfiguration {
     const detectVersion: string = task.getInput(DetectADOConstants.DETECT_VERSION, false) || 'latest'
 
     const useAirGap: boolean = task.getBoolInput(DetectADOConstants.DETECT_USE_AIR_GAP, false) || false
-    const detectAirGapJarPath = task.getInput(DetectADOConstants.DETECT_AIR_GAP_JAR_PATH, false) || PathResolver.getToolDirectory() || ''
+    const detectAirGapJarPath = task.getInput(DetectADOConstants.DETECT_AIR_GAP_JAR_PATH, useAirGap) || PathResolver.getToolDirectory() || ''
 
     return {
         detectAdditionalArguments: additionalArguments,

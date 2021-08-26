@@ -1,21 +1,20 @@
 import {IDetectRunnerConfiguration} from '../model/IDetectRunnerConfiguration';
 import {DetectRunner} from './DetectRunner';
+import path, {ParsedPath} from 'path';
 
 export class DetectJarConfigurationRunner extends DetectRunner {
-    static readonly DETECT_JAR_NAME = 'detect.jar'
-
-    readonly JAVA_JAR: IDetectRunnerConfiguration = {
-        fileName: DetectJarConfigurationRunner.DETECT_JAR_NAME,
-        runCommand: '-jar',
-        runnerTool: 'java'
-    }
-
     createRunnerConfiguration(): IDetectRunnerConfiguration {
-        return this.JAVA_JAR;
+        const parsedPath: ParsedPath = path.parse(this.detectConfiguration.detectAirGapJarPath)
+        return {
+            fileName: parsedPath.base,
+            runCommands: ['-jar', parsedPath.base],
+            runnerTool: 'java'
+        };
     }
 
     async retrieveOrCreateArtifactFolder(fileName: string): Promise<string> {
-        return this.detectConfiguration.detectAirGapJarPath;
+        const parsedPath: ParsedPath = path.parse(this.detectConfiguration.detectAirGapJarPath)
+        return parsedPath.dir
     }
 
 }

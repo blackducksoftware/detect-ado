@@ -14,19 +14,19 @@ export class DetectScriptConfigurationRunner extends DetectRunner {
 
     readonly BASH_SCRIPT: IDetectRunnerConfiguration = {
         fileName: DetectScriptConfigurationRunner.DETECT_SH_SCRIPT_NAME,
-        runCommand: `./${DetectScriptConfigurationRunner.DETECT_SH_SCRIPT_NAME}`,
+        runCommands: [`./${DetectScriptConfigurationRunner.DETECT_SH_SCRIPT_NAME}`],
         runnerTool: 'bash'
     }
 
     readonly SHELL_SCRIPT: IDetectRunnerConfiguration = {
         fileName: DetectScriptConfigurationRunner.DETECT_SH_SCRIPT_NAME,
-        runCommand: `./${DetectScriptConfigurationRunner.DETECT_SH_SCRIPT_NAME}`,
+        runCommands: [`./${DetectScriptConfigurationRunner.DETECT_SH_SCRIPT_NAME}`],
         runnerTool: 'sh'
     }
 
     readonly POWERSHELL_SCRIPT: IDetectRunnerConfiguration = {
         fileName: DetectScriptConfigurationRunner.DETECT_PS_SCRIPT_NAME,
-        runCommand: `Import-Module '.\\${DetectScriptConfigurationRunner.DETECT_PS_SCRIPT_NAME}'; Detect`,
+        runCommands: [`Import-Module '.\\${DetectScriptConfigurationRunner.DETECT_PS_SCRIPT_NAME}'; Detect`],
         runnerTool: 'powershell'
     }
 

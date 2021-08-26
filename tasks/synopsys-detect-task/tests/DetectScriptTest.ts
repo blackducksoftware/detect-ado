@@ -7,6 +7,7 @@ import {PathResolver} from "../ts/PathResolver";
 const fileSystemExtra = require('fs-extra')
 const assert = require('assert')
 
+// FIXME properly cleanup after this test so that no additional files exist in the project (May be another test not cleaning properly)
 describe.skip('DetectScript tests', function () {
     const folder = PathResolver.combinePathSegments(__dirname, 'detect')
 

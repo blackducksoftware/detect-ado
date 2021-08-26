@@ -55,15 +55,14 @@ describe('Detect setup tests', function () {
         ${fakeThree}
         ${fakeFour}`
 
-        const cleanedValues: string = DetectSetup.convertArgumentsToPassableValues(args)
-        const parsedCleanValues: Array<string> = cleanedValues.split(' ')
+        const cleanedValues: string[] = DetectSetup.convertArgumentsToPassableValues(args)
 
-        assert.strictEqual(4, parsedCleanValues.length)
+        assert.strictEqual(4, cleanedValues.length)
 
-        assert.strictEqual(fakeOne, parsedCleanValues[0])
-        assert.strictEqual(fakeTwo, parsedCleanValues[1])
-        assert.strictEqual(fakeThree, parsedCleanValues[2])
-        assert.strictEqual(fakeFour, parsedCleanValues[3])
+        assert.strictEqual(fakeOne, cleanedValues[0])
+        assert.strictEqual(fakeTwo, cleanedValues[1])
+        assert.strictEqual(fakeThree, cleanedValues[2])
+        assert.strictEqual(fakeFour, cleanedValues[3])
     });
 
     it('clean detect arguments', function() {
@@ -73,12 +72,11 @@ describe('Detect setup tests', function () {
         const args: string = `${fakeOne} ${fakeTwo}`
 
         const cleanedValues = DetectSetup.convertArgumentsToPassableValues(args)
-        const parsedCleanValues: Array<string> = cleanedValues.split(' ')
 
-        assert.strictEqual(2, parsedCleanValues.length)
+        assert.strictEqual(2, cleanedValues.length)
 
-        assert.strictEqual(fakeOne, parsedCleanValues[0])
-        assert.strictEqual(fakeTwo, parsedCleanValues[1])
+        assert.strictEqual(fakeOne, cleanedValues[0])
+        assert.strictEqual(fakeTwo, cleanedValues[1])
     });
 
 })

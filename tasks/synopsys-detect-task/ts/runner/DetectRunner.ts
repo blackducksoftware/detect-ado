@@ -19,7 +19,7 @@ export abstract class DetectRunner {
 
     async invokeDetect(): Promise<number> {
         const env = DetectSetup.createEnvironmentWithVariables(this.blackduckConfiguration, this.detectConfiguration.detectVersion, this.detectConfiguration.detectFolder)
-        const cleanedArguments = DetectSetup.convertArgumentsToPassableValues(this.detectConfiguration.detectAdditionalArguments)
+        const cleanedArguments: string[] = DetectSetup.convertArgumentsToPassableValues(this.detectConfiguration.detectAdditionalArguments)
         const config: IDetectRunnerConfiguration = this.createRunnerConfiguration()
         const artifactFolder: string = await this.retrieveOrCreateArtifactFolder(config.fileName)
         const toolRunner = new DefaultToolRunner(config)

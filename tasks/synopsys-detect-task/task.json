@@ -13,7 +13,7 @@
   "version": {
     "Major": 7,
     "Minor": 0,
-    "Patch": 6
+    "Patch": 11
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "Run Synopsys Detect for your build $(message)",
@@ -88,7 +88,7 @@
       "defaultValue": "",
       "label": "Detect Air Gap Jar Path",
       "required": false,
-      "helpMarkDown": "The location of the extracted Detect jar that will be used in Air Gap mode.",
+      "helpMarkDown": "The extracted Detect jar path that will be used for Air Gap mode.",
       "groupName": "airGap"
     }
   ],

@@ -1,5 +1,5 @@
 export interface IDetectRunnerConfiguration {
     fileName: string,
-    runCommand: string,
+    runCommands: Array<string>,
     runnerTool: string
 }
