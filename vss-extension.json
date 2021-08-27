@@ -1,7 +1,7 @@
 {
   "manifestVersion": 1,
   "id": "synopsys-detect-qa",
-  "version": "7.0.1",
+  "version": "7.0.2",
   "name": "Synopsys Detect QA",
   "publisher": "synopsys-detect",
   "public": false,
