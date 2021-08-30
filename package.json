@@ -9,7 +9,7 @@
     "tick": "tsc && node dev/tick.js && tfx extension create --manifest-globs vss-extension.json",
     "clean": "rimraf ./dist && rimraf ./*.vsix",
     "test": "tsc && mocha --timeout 30000 tasks/synopsys-detect-task/tests/*.js",
-    "subinstall": "cd tasks/synopsys-detect-task && npm install"
+    "subinstall": "cd tasks/synopsys-detect-task && npm install && npm dedupe && npm prune --production"
   },
   "author": "Black Duck Software, Inc.",
   "license": "Apache-2.0",
