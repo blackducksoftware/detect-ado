@@ -13,24 +13,10 @@
   "version": {
     "Major": 7,
     "Minor": 0,
-    "Patch": 16
+    "Patch": 19
   },
   "minimumAgentVersion": "1.95.0",
   "instanceNameFormat": "Run Synopsys Detect for your build $(message)",
-  "groups": [
-    {
-      "name": "airGap",
-      "displayName": "Air Gap",
-      "isExpanded": true,
-      "visibilityRule": "DetectRunMode = UseAirGap"
-    },
-    {
-      "name": "defaultScript",
-      "displayName": "Default Script",
-      "isExpanded": true,
-      "visibilityRule": "DetectRunMode = UseScript"
-    }
-  ],
   "inputs": [
     {
       "name": "BlackDuckService",
@@ -81,7 +67,7 @@
       "defaultValue": "latest",
       "required": true,
       "helpMarkDown": "Version of the detect binary to use. Default: latest.",
-      "groupName": "defaultScript"
+      "visibleRule": "DetectRunMode = UseScript"
     },
     {
       "name": "DetectFolder",
@@ -90,7 +76,7 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "The location in the Tool directory to download the detect jar or the location of an existing detect jar. Default: 'detect' directory.",
-      "groupName": "defaultScript"
+      "visibleRule": "DetectRunMode = UseScript"
     },
     {
       "name": "DetectAirGapJarDirectoryPath",
@@ -99,7 +85,7 @@
       "label": "Detect Air Gap Jar Directory Path",
       "required": true,
       "helpMarkDown": "The extracted Detect jar directory path that will be used for Air Gap mode.",
-      "groupName": "airGap"
+      "visibleRule": "DetectRunMode = UseAirGap"
     }
   ],
   "execution": {
