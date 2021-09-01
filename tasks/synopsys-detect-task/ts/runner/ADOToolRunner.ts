@@ -3,7 +3,7 @@ import {logger} from '../DetectLogger'
 import task = require('azure-pipelines-task-lib/task')
 import {IDetectRunnerConfiguration} from '../model/IDetectRunnerConfiguration';
 
-export class DefaultToolRunner {
+export class ADOToolRunner {
     private readonly runnerTool: string
     private readonly runnerCommands: Array<string>
     private readonly runnerFileName: string

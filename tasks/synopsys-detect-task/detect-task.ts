@@ -1,4 +1,4 @@
-import task = require("azure-pipelines-task-lib/task");
+import task = require('azure-pipelines-task-lib/task');
 import {IBlackduckConfiguration} from './ts/model/IBlackduckConfiguration'
 import {IDetectConfiguration} from './ts/model/IDetectConfiguration'
 import {IAdditionalConfiguration} from './ts/model/IAdditionalConfiguration'
@@ -10,7 +10,9 @@ import {PathResolver} from './ts/PathResolver';
 import {DetectScriptConfigurationRunner} from './ts/runner/DetectScriptConfigurationRunner';
 import {DetectRunner} from './ts/runner/DetectRunner';
 import {DetectJarConfigurationRunner} from './ts/runner/DetectJarConfigurationRunner';
-import {TaskResult} from "azure-pipelines-task-lib";
+import {TaskResult} from 'azure-pipelines-task-lib';
+import {IDefaultScriptConfiguration} from './ts/model/IDefaultScriptConfiguration';
+import {IJarConfiguration} from './ts/model/IJarConfiguration';
 
 async function run() {
     logger.info('Starting Detect Task')
@@ -19,9 +21,9 @@ async function run() {
         const detectConfiguration: IDetectConfiguration = getDetectConfiguration()
         const additionalConfiguration: IAdditionalConfiguration = getAdditionalConfiguration()
 
-        const detectRunner: DetectRunner = (detectConfiguration.useAirGap) ?
-            new DetectJarConfigurationRunner(blackduckConfiguration, detectConfiguration) :
-            new DetectScriptConfigurationRunner(blackduckConfiguration, detectConfiguration)
+        const detectRunner: DetectRunner = (DetectADOConstants.DETECT_RUN_MODE_AIR_GAP === detectConfiguration.detectRunMode) ?
+            new DetectJarConfigurationRunner(blackduckConfiguration, detectConfiguration, getAirGapConfiguration()) :
+            new DetectScriptConfigurationRunner(blackduckConfiguration, detectConfiguration, getDetectScriptConfiguration())
 
         const detectResult: number = await detectRunner.invokeDetect()
 
@@ -36,7 +38,7 @@ async function run() {
             task.setResult(task.TaskResult.Failed, `Detect run failed, received error code: ${detectResult}`, true)
             return
         }
-        task.setResult(TaskResult.Succeeded, "Success", true)
+        task.setResult(TaskResult.Succeeded, 'Success', true)
     } catch (e) {
         task.setResult(task.TaskResult.Failed, `An unexpected error occurred: ${e}`, true)
         return
@@ -80,18 +82,29 @@ function getBlackduckConfiguration(): IBlackduckConfiguration {
 function getDetectConfiguration(): IDetectConfiguration {
     logger.info('Retrieving Detect configuration')
     const additionalArguments: string = task.getInput(DetectADOConstants.DETECT_ARGUMENTS, false) || ''
-    const detectFolder: string = task.getInput(DetectADOConstants.DETECT_FOLDER, false) || PathResolver.getToolDirectory() || 'detect'
-    const detectVersion: string = task.getInput(DetectADOConstants.DETECT_VERSION, false) || 'latest'
-
-    const useAirGap: boolean = task.getBoolInput(DetectADOConstants.DETECT_USE_AIR_GAP, false) || false
-    const detectAirGapJarPath = task.getInput(DetectADOConstants.DETECT_AIR_GAP_JAR_PATH, useAirGap) || PathResolver.getToolDirectory() || ''
+    const runMode: string = task.getInput(DetectADOConstants.DETECT_RUN_MODE, true) || DetectADOConstants.DETECT_RUN_MODE_SCRIPT
 
     return {
         detectAdditionalArguments: additionalArguments,
+        detectRunMode: runMode
+    }
+}
+
+function getAirGapConfiguration(): IJarConfiguration {
+    const detectAirGapJarPath = task.getInput(DetectADOConstants.DETECT_AIR_GAP_JAR_DIRECTORY_PATH, true) || PathResolver.getToolDirectory() || ''
+
+    return {
+        detectJarPath: detectAirGapJarPath
+    }
+}
+
+function getDetectScriptConfiguration(): IDefaultScriptConfiguration {
+    const detectFolder: string = task.getInput(DetectADOConstants.DETECT_FOLDER, false) || PathResolver.getToolDirectory() || 'detect'
+    const detectVersion: string = task.getInput(DetectADOConstants.DETECT_VERSION, false) || 'latest'
+
+    return {
         detectFolder,
-        detectVersion,
-        useAirGap,
-        detectAirGapJarPath
+        detectVersion
     }
 }
 

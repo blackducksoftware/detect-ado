@@ -1,8 +1,10 @@
 import * as fileSystem from 'fs'
-import {IBlackduckConfiguration} from "../ts/model/IBlackduckConfiguration";
-import {IDetectConfiguration} from "../ts/model/IDetectConfiguration";
-import {DetectScriptConfigurationRunner} from "../ts/runner/DetectScriptConfigurationRunner";
-import {PathResolver} from "../ts/PathResolver";
+import {IBlackduckConfiguration} from '../ts/model/IBlackduckConfiguration';
+import {IDetectConfiguration} from '../ts/model/IDetectConfiguration';
+import {DetectScriptConfigurationRunner} from '../ts/runner/DetectScriptConfigurationRunner';
+import {PathResolver} from '../ts/PathResolver';
+import {IDefaultScriptConfiguration} from '../ts/model/IDefaultScriptConfiguration';
+import {DetectADOConstants} from '../ts/DetectADOConstants';
 
 const fileSystemExtra = require('fs-extra')
 const assert = require('assert')
@@ -30,13 +32,15 @@ describe.skip('DetectScript tests', function () {
 
         const detectConfiguration: IDetectConfiguration = {
             detectAdditionalArguments: '--blackduck.offline.mode=true --detect.tools.excluded=SIGNATURE_SCAN',
-            detectFolder: folder,
-            detectVersion: 'latest',
-            useAirGap: false,
-            detectAirGapJarPath: ''
+            detectRunMode: DetectADOConstants.DETECT_RUN_MODE_SCRIPT
         }
 
-        const scriptRunner = new DetectScriptConfigurationRunner(blackduckConfiguration, detectConfiguration)
+        const defaultScript: IDefaultScriptConfiguration = {
+            detectFolder: folder,
+            detectVersion: 'latest',
+        }
+
+        const scriptRunner = new DetectScriptConfigurationRunner(blackduckConfiguration, detectConfiguration, defaultScript)
         const runnerConfig = scriptRunner.createRunnerConfiguration()
 
         scriptRunner.invokeDetect().then(response => {
