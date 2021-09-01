@@ -1,17 +1,32 @@
 import {IBlackduckConfiguration} from './model/IBlackduckConfiguration'
 import {PathResolver} from './PathResolver';
-import {IProxyInfo} from "./model/IProxyInfo";
+import {IProxyInfo} from './model/IProxyInfo';
 
 export class DetectSetup {
-    private constructor() {}
+    static findTaskVersion = () => { const task = require('../task.json'); return task.version.Major + '.' + task.version.Minor + '.' + task.version.Patch; }
 
-    static findTaskVersion = () => { const task = require("../task.json"); return task.version.Major + "." + task.version.Minor + "." + task.version.Patch; }
+    private blackduckConfiguration: IBlackduckConfiguration
+    private detectArguments: string
+    private env: any
 
-    static createEnvironmentWithVariables(blackduckConfiguration: IBlackduckConfiguration, detectVersion: string, detectDownloadPath: string): any {
+    constructor(blackduckConfiguration: IBlackduckConfiguration, detectArguments: string) {
+        this.blackduckConfiguration = blackduckConfiguration
+        this.detectArguments = detectArguments
+        this.env = this.createEnvironmentWithVariables(blackduckConfiguration)
+    }
+
+    convertArgumentsToPassableValues(): string[] {
+        return this.detectArguments.split('--')
+            .map((value) => `--${value.trim()}`)
+            .filter(value => '--' !== value)
+    }
+
+    getEnv(): any {
+        return this.env
+    }
+
+    private createEnvironmentWithVariables(blackduckConfiguration: IBlackduckConfiguration): any {
         const env = process.env
-        if (detectVersion && ('latest' != detectVersion)) {
-            env['DETECT_LATEST_RELEASE_VERSION'] = detectVersion
-        }
 
         env['BLACKDUCK_URL'] = blackduckConfiguration.blackduckUrl
         env['BLACKDUCK_API_TOKEN'] = blackduckConfiguration.blackduckApiToken
@@ -25,21 +40,11 @@ export class DetectSetup {
             env['blackduck.proxy.password'] = proxyInfo.proxyPassword
         }
 
-        if (detectDownloadPath) {
-            env['DETECT_JAR_DOWNLOAD_DIR'] = detectDownloadPath
-        }
         env['DETECT_SOURCE_PATH'] = PathResolver.getBuildSourceDirectory()
 
         // TODO verify this works
         env['detect.phone.home.passthrough.detect.for.ado.version'] = DetectSetup.findTaskVersion()
 
         return env
-    }
-
-    static convertArgumentsToPassableValues(detectArguments: string): string[] {
-        const recombinedValues = detectArguments.split('--')
-            .map((value) => `--${value.trim()}`)
-            .filter(value => '--' !== value)
-        return recombinedValues
     }
 }

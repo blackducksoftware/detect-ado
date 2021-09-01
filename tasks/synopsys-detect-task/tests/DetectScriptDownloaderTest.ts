@@ -1,8 +1,8 @@
 import * as fileSystem from 'fs'
 import {DetectScriptDownloader} from '../ts/DetectScriptDownloader';
-import {IProxyInfo} from "../ts/model/IProxyInfo";
-import {DetectScriptConfigurationRunner} from "../ts/runner/DetectScriptConfigurationRunner";
-import {PathResolver} from "../ts/PathResolver";
+import {IProxyInfo} from '../ts/model/IProxyInfo';
+import {DetectScriptConfigurationRunner} from '../ts/runner/DetectScriptConfigurationRunner';
+import {PathResolver} from '../ts/PathResolver';
 
 const fileSystemExtra = require('fs-extra')
 const assert = require('assert')
@@ -29,7 +29,7 @@ describe('Detect script downloader tests', function () {
 
         DetectScriptDownloader.downloadScript(proxyInfo, DetectScriptConfigurationRunner.DETECT_SH_SCRIPT_NAME, folder)
             .then(() => {
-                assert.fail("Should have thrown exception")
+                assert.fail('Should have thrown exception')
             })
             .catch((error) => {
                 assert.ok(true)

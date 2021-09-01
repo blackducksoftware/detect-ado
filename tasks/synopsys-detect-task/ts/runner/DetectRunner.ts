@@ -1,8 +1,8 @@
-import {DefaultToolRunner} from "./DefaultToolRunner";
-import {DetectSetup} from "../DetectSetup";
-import {IBlackduckConfiguration} from "../model/IBlackduckConfiguration";
-import {IDetectConfiguration} from "../model/IDetectConfiguration";
-import {IDetectRunnerConfiguration} from "../model/IDetectRunnerConfiguration";
+import {ADOToolRunner} from './ADOToolRunner';
+import {DetectSetup} from '../DetectSetup';
+import {IBlackduckConfiguration} from '../model/IBlackduckConfiguration';
+import {IDetectConfiguration} from '../model/IDetectConfiguration';
+import {IDetectRunnerConfiguration} from '../model/IDetectRunnerConfiguration';
 
 export abstract class DetectRunner {
     protected readonly blackduckConfiguration: IBlackduckConfiguration
@@ -17,12 +17,17 @@ export abstract class DetectRunner {
 
     abstract async retrieveOrCreateArtifactFolder(fileName: string): Promise<string>
 
+    setupDetect(): DetectSetup {
+        return new DetectSetup(this.blackduckConfiguration, this.detectConfiguration.detectAdditionalArguments)
+    }
+
     async invokeDetect(): Promise<number> {
-        const env = DetectSetup.createEnvironmentWithVariables(this.blackduckConfiguration, this.detectConfiguration.detectVersion, this.detectConfiguration.detectFolder)
-        const cleanedArguments: string[] = DetectSetup.convertArgumentsToPassableValues(this.detectConfiguration.detectAdditionalArguments)
+        const detectSetup = this.setupDetect()
+        const env = detectSetup.getEnv()
+        const cleanedArguments: string[] = detectSetup.convertArgumentsToPassableValues()
         const config: IDetectRunnerConfiguration = this.createRunnerConfiguration()
         const artifactFolder: string = await this.retrieveOrCreateArtifactFolder(config.fileName)
-        const toolRunner = new DefaultToolRunner(config)
+        const toolRunner = new ADOToolRunner(config)
 
         return await toolRunner.invoke(cleanedArguments, artifactFolder, env)
     }

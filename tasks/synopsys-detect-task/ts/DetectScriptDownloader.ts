@@ -4,7 +4,7 @@ import url from 'url';
 import HttpsProxyAgent from 'https-proxy-agent/dist/agent';
 import {logger} from './DetectLogger';
 import fileSystem, {WriteStream} from 'fs';
-import {PathResolver} from "./PathResolver";
+import {PathResolver} from './PathResolver';
 
 export class DetectScriptDownloader {
     static readonly DETECT_DOWNLOAD_URL = 'https://detect.synopsys.com'
@@ -45,7 +45,7 @@ export class DetectScriptDownloader {
             }
 
             if (proxyInfo.proxyUsername && proxyInfo.proxyPassword) {
-                proxyConfig.auth = proxyInfo.proxyUsername + ":" + proxyInfo.proxyPassword
+                proxyConfig.auth = proxyInfo.proxyUsername + ':' + proxyInfo.proxyPassword
             }
 
             const httpsAgent = new HttpsProxyAgent(proxyConfig)

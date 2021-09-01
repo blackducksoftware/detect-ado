@@ -5,6 +5,10 @@ import {PathResolver} from '../PathResolver';
 import {DetectADOConstants} from '../DetectADOConstants';
 import {DetectScriptDownloader} from '../DetectScriptDownloader';
 import {DetectRunner} from './DetectRunner';
+import {DetectSetup} from '../DetectSetup';
+import {IBlackduckConfiguration} from '../model/IBlackduckConfiguration';
+import {IDetectConfiguration} from '../model/IDetectConfiguration';
+import {IDefaultScriptConfiguration} from '../model/IDefaultScriptConfiguration';
 
 const osPlat: string = os.platform()
 
@@ -30,6 +34,13 @@ export class DetectScriptConfigurationRunner extends DetectRunner {
         runnerTool: 'powershell'
     }
 
+    private defaultScriptConfiguration: IDefaultScriptConfiguration
+
+    constructor(blackduckConfiguration: IBlackduckConfiguration, detectConfiguration: IDetectConfiguration, defaultScriptConfiguration: IDefaultScriptConfiguration) {
+        super(blackduckConfiguration, detectConfiguration);
+        this.defaultScriptConfiguration = defaultScriptConfiguration
+    }
+
     createRunnerConfiguration(): IDetectRunnerConfiguration {
         if ('win32' == osPlat) {
             logger.info('Windows detected: Running powershell script')
@@ -44,7 +55,7 @@ export class DetectScriptConfigurationRunner extends DetectRunner {
     }
 
     async retrieveOrCreateArtifactFolder(fileName: string): Promise<string> {
-        const workingDirectory = PathResolver.getWorkingDirectory() || ""
+        const workingDirectory = PathResolver.getWorkingDirectory() || ''
         const scriptFolder: string = PathResolver.combinePathSegments(workingDirectory, DetectADOConstants.SCRIPT_DETECT_FOLDER)
 
         try {
@@ -55,6 +66,23 @@ export class DetectScriptConfigurationRunner extends DetectRunner {
         }
 
         return scriptFolder
+    }
+
+    setupDetect(): DetectSetup {
+        const detectSetup: DetectSetup = super.setupDetect();
+        const env: any = detectSetup.getEnv()
+
+        const detectVersion = this.defaultScriptConfiguration.detectVersion
+        if (detectVersion && ('latest' != detectVersion)) {
+            env['DETECT_LATEST_RELEASE_VERSION'] = detectVersion
+        }
+
+        const detectDownloadPath = this.defaultScriptConfiguration.detectFolder
+        if (detectDownloadPath) {
+            env['DETECT_JAR_DOWNLOAD_DIR'] = detectDownloadPath
+        }
+
+        return detectSetup
     }
 
 }
