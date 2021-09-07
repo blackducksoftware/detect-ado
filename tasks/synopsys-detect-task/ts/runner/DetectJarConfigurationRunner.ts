@@ -19,18 +19,17 @@ export class DetectJarConfigurationRunner extends DetectRunner {
     }
 
     createRunnerConfiguration(): IDetectRunnerConfiguration {
+        logger.info('Checking jar directory.')
+        if (!fileSystem.existsSync(this.jarDirectoryPath)) {
+            throw new Error(`Directory did not exist '${this.jarDirectoryPath}'`);
+        }
+
         const firstJarFile: string = fileSystem.readdirSync(this.jarDirectoryPath)
             .find(file => DetectJarConfigurationRunner.JAR_EXTENSION === path.parse(file).ext) || ''
 
         if (!firstJarFile || !firstJarFile.startsWith(DetectJarConfigurationRunner.JAR_PREFIX)) {
             logger.warn('Should have only the detect jar in this directory.')
-            logger.error(`Was unable to find valid jar in ${this.jarDirectoryPath}.`)
-
-            return {
-                fileName: '',
-                runCommands: [],
-                runnerTool: ''
-            }
+            throw new Error(`Was unable to find valid jar in ${this.jarDirectoryPath}.`)
         } else {
             logger.info(`Found jar file '${firstJarFile}'`)
         }

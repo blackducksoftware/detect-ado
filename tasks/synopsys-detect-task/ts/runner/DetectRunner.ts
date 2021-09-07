@@ -26,13 +26,15 @@ export abstract class DetectRunner {
         logger.info('Setting up the env to run Detect...')
         const detectSetup = this.setupDetect()
         const env = detectSetup.getEnv()
+
         logger.info('Parsing detect arguments...')
         const cleanedArguments: string[] = detectSetup.convertArgumentsToPassableValues()
         const config: IDetectRunnerConfiguration = this.createRunnerConfiguration()
+
         logger.info('Determining folder where Detect is located...')
         const artifactFolder: string = await this.retrieveOrCreateArtifactFolder(config.fileName)
-        const toolRunner = new ADOToolRunner(config)
 
+        const toolRunner = new ADOToolRunner(config)
         return await toolRunner.invoke(cleanedArguments, artifactFolder, env)
     }
 }
