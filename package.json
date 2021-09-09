@@ -3,13 +3,10 @@
   "version": "7.0.0",
   "description": "Execute Synopsys Detect against your build",
   "scripts": {
-    "build": "tsc -p .",
-    "postbuild": "npm run package",
-    "package": "tfx extension create",
-    "tick": "tsc && node dev/tick.js && tfx extension create --manifest-globs vss-extension.json",
+    "package": "tfx extension create --manifest-globs vss-extension.json",
+    "tick": "node dev/tick.js && tfx extension create --manifest-globs vss-extension.json",
     "clean": "rimraf ./dist && rimraf ./*.vsix",
-    "test": "tsc && mocha --timeout 30000 tasks/synopsys-detect-task/tests/*.js",
-    "subinstall": "cd tasks/synopsys-detect-task && npm install && npm dedupe && npm prune --production"
+    "installAll": "npm install && npm dedupe && npm prune && cd tasks/synopsys-detect-task && npm install && npm dedupe && npm prune"
   },
   "author": "Black Duck Software, Inc.",
   "license": "Apache-2.0",
@@ -21,25 +18,19 @@
     "ncp": "^2.0.0",
     "sync-request": "^6.1.0",
     "tfx-cli": "^0.6.3",
-    "y18n": "^4.0.1"
-  },
-  "dependencies": {
-    "@types/mocha": "^8.0.3",
-    "@types/q": "0.0.32",
-    "mocha": "^8.2.1",
+    "y18n": "^4.0.1",
     "@types/jquery": "^2.0.34",
-    "@types/node": "^14.14.5",
-    "typescript": "^4.0.2",
     "rimraf": "^2.5.4",
-    "axios": "^0.21.1",
     "azure-pipelines-task-lib": "^3.0.4-preview.0",
     "azure-pipelines-tool-lib": "^0.13.2",
     "fs-extra": "^9.0.1",
-    "https-proxy-agent": "^5.0.0",
     "request": "^2.88.2",
-    "request-promise": "^4.2.2",
-    "ts-node": "^9.0.0",
-    "vss-web-extension-sdk": "^2.109.0",
-    "winston": "^3.3.3"
+    "request-promise": "^4.2.4",
+    "vss-web-extension-sdk": "^2.109.0"
+  },
+  "dependencies": {
+    "@types/q": "0.0.32",
+    "@types/node": "^14.14.5",
+    "ts-node": "^9.0.0"
   }
 }
