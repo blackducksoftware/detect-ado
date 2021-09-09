@@ -16,7 +16,7 @@ export abstract class DetectRunner {
 
     abstract createRunnerConfiguration(): IDetectRunnerConfiguration
 
-    abstract async retrieveOrCreateArtifactFolder(fileName: string): Promise<string>
+    abstract retrieveOrCreateArtifactFolder(fileName: string): Promise<string>
 
     setupDetect(): DetectSetup {
         return new DetectSetup(this.blackduckConfiguration, this.detectConfiguration.detectAdditionalArguments)
