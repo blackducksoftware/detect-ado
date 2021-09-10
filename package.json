@@ -22,7 +22,6 @@
     "@types/jquery": "^2.0.34",
     "rimraf": "^2.5.4",
     "azure-pipelines-task-lib": "^3.0.4-preview.0",
-    "azure-pipelines-tool-lib": "^0.13.2",
     "fs-extra": "^9.0.1",
     "request": "^2.88.2",
     "request-promise": "^4.2.4",
