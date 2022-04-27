@@ -24,7 +24,8 @@ export class DetectScriptDownloader {
         const response = await axios({
             url: downloadLink,
             method: 'GET',
-            responseType: 'stream'
+            responseType: 'stream',
+            proxy: false // https://github.com/axios/axios/issues/2072#issuecomment-609650888
         })
 
         response.data.pipe(writer)
