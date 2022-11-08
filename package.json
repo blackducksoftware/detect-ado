@@ -23,7 +23,7 @@
     "request-promise": "^4.2.4",
     "rimraf": "^2.5.4",
     "sync-request": "^6.1.0",
-    "tfx-cli": "^0.6.3",
+    "tfx-cli": "^0.12.0",
     "vss-web-extension-sdk": "^2.109.0",
     "y18n": "^4.0.1"
   },
