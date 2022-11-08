@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@types/jquery": "^2.0.34",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "azure-pipelines-task-lib": "^3.0.4-preview.0",
     "fs-extra": "^9.0.1",
     "https-proxy-agent": "^5.0.0",
