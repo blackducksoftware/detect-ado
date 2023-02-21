@@ -63,6 +63,7 @@ export class DetectScriptConfigurationRunner extends DetectRunner {
         } catch (error) {
             logger.error(`Unable to connect with ${DetectScriptDownloader.DETECT_DOWNLOAD_URL}`)
             logger.error('This may be a problem with your proxy setup or network.')
+            throw new Error('This may be a problem with your proxy setup or network')
         }
 
         return scriptFolder
