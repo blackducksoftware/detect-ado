@@ -62,7 +62,7 @@
     },
     {
       "name": "DetectVersion",
-      "type": "string",
+      "type": "pickList",
       "label": "Detect Version",
       "defaultValue": "latest",
       "required": true,
