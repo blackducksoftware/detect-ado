@@ -88,6 +88,15 @@
       "visibleRule": "DetectRunMode = UseAirGap"
     }
   ],
+  "dataSourceBindings": [
+    {
+      "endpointId": "synopsys-detect-versions-endpoint",
+      "target": "DetectVersion",
+      "endpointUrl": "{{endpoint.url}}/artifactory/api/storage/bds-integrations-release/com/synopsys/integration/synopsys-detect/",
+      "resultSelector": "jsonpath:$.children[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{uri}}}\", \"DisplayValue\" : \"{{{uri}}}\" }"
+    }
+  ],
   "execution": {
     "Node10": {
       "target": "detect-task.js"
