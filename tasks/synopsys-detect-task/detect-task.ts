@@ -13,6 +13,7 @@ import {DetectJarConfigurationRunner} from './ts/runner/DetectJarConfigurationRu
 import {TaskResult} from 'azure-pipelines-task-lib';
 import {IDefaultScriptConfiguration} from './ts/model/IDefaultScriptConfiguration';
 import {IJarConfiguration} from './ts/model/IJarConfiguration';
+import tl = require('azure-pipelines-task-lib/task');
 
 async function run() {
     logger.info('Starting Detect Task')
@@ -59,11 +60,29 @@ function getBlackduckConfiguration(): IBlackduckConfiguration {
     const blackduckToken: string | undefined = task.getEndpointAuthorizationParameter(blackduckService, DetectADOConstants.BLACKDUCK_API_TOKEN, true)
 
     let blackduckProxyInfo: IProxyInfo | undefined
+    
+    // Blackduck Proxy Service Connection
     const blackduckProxyService: string | undefined = task.getInput(DetectADOConstants.BLACKDUCK_PROXY_ID, false)
+
+    // Agent's proxy configuration
+    const agentProxy = tl.getHttpProxyConfiguration()!
+
     if (blackduckProxyService) {
         const proxyUrl: string = task.getEndpointUrl(blackduckProxyService, true)!
-        const proxyUsername : string | undefined = task.getEndpointAuthorizationParameter(blackduckProxyService, DetectADOConstants.PROXY_USERNAME, true)
+        const proxyUsername: string | undefined = task.getEndpointAuthorizationParameter(blackduckProxyService, DetectADOConstants.PROXY_USERNAME, true)
         const proxyPassword: string | undefined = task.getEndpointAuthorizationParameter(blackduckProxyService, DetectADOConstants.PROXY_PASSWORD, true)
+
+        blackduckProxyInfo = {
+            proxyUrl,
+            proxyUsername,
+            proxyPassword
+        }
+        
+    // Use Agent's proxy configuration if BD Proxy Service Connection not used 
+    } else if (agentProxy && blackduckProxyService === undefined) {          
+        const proxyUrl: string = agentProxy.proxyUrl
+        const proxyUsername: string | undefined = agentProxy?.proxyUsername
+        const proxyPassword: string | undefined = agentProxy?.proxyPassword
 
         blackduckProxyInfo = {
             proxyUrl,
