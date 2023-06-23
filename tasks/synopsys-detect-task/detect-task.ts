@@ -72,6 +72,7 @@ function getBlackduckConfiguration(): IBlackduckConfiguration {
             proxyPassword
         }
     } else  if (azureAgentProxyConfiguration) {
+        logger.info('Found Azure Agent Proxy Configuration')
         const proxyUrl: string = azureAgentProxyConfiguration!.proxyUrl
         const proxyUsername : string | undefined = azureAgentProxyConfiguration?.proxyUsername
         const proxyPassword: string | undefined = azureAgentProxyConfiguration?.proxyPassword
