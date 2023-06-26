@@ -13,7 +13,6 @@ import {DetectJarConfigurationRunner} from './ts/runner/DetectJarConfigurationRu
 import {TaskResult} from 'azure-pipelines-task-lib';
 import {IDefaultScriptConfiguration} from './ts/model/IDefaultScriptConfiguration';
 import {IJarConfiguration} from './ts/model/IJarConfiguration';
-import tl = require('azure-pipelines-task-lib/task');
 
 async function run() {
     logger.info('Starting Detect Task')
@@ -65,7 +64,7 @@ function getBlackduckConfiguration(): IBlackduckConfiguration {
     const blackduckProxyService: string | undefined = task.getInput(DetectADOConstants.BLACKDUCK_PROXY_ID, false)
 
     // Agent's proxy configuration
-    const agentProxy = tl.getHttpProxyConfiguration()!
+    const agentProxy = task.getHttpProxyConfiguration()!
 
     if (blackduckProxyService) {
         const proxyUrl: string = task.getEndpointUrl(blackduckProxyService, true)!
@@ -81,8 +80,8 @@ function getBlackduckConfiguration(): IBlackduckConfiguration {
     // Use Agent's proxy configuration if BD Proxy Service Connection not used 
     } else if (agentProxy && blackduckProxyService === undefined) {          
         const proxyUrl: string = agentProxy.proxyUrl
-        const proxyUsername: string | undefined = agentProxy?.proxyUsername
-        const proxyPassword: string | undefined = agentProxy?.proxyPassword
+        const proxyUsername: string | undefined = agentProxy.proxyUsername
+        const proxyPassword: string | undefined = agentProxy.proxyPassword
 
         blackduckProxyInfo = {
             proxyUrl,
