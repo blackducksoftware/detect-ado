@@ -10,7 +10,7 @@ import {PathResolver} from './ts/PathResolver';
 import {DetectScriptConfigurationRunner} from './ts/runner/DetectScriptConfigurationRunner';
 import {DetectRunner} from './ts/runner/DetectRunner';
 import {DetectJarConfigurationRunner} from './ts/runner/DetectJarConfigurationRunner';
-import {TaskResult} from 'azure-pipelines-task-lib';
+import {ProxyConfiguration, TaskResult} from 'azure-pipelines-task-lib';
 import {IDefaultScriptConfiguration} from './ts/model/IDefaultScriptConfiguration';
 import {IJarConfiguration} from './ts/model/IJarConfiguration';
 
@@ -54,6 +54,7 @@ function addSummaryAttachment(content: string) {
 
 function getBlackduckConfiguration(): IBlackduckConfiguration {
     logger.info('Retrieving Blackduck configuration')
+    const azureAgentProxyConfiguration: ProxyConfiguration | null = task.getHttpProxyConfiguration()
     const blackduckService: string = task.getInput(DetectADOConstants.BLACKDUCK_ID, true)!
     const blackduckUrl: string = task.getEndpointUrl(blackduckService, false)!
     const blackduckToken: string | undefined = task.getEndpointAuthorizationParameter(blackduckService, DetectADOConstants.BLACKDUCK_API_TOKEN, true)
@@ -64,6 +65,17 @@ function getBlackduckConfiguration(): IBlackduckConfiguration {
         const proxyUrl: string = task.getEndpointUrl(blackduckProxyService, true)!
         const proxyUsername : string | undefined = task.getEndpointAuthorizationParameter(blackduckProxyService, DetectADOConstants.PROXY_USERNAME, true)
         const proxyPassword: string | undefined = task.getEndpointAuthorizationParameter(blackduckProxyService, DetectADOConstants.PROXY_PASSWORD, true)
+
+        blackduckProxyInfo = {
+            proxyUrl,
+            proxyUsername,
+            proxyPassword
+        }
+    } else  if (azureAgentProxyConfiguration) {
+        logger.info('Found Azure Agent Proxy Configuration')
+        const proxyUrl: string = azureAgentProxyConfiguration!.proxyUrl
+        const proxyUsername : string | undefined = azureAgentProxyConfiguration?.proxyUsername
+        const proxyPassword: string | undefined = azureAgentProxyConfiguration?.proxyPassword
 
         blackduckProxyInfo = {
             proxyUrl,
