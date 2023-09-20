@@ -13,8 +13,8 @@ import {IDefaultScriptConfiguration} from '../model/IDefaultScriptConfiguration'
 const osPlat: string = os.platform()
 
 export class DetectScriptConfigurationRunner extends DetectRunner {
-    static readonly DETECT_SH_SCRIPT_NAME = 'detect8.sh'
-    static readonly DETECT_PS_SCRIPT_NAME = 'detect8.ps1'
+    static readonly DETECT_SH_SCRIPT_NAME = 'detect9.sh'
+    static readonly DETECT_PS_SCRIPT_NAME = 'detect9.ps1'
 
     readonly BASH_SCRIPT: IDetectRunnerConfiguration = {
         fileName: DetectScriptConfigurationRunner.DETECT_SH_SCRIPT_NAME,
@@ -63,6 +63,7 @@ export class DetectScriptConfigurationRunner extends DetectRunner {
         } catch (error) {
             logger.error(`Unable to connect with ${DetectScriptDownloader.DETECT_DOWNLOAD_URL}`)
             logger.error('This may be a problem with your proxy setup or network.')
+            throw new Error('This may be a problem with your proxy setup or network.')
         }
 
         return scriptFolder
