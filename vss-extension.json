@@ -144,6 +144,38 @@
           }
         ]
       }
+    },
+    {
+      "id": "synopsys-detect-versions-endpoint",
+      "description": "Service Endpoint for retrieving list of possible detect versions",
+      "type": "ms.vss-endpoint.service-endpoint-type",
+      "targets": [
+        "ms.vss-endpoint.endpoint-types"
+      ],
+      "properties": {
+        "name": "synopsysdetectartifactory",
+        "displayName": "SIG Repo Artifactory",
+        "url": {
+          "displayName": "Server URL",
+          "value": "https://sig-repo.synopsys.com",
+          "helpText": "This Service Endpoint URL is always fixed"
+        },
+        "authenticationSchemes": [
+          {
+            "id": "endpoint-auth-scheme-none",
+            "description": "Creates an endpoint authentication scheme with no authentication.",
+            "type": "ms.vss-endpoint.endpoint-auth-scheme-none",
+            "targets": [
+              "ms.vss-endpoint.endpoint-auth-schemes"
+            ],
+            "properties": {
+              "name": "None",
+              "displayName": "No Authentication"
+            }
+          }
+        ]
+      }
+
     }
   ]
 }

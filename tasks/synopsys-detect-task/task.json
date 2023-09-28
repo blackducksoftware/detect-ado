@@ -62,7 +62,7 @@
     },
     {
       "name": "DetectVersion",
-      "type": "string",
+      "type": "pickList",
       "label": "Detect Version",
       "defaultValue": "latest",
       "required": true,
@@ -86,6 +86,15 @@
       "required": true,
       "helpMarkDown": "The extracted Detect jar directory path that will be used for Air Gap mode.",
       "visibleRule": "DetectRunMode = UseAirGap"
+    }
+  ],
+  "dataSourceBindings": [
+    {
+      "endpointId": "synopsys-detect-versions-endpoint",
+      "target": "DetectVersion",
+      "endpointUrl": "{{endpoint.url}}/artifactory/api/storage/bds-integrations-release/com/synopsys/integration/synopsys-detect/",
+      "resultSelector": "jsonpath:$.children[*]",
+      "resultTemplate": "{ \"Value\" : \"{{{uri}}}\", \"DisplayValue\" : \"{{{uri}}}\" }"
     }
   ],
   "execution": {
