@@ -12,7 +12,7 @@ export class PathResolver {
     }
 
     static getWorkingDirectory(): string {
-        return task.getVariable('Agent.WorkFolder') || __dirname
+        return task.getVariable('Agent.BuildDirectory') || __dirname
     }
 
     static combinePathSegments(...pathSegments: string[]): string {
