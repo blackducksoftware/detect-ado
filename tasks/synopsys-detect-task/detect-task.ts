@@ -49,7 +49,7 @@ function addSummaryAttachment(content: string) {
     const attachmentFilePath: string = Date.now().toString()
     const fullPath: string = PathResolver.combinePathSegments(__dirname, attachmentFilePath)
     fileSystem.writeFileSync(fullPath, content)
-    task.addAttachment('Distributedtask.Core.Summary', 'Synopsys Detect', fullPath)
+    task.addAttachment('Distributedtask.Core.Summary', 'Black Duck Detect', fullPath)
 }
 
 function getBlackduckConfiguration(): IBlackduckConfiguration {

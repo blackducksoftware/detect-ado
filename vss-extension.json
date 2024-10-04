@@ -1,9 +1,9 @@
 {
   "manifestVersion": 1,
-  "id": "synopsys-detect-qa",
+  "id": "black-duck-detect-qa",
   "version": "9.0.0",
-  "name": "Synopsys Detect QA",
-  "publisher": "synopsys-detect",
+  "name": "Black Duck Detect QA",
+  "publisher": "black-duck-detect",
   "public": false,
   "targets": [
     {
@@ -12,7 +12,6 @@
   ],
   "tags": [
     "Black Duck",
-    "Synopsys",
     "Detect",
     "Continuous Integration",
     "Security",
@@ -22,12 +21,12 @@
   "scopes": [
     "vso.build_execute"
   ],
-  "description": "Run Synopsys Detect for your build",
+  "description": "Run Black Duck Detect for your build",
   "categories": [
     "Azure Pipelines"
   ],
   "icons": {
-    "default": "images/synopsys.png"
+    "default": "images/blackduck.png"
   },
   "branding": {
     "color": "#00639c",
@@ -35,7 +34,7 @@
   },
   "files": [
     {
-      "path": "tasks/synopsys-detect-task"
+      "path": "tasks/blackduck-detect-task"
     },
     {
       "path": "images",
@@ -54,24 +53,24 @@
   },
   "contributions": [
     {
-      "id": "synopsys-detect-task",
+      "id": "black-duck-detect-task",
       "type": "ms.vss-distributed-task.task",
       "targets": [
         "ms.vss-distributed-task.tasks"
       ],
       "properties": {
-        "name": "tasks/synopsys-detect-task"
+        "name": "tasks/black-duck-detect-task"
       }
     },
     {
-      "id": "synopsys-proxy-endpoint",
+      "id": "black-duck-proxy-endpoint",
       "description": "Proxy Service Endpoint for Black Duck connections",
       "type": "ms.vss-endpoint.service-endpoint-type",
       "targets": [
         "ms.vss-endpoint.endpoint-types"
       ],
       "properties": {
-        "name": "synopsysproxy",
+        "name": "blackduckproxy",
         "displayName": "Black Duck Proxy",
         "url": {
           "displayName": "Server URL",
@@ -108,14 +107,14 @@
       }
     },
     {
-      "id": "synopsys-blackduck-endpoint",
+      "id": "blackduck-endpoint",
       "description": "Service Endpoint for Black Duck connections",
       "type": "ms.vss-endpoint.service-endpoint-type",
       "targets": [
         "ms.vss-endpoint.endpoint-types"
       ],
       "properties": {
-        "name": "synopsysblackduck",
+        "name": "blackduck",
         "displayName": "Black Duck",
         "url": {
           "displayName": "Server URL",

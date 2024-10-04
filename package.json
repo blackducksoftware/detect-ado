@@ -1,12 +1,12 @@
 {
   "name": "detect-ado",
   "version": "9.0.0",
-  "description": "Execute Synopsys Detect against your build",
+  "description": "Execute Black Duck Detect against your build",
   "scripts": {
     "package": "tfx extension create --manifest-globs vss-extension.json",
     "tick": "node dev/tick.js && tfx extension create --manifest-globs vss-extension.json",
     "clean": "rimraf ./dist && rimraf ./*.vsix",
-    "installAll": "npm install && npm dedupe && npm prune && cd tasks/synopsys-detect-task && npm install && npm dedupe && npm prune && npm run build"
+    "installAll": "npm install && npm dedupe && npm prune && cd tasks/blackduck-detect-task && npm install && npm dedupe && npm prune && npm run build"
   },
   "author": "Black Duck Software, Inc.",
   "license": "Apache-2.0",
