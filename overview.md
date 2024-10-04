@@ -34,7 +34,7 @@ For information on the full capabilities of Detect visit [Detect Public Confluen
 
 Before calling Detect in Azure DevOps, an active instance of Black Duck is required.
 
-If you do not have Black Duck, refer to [Azure Marketplace](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/black-duck-software.blackduck_hub_431) for more information.
+If you do not have Black Duck, refer to [Azure Marketplace](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/blackduck-software.blackduck_hub_431) for more information.
 
 ## Want to contribute? ##
 
