@@ -13,8 +13,8 @@ import {IDefaultScriptConfiguration} from '../model/IDefaultScriptConfiguration'
 const osPlat: string = os.platform()
 
 export class DetectScriptConfigurationRunner extends DetectRunner {
-    static readonly DETECT_SH_SCRIPT_NAME = 'detect9.sh' // TOME should point at 10 (SNAPSHOT for testing) along with sierra changes
-    static readonly DETECT_PS_SCRIPT_NAME = 'detect9.ps1'
+    static readonly DETECT_SH_SCRIPT_NAME = 'detect10-3.2.0-SNAPSHOT.sh'
+    static readonly DETECT_PS_SCRIPT_NAME = 'detect10-3.2.0-SNAPSHOT.ps1'
 
     readonly BASH_SCRIPT: IDetectRunnerConfiguration = {
         fileName: DetectScriptConfigurationRunner.DETECT_SH_SCRIPT_NAME,
