@@ -8,7 +8,7 @@ import {IJarConfiguration} from '../model/IJarConfiguration';
 import {logger} from '../DetectLogger';
 
 export class DetectJarConfigurationRunner extends DetectRunner {
-    private static readonly JAR_PREFIX = 'blackduck-detect-'
+    private static readonly JAR_PREFIX = 'detect-'
     private static readonly JAR_EXTENSION = '.jar'
 
     private readonly jarDirectoryPath: string
