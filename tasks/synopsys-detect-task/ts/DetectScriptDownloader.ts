@@ -13,6 +13,7 @@ export class DetectScriptDownloader {
     private constructor() {}
 
     static async downloadScript(proxyInfo: IProxyInfo | undefined, scriptName: string, scriptDirectory: string, isBlackDuckAccessible: boolean): Promise<boolean> {
+        logger.info(isBlackDuckAccessible + "isBlackduckAccessible")
         logger.info('Downloading detect script.')
         if (!fileSystem.existsSync(scriptDirectory)) {
             fileSystem.mkdirSync(scriptDirectory, {recursive: true})
@@ -65,13 +66,5 @@ export class DetectScriptDownloader {
 
     private static getFullDownloadUrl(scriptName: string): string {
         return `${DetectScriptDownloader.DETECT_DOWNLOAD_URL}/${scriptName}`
-    }
-
-    private static getFullFallbackDownloadUrl(scriptName: string): string {
-        return `${DetectScriptDownloader.DETECT_DOWNLOAD_FALLBACK_URL}/${scriptName}`
-    }
-
-    static async isBlackDuckUrlAccessible(): Promise<boolean> {
-        return false
     }
 }
