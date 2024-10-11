@@ -18,16 +18,29 @@ export class DetectScriptDownloader {
         if (!fileSystem.existsSync(scriptDirectory)) {
             fileSystem.mkdirSync(scriptDirectory, {recursive: true})
         }
+        logger.info("Hello all")
 
         const filePath: string = PathResolver.combinePathSegments(scriptDirectory, scriptName)
         const writer: WriteStream = fileSystem.createWriteStream(filePath)
         const axios: AxiosInstance = this.createAxiosAgent(proxyInfo)
 
+        logger.info(filePath, writer)
+
         try {
-            await this.isBlackDuckURLAccessible(axios, writer)
-            this.downloadLink = this.getFullDownloadUrl(scriptName);
+            logger.info("In try block")
+            const bdResponse = await axios.get(DetectScriptDownloader.DETECT_DOWNLOAD_URL)
+
+            if(bdResponse.status >= 200 && bdResponse.status <= 399) {
+                logger.info("In If block")
+                this.downloadLink = this.getFullDownloadUrl(scriptName);
+            } else {
+                logger.info("In else block")
+                logger.warn("https://detect.blackduck.com responded with an unexpected status code " + bdResponse.status + ". Please allow access through your firewall as https://sig-repo.synopsys.com will be shutdown at the end of February 2025.")
+                this.downloadLink = this.getFullFallbackDownloadUrl(scriptName)
+            }
         } catch (error) {
-            this.downloadLink = this.getFullFallbackDownloadUrl(scriptName);
+            logger.warn("https://detect.blackduck.com is inaccessible from this machine. Please allow access through your firewall as https://sig-repo.synopsys.com will be shutdown at the end of February 2025.")
+            this.downloadLink = this.getFullFallbackDownloadUrl(scriptName)
         }
 
         const response = await axios({
@@ -70,29 +83,5 @@ export class DetectScriptDownloader {
 
     private static getFullFallbackDownloadUrl(scriptName: string): string {
         return `${DetectScriptDownloader.DETECT_DOWNLOAD_FALLBACK_URL}/${scriptName}`
-    }
-
-    private static async isBlackDuckURLAccessible(axios: AxiosInstance, writer: WriteStream): Promise<boolean> {
-
-        const response: AxiosResponse<any> = await axios({
-            url: DetectScriptDownloader.DETECT_DOWNLOAD_URL,
-            method: 'GET',
-        }).catch(function()  {
-            logger.warn("https://repo.blackduck.com is inaccessible from this machine. Please allow access through your firewall as https://sig-repo.synopsys.com will be shutdown at the end of February 2025.")
-            return new Promise((reject) => {
-                writer.on('error', reject)
-            })
-        })
-
-        if(response.status >= 200 && response.status <= 399) {
-            return new Promise((resolve) => {
-                writer.on('finish', resolve)
-            })
-        } else {
-            logger.warn("https://repo.blackduck.com responded with an unexpected status code " + response.status + ". Please allow access through your firewall as https://sig-repo.synopsys.com will be shutdown at the end of February 2025.")
-            return new Promise((reject) => {
-                writer.on('error', reject)
-            })
-        }
     }
 }
