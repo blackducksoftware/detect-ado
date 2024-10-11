@@ -67,4 +67,8 @@ export class DetectScriptDownloader {
     private static getFullDownloadUrl(scriptName: string): string {
         return `${DetectScriptDownloader.DETECT_DOWNLOAD_URL}/${scriptName}`
     }
+
+    private static getFullFallbackDownloadUrl(scriptName: string): string {
+        return `${DetectScriptDownloader.DETECT_DOWNLOAD_FALLBACK_URL}/${scriptName}`
+    }
 }
