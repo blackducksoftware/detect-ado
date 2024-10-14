@@ -26,15 +26,15 @@ Detect for Azure DevOps is architected to integrate seamlessly with build and re
 
 ## Documentation ##
 
-Instructions and examples are available on our [Public Confluence](https://blackduck.atlassian.net/wiki/spaces/INTDOCS/pages/622618/Black+Duck+Detect+for+Azure+DevOps)
+Instructions and examples are available on our [Public Confluence](https://documentation.blackduck.com/bundle/detect/page/integrations/azureplugin/azure.html)
 
-For information on the full capabilities of Detect visit [Detect Public Confluence](https://blackduck.atlassian.net/wiki/spaces/INTDOCS/pages/62423113/Black+Duck+Detect)
+For information on the full capabilities of Detect visit [Detect Public Confluence](https://documentation.blackduck.com/bundle/detect/page/introduction.html)
 
 ## Pre-Requisites ##
 
 Before calling Detect in Azure DevOps, an active instance of Black Duck is required.
 
-If you do not have Black Duck, refer to [Azure Marketplace](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/blackduck-software.blackduck_hub_431) for more information.
+If you do not have Black Duck, refer to [Azure Marketplace](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/black-duck-software.blackduck_hub_431) for more information.
 
 ## Want to contribute? ##
 
