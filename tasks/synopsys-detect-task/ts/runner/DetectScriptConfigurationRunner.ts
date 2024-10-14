@@ -62,14 +62,11 @@ export class DetectScriptConfigurationRunner extends DetectRunner {
         const axios: AxiosInstance = Axios.create()
 
         try {
-            logger.info("In try block")
             const bdResponse = await axios.get(DetectScriptDownloader.DETECT_DOWNLOAD_URL)
 
             if(bdResponse.status >= 200 && bdResponse.status <= 399) {
-                logger.info("In If block")
                 isBlackDuckAccessible = true;
             } else {
-                logger.info("In else block")
                 logger.warn("https://detect.blackduck.com responded with an unexpected status code " + bdResponse.status + ". Please allow access through your firewall as https://detect.synopsys.com will be shutdown at the end of February 2025.")
                 isBlackDuckAccessible = false
             }

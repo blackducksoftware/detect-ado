@@ -13,12 +13,9 @@ export class DetectScriptDownloader {
     private constructor() {}
 
     static async downloadScript(proxyInfo: IProxyInfo | undefined, scriptName: string, scriptDirectory: string, isBlackDuckAccessible: boolean): Promise<boolean> {
-        logger.info(isBlackDuckAccessible + "isBlackduckAccessible")
-        logger.info('Downloading detect script.')
         if (!fileSystem.existsSync(scriptDirectory)) {
             fileSystem.mkdirSync(scriptDirectory, {recursive: true})
         }
-        logger.info("Hello all")
 
         let downloadLink:string
         if(isBlackDuckAccessible) {
@@ -30,6 +27,7 @@ export class DetectScriptDownloader {
         const writer: WriteStream = fileSystem.createWriteStream(filePath)
         const axios: AxiosInstance = this.createAxiosAgent(proxyInfo)
 
+        logger.info("Downloading Detect Script from: " + downloadLink)
         const response = await axios({
             url: downloadLink,
             method: 'GET',
