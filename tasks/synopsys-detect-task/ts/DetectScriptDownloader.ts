@@ -1,4 +1,4 @@
-import Axios, {AxiosInstance} from 'axios';
+import Axios, {AxiosInstance, AxiosResponse} from 'axios';
 import {IProxyInfo} from './model/IProxyInfo';
 import url from 'url';
 import HttpsProxyAgent from 'https-proxy-agent/dist/agent';
@@ -7,20 +7,22 @@ import fileSystem, {WriteStream} from 'fs';
 import {PathResolver} from './PathResolver';
 
 export class DetectScriptDownloader {
-    static readonly DETECT_DOWNLOAD_URL = 'https://detect.synopsys.com'
+    static readonly DETECT_DOWNLOAD_URL = 'https://detect.blackduck.com'
+    static readonly DETECT_DOWNLOAD_FALLBACK_URL = 'https://detect.synopsys.com'
 
     private constructor() {}
 
-    static async downloadScript(proxyInfo: IProxyInfo | undefined, scriptName: string, scriptDirectory: string): Promise<boolean> {
-        logger.info('Downloading detect script.')
+    static async downloadScript(proxyInfo: IProxyInfo | undefined, scriptName: string, scriptDirectory: string, isBlackDuckAccessible: boolean): Promise<boolean> {
         if (!fileSystem.existsSync(scriptDirectory)) {
             fileSystem.mkdirSync(scriptDirectory, {recursive: true})
         }
 
-        const downloadLink: string = this.getFullDownloadUrl(scriptName)
+        const downloadLink: string = this.getFullDownloadUrl(isBlackDuckAccessible, scriptName)
         const filePath: string = PathResolver.combinePathSegments(scriptDirectory, scriptName)
-        const writer: WriteStream = fileSystem.createWriteStream(filePath);
+        const writer: WriteStream = fileSystem.createWriteStream(filePath)
         const axios: AxiosInstance = this.createAxiosAgent(proxyInfo)
+
+        logger.info("Downloading Detect Script from: " + downloadLink)
         const response = await axios({
             url: downloadLink,
             method: 'GET',
@@ -55,7 +57,11 @@ export class DetectScriptDownloader {
         return Axios.create()
     }
 
-    private static getFullDownloadUrl(scriptName: string): string {
-        return `${DetectScriptDownloader.DETECT_DOWNLOAD_URL}/${scriptName}`
+    private static getFullDownloadUrl(isBlackDuckAccessible: boolean, scriptName: string): string {
+        if(isBlackDuckAccessible) {
+            return `${DetectScriptDownloader.DETECT_DOWNLOAD_URL}/${scriptName}`
+        } else {
+            return `${DetectScriptDownloader.DETECT_DOWNLOAD_FALLBACK_URL}/${scriptName}`
+        }
     }
 }
