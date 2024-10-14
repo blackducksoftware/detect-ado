@@ -7,7 +7,7 @@ import fileSystem, {WriteStream} from 'fs';
 import {PathResolver} from './PathResolver';
 
 export class DetectScriptDownloader {
-    static readonly DETECT_DOWNLOAD_URL = 'https://detect.synopsys.com'
+    static readonly DETECT_DOWNLOAD_URL = 'https://detect.blackduck.com'
 
     private constructor() {}
 
