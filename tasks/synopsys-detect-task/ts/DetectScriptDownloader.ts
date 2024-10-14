@@ -17,12 +17,7 @@ export class DetectScriptDownloader {
             fileSystem.mkdirSync(scriptDirectory, {recursive: true})
         }
 
-        let downloadLink:string
-        if(isBlackDuckAccessible) {
-            downloadLink = this.getFullDownloadUrl(scriptName)
-        } else {
-            downloadLink = this.getFullFallbackDownloadUrl(scriptName)
-        }
+        const downloadLink: string = this.getFullDownloadUrl(isBlackDuckAccessible, scriptName)
         const filePath: string = PathResolver.combinePathSegments(scriptDirectory, scriptName)
         const writer: WriteStream = fileSystem.createWriteStream(filePath)
         const axios: AxiosInstance = this.createAxiosAgent(proxyInfo)
@@ -62,11 +57,11 @@ export class DetectScriptDownloader {
         return Axios.create()
     }
 
-    private static getFullDownloadUrl(scriptName: string): string {
-        return `${DetectScriptDownloader.DETECT_DOWNLOAD_URL}/${scriptName}`
-    }
-
-    private static getFullFallbackDownloadUrl(scriptName: string): string {
-        return `${DetectScriptDownloader.DETECT_DOWNLOAD_FALLBACK_URL}/${scriptName}`
+    private static getFullDownloadUrl(isBlackDuckAccessible: boolean, scriptName: string): string {
+        if(isBlackDuckAccessible) {
+            return `${DetectScriptDownloader.DETECT_DOWNLOAD_URL}/${scriptName}`
+        } else {
+            return `${DetectScriptDownloader.DETECT_DOWNLOAD_FALLBACK_URL}/${scriptName}`
+        }
     }
 }

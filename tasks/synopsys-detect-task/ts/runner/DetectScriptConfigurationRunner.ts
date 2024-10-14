@@ -67,11 +67,11 @@ export class DetectScriptConfigurationRunner extends DetectRunner {
             if(bdResponse.status >= 200 && bdResponse.status <= 399) {
                 isBlackDuckAccessible = true;
             } else {
-                logger.warn("https://detect.blackduck.com responded with an unexpected status code " + bdResponse.status + ". Please allow access through your firewall as https://detect.synopsys.com will be shutdown at the end of February 2025.")
+                logger.warn("https://detect.blackduck.com responded with an unexpected status code " + bdResponse.status + ".")
                 isBlackDuckAccessible = false
             }
         } catch (error) {
-            logger.warn("https://detect.blackduck.com is inaccessible from this machine. Please allow access through your firewall as https://detect.synopsys.com will be shutdown at the end of February 2025.")
+            logger.warn("https://detect.blackduck.com is inaccessible from this machine. Please allow access through your firewall.")
             isBlackDuckAccessible = false
         }
 
