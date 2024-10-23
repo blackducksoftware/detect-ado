@@ -15,7 +15,7 @@ describe('Detect script downloader tests', function () {
     })
 
     it('test script download', (done) => {
-        DetectScriptDownloader.downloadScript(undefined, DetectScriptConfigurationRunner.DETECT_SH_SCRIPT_NAME, folder).then(response => {
+        DetectScriptDownloader.downloadScript(undefined, DetectScriptConfigurationRunner.DETECT_SH_SCRIPT_NAME, folder, true).then(response => {
             assert.ok(fileSystem.existsSync(`${folder}/${DetectScriptConfigurationRunner.DETECT_SH_SCRIPT_NAME}`), 'Downloaded file did not exist')
         }).finally(done)
     });
@@ -27,7 +27,7 @@ describe('Detect script downloader tests', function () {
             proxyPassword: undefined
         }
 
-        DetectScriptDownloader.downloadScript(proxyInfo, DetectScriptConfigurationRunner.DETECT_SH_SCRIPT_NAME, folder)
+        DetectScriptDownloader.downloadScript(proxyInfo, DetectScriptConfigurationRunner.DETECT_SH_SCRIPT_NAME, folder, true)
             .then(() => {
                 assert.fail('Should have thrown exception')
             })

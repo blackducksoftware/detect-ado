@@ -9,6 +9,7 @@ import {DetectSetup} from '../DetectSetup';
 import {IBlackduckConfiguration} from '../model/IBlackduckConfiguration';
 import {IDetectConfiguration} from '../model/IDetectConfiguration';
 import {IDefaultScriptConfiguration} from '../model/IDefaultScriptConfiguration';
+import Axios, {AxiosInstance} from "axios";
 
 const osPlat: string = os.platform()
 
@@ -57,9 +58,25 @@ export class DetectScriptConfigurationRunner extends DetectRunner {
     async retrieveOrCreateArtifactFolder(fileName: string): Promise<string> {
         const workingDirectory = PathResolver.getWorkingDirectory() || ''
         const scriptFolder: string = PathResolver.combinePathSegments(workingDirectory, DetectADOConstants.SCRIPT_DETECT_FOLDER)
+        let isBlackDuckAccessible: boolean = true
+        const axios: AxiosInstance = Axios.create()
 
         try {
-            await DetectScriptDownloader.downloadScript(this.blackduckConfiguration.proxyInfo, fileName, scriptFolder)
+            const bdResponse = await axios.get(DetectScriptDownloader.DETECT_DOWNLOAD_URL)
+
+            if(bdResponse.status >= 200 && bdResponse.status <= 399) {
+                isBlackDuckAccessible = true;
+            } else {
+                logger.warn("https://detect.blackduck.com responded with an unexpected status code " + bdResponse.status + ".")
+                isBlackDuckAccessible = false
+            }
+        } catch (error) {
+            logger.warn("https://detect.blackduck.com is inaccessible from this machine. Please allow access through your firewall.")
+            isBlackDuckAccessible = false
+        }
+
+        try {
+            await DetectScriptDownloader.downloadScript(this.blackduckConfiguration.proxyInfo, fileName, scriptFolder, isBlackDuckAccessible)
         } catch (error) {
             logger.error(`Unable to connect with ${DetectScriptDownloader.DETECT_DOWNLOAD_URL}`)
             logger.error('This may be a problem with your proxy setup or network.')
