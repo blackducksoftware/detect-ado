@@ -3,7 +3,7 @@
   "id": "blackduck-detect-qa",
   "version": "10.0.0",
   "name": "Black Duck Detect QA",
-  "publisher": "blackduck-detect",
+  "publisher": "blackduck",
   "public": false,
   "targets": [
     {

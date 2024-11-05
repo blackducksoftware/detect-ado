@@ -8,11 +8,11 @@ This is the GitHub page for the Detect plugin for Azure DevOps.
 
 
 ## Where can I get the latest release? ##
-Detect for Azure DevOps is available on the [Azure Marketplace](https://marketplace.visualstudio.com/items?itemName=blackduck-detect.blackduck-detect).
+Detect for Azure DevOps is available on the [Azure Marketplace](https://marketplace.visualstudio.com/items?itemName=blackduck.blackduck-detect).
 
 Releases and Source are available under [GitHub releases](https://github.com/blackducksoftware/detect-ado/releases).
 
 ## Documentation ##
-Instructions and examples are available on our [Public Confluence](https://documentation.blackduck.com/bundle/detect/page/integrations/azureplugin/azure.html).
+Instructions and examples are available on our [Public Documentation](https://documentation.blackduck.com/bundle/detect/page/integrations/azureplugin/azure.html).
 
 

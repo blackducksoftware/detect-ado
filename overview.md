@@ -1,6 +1,6 @@
 ## Overview ##
 
-The [Black Duck Detect](https://blackduck.atlassian.net/wiki/spaces/INTDOCS/pages/62423113/Black+Duck+Detect) plugin for Azure DevOps (formerly known as Hub Detect) supports Software Composition Analysis (SCA: open source software detection). It is architected to seamlessly integrate Black Duck Detect with Azure DevOps build and release pipelines. Black Duck Detect makes it easier to set up and scan code bases using a variety of languages and package managers across different application security techniques.  
+The [Black Duck Detect](https://documentation.blackduck.com/bundle/detect/page/integrations/azureplugin/azure.html) plugin for Azure DevOps (formerly known as Hub Detect) supports Software Composition Analysis (SCA: open source software detection). It is architected to seamlessly integrate Black Duck Detect with Azure DevOps build and release pipelines. Black Duck Detect makes it easier to set up and scan code bases using a variety of languages and package managers across different application security techniques.  
 
 As a Black Duck and Azure DevOps user, Black Duck Detect Extension for Azure DevOps enables you to:
 
