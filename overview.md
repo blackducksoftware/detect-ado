@@ -26,7 +26,7 @@ Detect for Azure DevOps is architected to integrate seamlessly with build and re
 
 ## Documentation ##
 
-Instructions and examples are available on our [Public Confluence](https://documentation.blackduck.com/bundle/detect/page/integrations/azureplugin/azure.html)
+Instructions and examples are available on our [Documentation Portal](https://documentation.blackduck.com/bundle/detect/page/integrations/azureplugin/azure.html)
 
 For information on the full capabilities of Detect visit [Detect Public Confluence](https://documentation.blackduck.com/bundle/detect/page/introduction.html)
 
