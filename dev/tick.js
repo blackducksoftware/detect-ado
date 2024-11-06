@@ -1,7 +1,7 @@
 "use strict";
 const fs = require("fs");
 function updateTaskVersion() {
-    const taskjsonpath = "tasks/synopsys-detect-task/task.json";
+    const taskjsonpath = "tasks/blackduck-detect-task/task.json";
     let taskjsontext = fs.readFileSync(taskjsonpath);
     let taskjson = JSON.parse(taskjsontext);
     taskjson.version.Patch += 1;

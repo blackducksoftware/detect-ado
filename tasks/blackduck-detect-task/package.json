@@ -1,7 +1,7 @@
 {
   "name": "detect-ado",
-  "version": "9.0.0",
-  "description": "Execute Synopsys Detect against your build",
+  "version": "10.0.0",
+  "description": "Execute Black Duck Detect against your build",
   "scripts": {
     "build": "tsc -p .",
     "test": "npm run build && mocha --timeout 30000 tests/*.js"

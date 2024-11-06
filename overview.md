@@ -1,8 +1,8 @@
 ## Overview ##
 
-The [Synopsys Detect](https://synopsys.atlassian.net/wiki/spaces/INTDOCS/pages/62423113/Synopsys+Detect) plugin for Azure DevOps (formerly known as Hub Detect) supports Software Composition Analysis (SCA: open source software detection). It is architected to seamlessly integrate Synopsys Detect with Azure DevOps build and release pipelines. Synopsys Detect makes it easier to set up and scan code bases using a variety of languages and package managers across different application security techniques.  
+The [Black Duck Detect](https://documentation.blackduck.com/bundle/detect/page/integrations/azureplugin/azure.html) plugin for Azure DevOps (formerly known as Hub Detect) supports Software Composition Analysis (SCA: open source software detection). It is architected to seamlessly integrate Black Duck Detect with Azure DevOps build and release pipelines. Black Duck Detect makes it easier to set up and scan code bases using a variety of languages and package managers across different application security techniques.  
 
-As a Synopsys and Azure DevOps user, Synopsys Detect Extension for Azure DevOps enables you to:
+As a Black Duck and Azure DevOps user, Black Duck Detect Extension for Azure DevOps enables you to:
 
 •	Run a component scan in an Azure DevOps job:
 
@@ -22,13 +22,13 @@ Open Source Discovery: Rapid scanning and identification of open source librarie
 
 Detect for Azure DevOps is architected to integrate seamlessly with build and release pipelines for Black Duck
 
-![extension](images/new-extension.png)
+![extension](images/bd-extension.png)
 
 ## Documentation ##
 
-Instructions and examples are available on our [Public Confluence](https://synopsys.atlassian.net/wiki/spaces/INTDOCS/pages/622618/Synopsys+Detect+for+Azure+DevOps)
+Instructions and examples are available on our [Documentation Portal](https://documentation.blackduck.com/bundle/detect/page/integrations/azureplugin/azure.html)
 
-For information on the full capabilities of Detect visit [Detect Public Confluence](https://synopsys.atlassian.net/wiki/spaces/INTDOCS/pages/62423113/Synopsys+Detect)
+For information on the full capabilities of Detect visit [Detect Public Confluence](https://documentation.blackduck.com/bundle/detect/page/introduction.html)
 
 ## Pre-Requisites ##
 
