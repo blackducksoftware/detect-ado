@@ -10,7 +10,7 @@ As a Black Duck and Azure DevOps user, Black Duck Detect Extension for Azure Dev
 
 •	Create projects and releases in Black Duck through the Azure DevOps job.
 	
-•	After a scan is complete, the results are available on the Black Duck server (for SCA)
+•	After a scan is complete, the results are available on the Black Duck server (for SCA).
 
 
 ## Key Features ## 
@@ -19,25 +19,24 @@ Open Source Discovery: Rapid scanning and identification of open source librarie
 
 ![catalog](images/catalog.png)
 
-
 ## The Extension ##
 
-Detect for Azure DevOps is architected to integrate seamlessly with build and release pipelines for Black Duck
+Detect for Azure DevOps is architected to integrate seamlessly with build and release pipelines for Black Duck®.
 
 ![extension](images/bd-extension.png)
 
 ## Documentation ##
 
-Instructions and examples are available on our [Documentation Portal](https://documentation.blackduck.com/bundle/detect/page/integrations/azureplugin/azure.html)
+Instructions and examples for the Azure Plugin are available on our [Documentation Portal - Detect Azure Plugin](https://documentation.blackduck.com/bundle/detect/page/integrations/azureplugin/azure.html)
 
-For information on the full capabilities of Detect visit [Detect Public Confluence](https://documentation.blackduck.com/bundle/detect/page/introduction.html)
+For information on the full capabilities of Detect visit our [Documentation Portal](https://documentation.blackduck.com/bundle/detect/page/introduction.html)
 
 ## Pre-Requisites ##
 
 Before calling Detect in Azure DevOps, an active instance of Black Duck is required.
 
-If you do not have Black Duck, refer to [Azure Marketplace](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/black-duck-software.blackduck_hub_431) for more information.
+If you do not have Black Duck, [Contact Black Duck Sales](https://www.blackduck.com/contact-sales.html) for more information.
 
 ## Want to contribute? ##
 
-Running into an issue? Want to contribute? All code for this extension is [available on Github](https://github.com/blackducksoftware/detect-ado).  
+Want to contribute to this project? All code for this extension is [available on Github](https://github.com/blackducksoftware/detect-ado).  
