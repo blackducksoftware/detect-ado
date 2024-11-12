@@ -9,6 +9,7 @@ import {logger} from '../DetectLogger';
 
 export class DetectJarConfigurationRunner extends DetectRunner {
     private static readonly JAR_PREFIX = 'synopsys-detect-'
+    private static readonly NEW_JAR_PREFIX = 'detect-'
     private static readonly JAR_EXTENSION = '.jar'
 
     private readonly jarDirectoryPath: string
@@ -27,7 +28,8 @@ export class DetectJarConfigurationRunner extends DetectRunner {
         const firstJarFile: string = fileSystem.readdirSync(this.jarDirectoryPath)
             .find(file => DetectJarConfigurationRunner.JAR_EXTENSION === path.parse(file).ext) || ''
 
-        if (!firstJarFile || !firstJarFile.startsWith(DetectJarConfigurationRunner.JAR_PREFIX)) {
+
+            if (!firstJarFile || (!firstJarFile.startsWith(DetectJarConfigurationRunner.JAR_PREFIX) && !firstJarFile.startsWith(DetectJarConfigurationRunner.NEW_JAR_PREFIX))) {
             logger.warn('Should have only the detect jar in this directory.')
             throw new Error(`Was unable to find valid jar in ${this.jarDirectoryPath}.`)
         } else {
