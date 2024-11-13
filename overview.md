@@ -22,7 +22,7 @@ Open Source Discovery: Rapid scanning and identification of open source librarie
 
 ## The Extension ##
 
-Detect for Azure DevOps is architected to integrate seamlessly with build and release pipelines for Black Duck
+Detect for Azure DevOps is architected to integrate seamlessly with build and release pipelines for Black Duck.
 
 ![extension](images/new-extension.png)
 
