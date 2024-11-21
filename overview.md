@@ -1,6 +1,6 @@
 ## Overview ##
 
-_**The Synopsys Software Integrity Group is now Black Duck®. If you are an existing Detect user, please manually uninstall [Synopsys Detect Plugin](https://marketplace.visualstudio.com/items?itemName=synopsys-detect.synopsys-detect) and install this plugin to receive future updates. If you are a new user, you may proceed with installing the Black Duck Detect Plugin.**_
+_**The Synopsys Software Integrity Group is now Black Duck®. If you are an existing Synopsys Detect Azure DevOps extension user, please manually uninstall [Synopsys Detect Plugin](https://marketplace.visualstudio.com/items?itemName=synopsys-detect.synopsys-detect) and install this plugin to receive future updates. If you are a new user, you may proceed with installing the Black Duck Detect Plugin.**_
 
 The [Black Duck Detect](https://documentation.blackduck.com/bundle/detect/page/integrations/azureplugin/azure.html) plugin for Azure DevOps supports Software Composition Analysis (SCA: open source software detection). It is architected to seamlessly integrate Black Duck Detect with Azure DevOps build and release pipelines. Black Duck Detect makes it easy to set up and scan code bases using a variety of languages and package managers across different application security techniques.  
 
