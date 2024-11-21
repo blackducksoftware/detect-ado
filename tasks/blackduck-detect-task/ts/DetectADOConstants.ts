@@ -1,6 +1,6 @@
 export abstract class DetectADOConstants {
-    static readonly BLACKDUCK_ID = 'BlackDuckService'
-    static readonly BLACKDUCK_PROXY_ID = 'BlackDuckProxyService'
+    static readonly BLACKDUCK_ID = 'BlackDuckScaService'
+    static readonly BLACKDUCK_PROXY_ID = 'BlackDuckScaProxyService'
 
     static readonly BLACKDUCK_API_TOKEN = 'apitoken'
 
