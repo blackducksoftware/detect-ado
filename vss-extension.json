@@ -63,14 +63,14 @@
       }
     },
     {
-      "id": "blackduck-proxy-endpoint",
+      "id": "blackduck-sca-proxy-endpoint",
       "description": "Proxy Service Endpoint for Black Duck connections",
       "type": "ms.vss-endpoint.service-endpoint-type",
       "targets": [
         "ms.vss-endpoint.endpoint-types"
       ],
       "properties": {
-        "name": "blackduckproxy",
+        "name": "blackduckscaproxy",
         "displayName": "Black Duck Proxy",
         "url": {
           "displayName": "Server URL",
@@ -107,14 +107,14 @@
       }
     },
     {
-      "id": "blackduck-endpoint",
+      "id": "blackduck-sca-endpoint",
       "description": "Service Endpoint for Black Duck connections",
       "type": "ms.vss-endpoint.service-endpoint-type",
       "targets": [
         "ms.vss-endpoint.endpoint-types"
       ],
       "properties": {
-        "name": "blackduck",
+        "name": "blackducksca",
         "displayName": "Black Duck",
         "url": {
           "displayName": "Server URL",
