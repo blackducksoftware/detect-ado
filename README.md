@@ -3,7 +3,6 @@ This is the GitHub page for the Detect plugin for Azure DevOps.
 
 ## Build ##
 
-[![Build Status](https://travis-ci.org/blackducksoftware/detect-for-tfs.svg?branch=master)](https://travis-ci.org/blackducksoftware/detect-for-tfs)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 
@@ -14,5 +13,7 @@ Releases and Source are available under [GitHub releases](https://github.com/bla
 
 ## Documentation ##
 Instructions and examples are available on our [Public Documentation](https://documentation.blackduck.com/bundle/detect/page/integrations/azureplugin/azure.html).
+
+For full details of the each release, see [Release Notes](https://documentation.blackduck.com/bundle/detect/page/integrations/azureplugin/azurepluginreleasenotes.html)
 
 
