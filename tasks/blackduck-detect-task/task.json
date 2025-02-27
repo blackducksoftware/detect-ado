@@ -91,6 +91,9 @@
   "execution": {
     "Node10": {
       "target": "detect-task.js"
+    },
+    "Node16": {
+      "target": "detect-task.js"
     }
   }
 }
