@@ -27,7 +27,7 @@ export class DetectScriptDownloader {
             responseType: 'stream'
         })
 
-        response.data.data.pipe(writer)
+        response.data.pipe(writer)
         return new Promise((resolve, reject) => {
             writer.on('finish', resolve)
             writer.on('error', reject)
