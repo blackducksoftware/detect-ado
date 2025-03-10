@@ -28,7 +28,7 @@
     "y18n": "^4.0.1"
   },
   "dependencies": {
-    "@types/node": "^16.11.39",
+    "@types/node": "^20.3.1",
     "@types/q": "0.0.32",
     "ts-node": "^9.0.0"
   }
