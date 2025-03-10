@@ -94,6 +94,9 @@
     },
     "Node16": {
       "target": "detect-task.js"
+    },
+    "Node20_1": {
+      "target": "detect-task.js"
     }
   }
 }

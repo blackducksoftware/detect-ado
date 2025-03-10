@@ -1,10 +1,10 @@
-import Axios, {AxiosInstance} from 'axios';
 import {IProxyInfo} from './model/IProxyInfo';
 import url from 'url';
 import HttpsProxyAgent from 'https-proxy-agent/dist/agent';
 import {logger} from './DetectLogger';
 import fileSystem, {WriteStream} from 'fs';
 import {PathResolver} from './PathResolver';
+import got from "got";
 
 export class DetectScriptDownloader {
     static readonly DETECT_DOWNLOAD_URL = 'https://detect.blackduck.com'
@@ -20,39 +20,37 @@ export class DetectScriptDownloader {
         const downloadLink: string = this.getFullDownloadUrl(scriptName)
         const filePath: string = PathResolver.combinePathSegments(scriptDirectory, scriptName)
         const writer: WriteStream = fileSystem.createWriteStream(filePath);
-        const axios: AxiosInstance = this.createAxiosAgent(proxyInfo)
-        const response = await axios({
-            url: downloadLink,
-            method: 'GET',
-            responseType: 'stream'
-        })
+        if(proxyInfo) {
+            const httpsAgent = this.createProxyAgent(proxyInfo)
+            const stream = got.stream(downloadLink, {agent: {https: httpsAgent}})
+            stream.pipe(writer)
+        } else {
+            const stream = got.stream(downloadLink)
+            stream.pipe(writer)
+        }
 
-        response.data.pipe(writer)
         return new Promise((resolve, reject) => {
-            writer.on('finish', resolve)
+            writer.on('finish', () => {
+                resolve(true)
+            })
             writer.on('error', reject)
         })
     }
 
     // TODO check for support of NTLM, Basic, Digest
-    private static createAxiosAgent(proxyInfo: IProxyInfo | undefined): AxiosInstance {
-        if (proxyInfo) {
-            const proxyOpts = url.parse(proxyInfo.proxyUrl)
+    private static createProxyAgent(proxyInfo: IProxyInfo): HttpsProxyAgent {
+        const proxyOpts = url.parse(proxyInfo.proxyUrl)
 
-            const proxyConfig: any = {
-                host: proxyOpts.hostname,
-                port: proxyOpts.port
-            }
-
-            if (proxyInfo.proxyUsername && proxyInfo.proxyPassword) {
-                proxyConfig.auth = proxyInfo.proxyUsername + ':' + proxyInfo.proxyPassword
-            }
-
-            const httpsAgent = new HttpsProxyAgent(proxyConfig)
-            return Axios.create({httpsAgent})
+        const proxyConfig: any = {
+            host: proxyOpts.hostname,
+            port: proxyOpts.port
         }
 
-        return Axios.create()
+        if (proxyInfo.proxyUsername && proxyInfo.proxyPassword) {
+            proxyConfig.auth = proxyInfo.proxyUsername + ':' + proxyInfo.proxyPassword
+        }
+
+        return new HttpsProxyAgent(proxyConfig)
     }
 
     private static getFullDownloadUrl(scriptName: string): string {
