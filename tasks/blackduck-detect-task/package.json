@@ -23,7 +23,7 @@
     "y18n": "^4.0.1"
   },
   "dependencies": {
-    "got": "^11.8.6",
+    "got": "^10.7.0",
     "azure-pipelines-task-lib": "^4.13.0",
     "fs-extra": "^9.0.1",
     "https-proxy-agent": "^5.0.0",
