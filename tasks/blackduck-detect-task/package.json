@@ -13,6 +13,7 @@
     "url": "https://github.com/blackducksoftware/detect-ado"
   },
   "devDependencies": {
+    "@types/jquery": "^2.0.34",
     "@types/mocha": "^8.2.1",
     "@types/node": "^20.3.1",
     "@types/q": "0.0.32",
@@ -22,8 +23,7 @@
     "y18n": "^4.0.1"
   },
   "dependencies": {
-    "@types/jquery": "^2.0.34",
-    "got": "^11.8.6",
+    "got": "^10.7.0",
     "azure-pipelines-task-lib": "^4.13.0",
     "fs-extra": "^9.0.1",
     "https-proxy-agent": "^5.0.0",
