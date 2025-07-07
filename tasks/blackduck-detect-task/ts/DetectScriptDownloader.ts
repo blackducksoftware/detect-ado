@@ -22,7 +22,7 @@ export class DetectScriptDownloader {
         const writer: WriteStream = fileSystem.createWriteStream(filePath);
         if(proxyInfo) {
             const httpsAgent = this.createProxyAgent(proxyInfo)
-            const stream = got.stream(downloadLink, {agent: {https: httpsAgent}})
+            const stream = got.stream(downloadLink, {agent: {https: httpsAgent as any}})
             stream.pipe(writer)
         } else {
             const stream = got.stream(downloadLink)
