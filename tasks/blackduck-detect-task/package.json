@@ -33,8 +33,6 @@
     "winston": "^3.6.0"
   },
   "overrides": {
-    "https-proxy-agent": {
-      "debug": "npm:dry-uninstall"
-    }
+    "debug": "npm:dry-uninstall"
   }
 }

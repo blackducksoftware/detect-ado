@@ -31,5 +31,8 @@
   },
   "dependencies": {
     "ts-node": "^9.0.0"
+  },
+  "overrides": {
+    "debug": "npm:dry-uninstall"
   }
 }
