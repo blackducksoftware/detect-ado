@@ -1,6 +1,6 @@
 {
   "name": "detect-ado",
-  "version": "10.1.0",
+  "version": "10.1.1",
   "description": "Execute Black Duck Detect against your build",
   "scripts": {
     "package": "tfx extension create --manifest-globs vss-extension.json",
@@ -31,11 +31,5 @@
   },
   "dependencies": {
     "ts-node": "^9.0.0"
-  },
-  "overrides": {
-    "debug": false ,
-    "package-name": {
-      "unwanted-dependency": false
-    }
   }
 }
