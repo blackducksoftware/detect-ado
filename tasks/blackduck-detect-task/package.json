@@ -1,6 +1,6 @@
 {
   "name": "detect-ado",
-  "version": "10.1.0",
+  "version": "10.1.1",
   "description": "Execute Black Duck Detect against your build",
   "scripts": {
     "build": "tsc -p .",
@@ -33,9 +33,8 @@
     "winston": "^3.6.0"
   },
   "overrides": {
-    "debug": false,
-    "package-name": {
-      "unwanted-dependency": false
+    "https-proxy-agent": {
+      "debug": "npm:dry-uninstall"
     }
   }
 }
