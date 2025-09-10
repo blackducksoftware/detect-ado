@@ -33,6 +33,6 @@
     "ts-node": "^9.0.0"
   },
   "overrides": {
-    "debug": "npm:dry-uninstall"
+    "simple-swizzle": "0.2.2"
   }
 }
