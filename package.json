@@ -31,5 +31,8 @@
   },
   "dependencies": {
     "ts-node": "^9.0.0"
+  },
+  "resolutions": {
+    "semver": "7.7.2"
   }
 }
