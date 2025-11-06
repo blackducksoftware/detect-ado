@@ -15,7 +15,7 @@
     "url": "https://github.com/blackducksoftware/detect-ado"
   },
   "devDependencies": {
-    "@types/node": "24.5.2",
+    "@types/node": "20.19.17",
     "@types/q": "0.0.32",
     "@types/jquery": "^2.0.34",
     "azure-pipelines-task-lib": "^4.13.0",
