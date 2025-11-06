@@ -15,7 +15,7 @@
   "devDependencies": {
     "@types/jquery": "^2.0.34",
     "@types/mocha": "^8.2.1",
-    "@types/node": "^20.3.1",
+    "@types/node": "24.5.2",
     "@types/q": "0.0.32",
     "mocha": "^8.2.1",
     "ncp": "^2.0.0",
