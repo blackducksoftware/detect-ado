@@ -1,0 +1,11 @@
+{
+  "name": "uuid",
+  "version": "3.4.1",
+  "description": "Local shim replacing vulnerable uuid 3.4.0 using Node.js built-in crypto",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./v1": "./v1.js",
+    "./v4": "./v4.js"
+  }
+}
