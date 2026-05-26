@@ -23,12 +23,11 @@
     "y18n": "^4.0.1"
   },
   "overrides": {
-    "brace-expansion": "^1.1.12",
-    "shelljs": "^0.10.0"
+    "brace-expansion": "^1.1.12"
   },
   "dependencies": {
     "got": "^11.8.5",
-    "azure-pipelines-task-lib": "^4.13.0",
+    "azure-pipelines-task-lib": "^5.0.0",
     "fs-extra": "^9.0.1",
     "https-proxy-agent": "^5.0.0",
     "ts-node": "^9.0.0",
