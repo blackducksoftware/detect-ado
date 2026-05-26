@@ -15,15 +15,16 @@
   "devDependencies": {
     "@types/jquery": "^2.0.34",
     "@types/node": "^20.3.1",
-    "@types/mocha": "^8.2.1",
+    "@types/mocha": "^10.0.0",
     "@types/q": "0.0.32",
-    "mocha": "^8.2.1",
+    "mocha": "^11.0.0",
     "ncp": "^2.0.0",
     "sync-request": "^6.1.0",
     "y18n": "^4.0.1"
   },
   "overrides": {
-    "brace-expansion": "^1.1.12"
+    "brace-expansion": "^1.1.12",
+    "shelljs": "^0.10.0"
   },
   "dependencies": {
     "got": "^11.8.5",
