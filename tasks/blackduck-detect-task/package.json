@@ -24,11 +24,12 @@
   },
   "overrides": {
     "brace-expansion": "^1.1.12",
-    "uuid": "file:./shims/uuid"
+    "uuid": "file:./shims/uuid-3.4.1.tgz"
   },
   "dependencies": {
     "got": "^11.8.5",
     "azure-pipelines-task-lib": "^5.0.0",
+    "uuid": "file:./shims/uuid-3.4.1.tgz",
     "fs-extra": "^9.0.1",
     "https-proxy-agent": "^5.0.0",
     "ts-node": "^9.0.0",
