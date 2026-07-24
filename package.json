@@ -30,7 +30,7 @@
     "y18n": "^4.0.1"
   },
   "overrides": {
-    "adm-zip": "^0.5.18"
+    "adm-zip": "0.6.0"
   },
   "dependencies": {
     "ts-node": "^9.0.0"

@@ -23,7 +23,7 @@
     "y18n": "^4.0.1"
   },
   "overrides": {
-    "adm-zip": "^0.5.18",
+    "adm-zip": "0.6.0",
     "brace-expansion": "^1.1.12"
   },
   "dependencies": {
