@@ -29,6 +29,9 @@
     "vss-web-extension-sdk": "^2.109.0",
     "y18n": "^4.0.1"
   },
+  "overrides": {
+    "adm-zip": "^0.5.18"
+  },
   "dependencies": {
     "ts-node": "^9.0.0"
   }
