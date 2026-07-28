@@ -24,7 +24,7 @@
   },
   "overrides": {
     "adm-zip": "0.6.0",
-    "brace-expansion": "^1.1.12"
+    "brace-expansion": "^1.1.16"
   },
   "dependencies": {
     "got": "^11.8.5",
