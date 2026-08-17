@@ -13,8 +13,8 @@ import {IDefaultScriptConfiguration} from '../model/IDefaultScriptConfiguration'
 const osPlat: string = os.platform()
 
 export class DetectScriptConfigurationRunner extends DetectRunner {
-    static readonly DETECT_SH_SCRIPT_NAME = 'detect11.sh'
-    static readonly DETECT_PS_SCRIPT_NAME = 'detect11.ps1'
+    static readonly DETECT_SH_SCRIPT_NAME = 'detect12.sh'
+    static readonly DETECT_PS_SCRIPT_NAME = 'detect12.ps1'
 
     readonly BASH_SCRIPT: IDetectRunnerConfiguration = {
         fileName: DetectScriptConfigurationRunner.DETECT_SH_SCRIPT_NAME,
